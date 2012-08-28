@@ -1,0 +1,34 @@
+// Selecting multiple elements from a browse
+
+#include "FiveLinux.ch"
+
+function Main()
+
+   local oWnd, oBrw, aTest := { { .F., "one", "two" }, { .F., "three", "four" }, { .F., "five", "six" } }
+
+   DEFINE WINDOW oWnd TITLE "Testing Browses" SIZE 522, 317
+
+   @ 2, 2 BROWSE oBrw OF oWnd ;
+      HEADERS "Selected", "First", "Second" ;
+      FIELDS  If( aTest[ oBrw:nAt ][ 1 ], "X", " " ), aTest[ oBrw:nAt ][ 2 ], aTest[ oBrw:nAt ][ 3 ]
+
+   oBrw:SetArray( aTest )
+   oBrw:nRowPos = 2
+   oBrw:nAt = 2
+
+   oBrw:bKeyDown = { | nKey | If( nKey == 32, ( aTest[ oBrw:nAt ][ 1 ] := ! aTest[ oBrw:nAt ][ 1 ], oBrw:Refresh() ),) }
+
+   oBrw:bLClicked = { | nRowAt, nCol | If( nCol < 80, ( aTest[ oBrw:nAt ][ 1 ]:= ! aTest[ oBrw:nAt ][ 1 ], oBrw:Refresh() ),) }   
+
+   @ 28, 2 BUTTON "_Ok" OF oWnd ACTION oWnd:End()
+   
+   @ 28, 30 BUTTON "Add" OF oWnd ACTION ( AAdd( aTest, { .F., "five", "six" } ), oBrw:SetArray( aTest ), oBrw:GoTop(), oBrw:Refresh() )
+
+   @ 28, 40 BUTTON "Select" OF oWnd ACTION ( aTest[ oBrw:nRowPos ][ 1 ] := ! aTest[ oBrw:nRowPos ][ 1 ], oBrw:Refresh() )
+
+   oWnd:Center()
+
+   ACTIVATE WINDOW oWnd 
+
+return nil
+ 
