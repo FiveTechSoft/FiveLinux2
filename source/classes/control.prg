@@ -39,7 +39,9 @@ METHOD LButtonDown( nRow, nCol ) CLASS TControl
       ::nStartCol = nCol
    endif
 
-return Super:LButtonDown( nRow, nCol )
+   Super:LButtonDown( nRow, nCol )
+
+return If( ::lDrag, 1, nil )  // no default behavior for lDrag 
 
 //----------------------------------------------------------------------------//
 

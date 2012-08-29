@@ -320,7 +320,7 @@ gboolean button_press_event( GtkWidget * hWnd, GdkEventButton * event )
       hb_vmFunction( 4 );
    }
    
-   return TRUE;
+   return ! HB_ISNIL( -1 ); // FALSE invokes default behavior
 }
 
 gboolean motion_notify_event( GtkWidget * hWnd, GdkEventMotion * event ) 
