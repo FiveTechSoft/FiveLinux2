@@ -7,7 +7,7 @@ CLASS TButton FROM TControl
    DATA   bAction   // The action to execute when the button is clicked
 
    METHOD New( nRow, nCol, cText, oWnd, bAction, nWidth, nHeight, bValid,;
-               bWhen, lUpdate, cImgName, oFont, lDesign )
+               bWhen, lUpdate, cImgName, oFont, lDesign, lPixel )
 
    METHOD NewBar( oBar, cText, cImgName, bAction, lGroup )
 
@@ -28,10 +28,10 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, cText, oWnd, bAction, nWidth, nHeight, bValid,;
-            bWhen, lUpdate, cImgName, oFont, lDesign ) CLASS TButton
+            bWhen, lUpdate, cImgName, oFont, lDesign, lPixel ) CLASS TButton
 
    DEFAULT cText := "_Button", oWnd := GetWndDefault(), nWidth := 80,;
-           nHeight := 27, lUpdate := .F., lDesign := .F.
+           nHeight := 27, lUpdate := .F., lDesign := .F., lPixel := .F.
 
    ::bAction   = bAction
    ::hWnd      = CreateButton( cText, cImgName )
@@ -43,7 +43,7 @@ METHOD New( nRow, nCol, cText, oWnd, bAction, nWidth, nHeight, bValid,;
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   ::SetPos( nRow * 10, nCol * 10 )
+   ::SetPos( nRow * If( lPixel, 1, 10 ), nCol * If( lPixel, 1, 10 ) )
    ::SetSize( nWidth, nHeight )
 
    if ! Empty( oFont )
@@ -51,6 +51,7 @@ METHOD New( nRow, nCol, cText, oWnd, bAction, nWidth, nHeight, bValid,;
    endif
 
    ::Link()
+   ::Show()
 
 return Self
 

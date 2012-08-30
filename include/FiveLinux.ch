@@ -129,12 +129,13 @@ extern ErrorLink
 	     [ <img: IMAGE, RESOURCE> <cImgName> ] ;       
 	     [ FONT <oFont> ] ;
 	     [ <design: DESIGN> ] ;       
+	     [ <pixel: PIXEL> ] ;       
 	  => ;
              [ <oBtn> := ] TButton():New( <nRow>, <nCol>,;
 	     <cPrompt>, [<oWnd>], [ \{|o| <uAction> \} ],;
 	     <nWidth>, <nHeight>, [ \{|o| <uValid> \} ],;
 	     [ \{|o| <uWhen> \} ], <.update.>, <cImgName>, [ <oFont> ],;
-             [<.design.>] )
+             [<.design.>], [<.pixel.>] )
 
 #xcommand REDEFINE BUTTON [ <oBtn> ] ;
              [ <of: OF, WINDOW, DIALOG> <oWnd> ] ;

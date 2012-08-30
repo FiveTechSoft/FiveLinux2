@@ -2,18 +2,149 @@
 
 #include "FiveLinux.ch"
 
+static oWndMain, oWnd, aWindows := {}, oIni
+
+//----------------------------------------------------------------------------//
+
 function Main()
 
-   local oWnd
+   local oBar
 
-   DEFINE WINDOW oWnd
+   SET DATE FORMAT TO "DD/MM/YYYY"
 
-   @ 2, 2 BUTTON "Button" OF oWnd DESIGN ;
-      ACTION MsgInfo( "click" )
+   LoadPreferences()
 
-   @ 6, 2 BUTTON "Button" OF oWnd DESIGN ;
-      ACTION MsgInfo( "click" )
+   DEFINE WINDOW oWndMain TITLE "FiveDbu" ;
+      MENU BuildMenu()
 
-   ACTIVATE WINDOW oWnd CENTER
+   DEFINE BUTTONBAR oBar OF oWndMain
+
+   DEFINE BUTTON OF oBar PROMPT "New" RESOURCE "gtk-new" ;
+      ACTION New()
+
+   DEFINE BUTTON OF oBar PROMPT "Open" RESOURCE "gtk-open" ;
+      ACTION Open()
+
+   DEFINE BUTTON OF oBar PROMPT "Save" RESOURCE "gtk-save" ;
+      ACTION Save()
+
+   DEFINE BUTTON OF oBar PROMPT "Preferences" RESOURCE "gtk-preferences" GROUP
+
+   DEFINE BUTTON OF oBar PROMPT "Button" RESOURCE "gtk-button" ;
+      ACTION AddButton()
+
+   DEFINE BUTTON OF oBar PROMPT "Exit" RESOURCE "gtk-quit" GROUP ;
+      ACTION oWndMain:End()
+
+   DEFINE MSGBAR OF oWndMain PROMPT "FiveForm"
+
+   oWndMain:SetPos( 0, 0 )
+   oWndMain:SetSize( 1024, 100 )
+
+   ACTIVATE WINDOW oWndMain ;
+      VALID CloseAllWindows() 
 
 return nil
+
+//----------------------------------------------------------------------------//
+
+function CloseAllWindows()
+
+   local lExit := .F.
+
+   if MsgYesNo( "Want to end ?" )
+      while Len( aWindows ) > 0
+         ATail( aWindows ):End()
+         ASize( aWindows, Len( aWindows ) - 1 )   
+      end
+      lExit = .T.
+   endif   
+
+return lExit
+
+//----------------------------------------------------------------------------//
+
+function BuildMenu()
+
+   local oMenu, cFileName
+
+   MENU oMenu
+      MENUITEM "Files"
+      MENU
+         MENUITEM "New..." ACTION New()
+         MENUITEM "Open..." ACTION Open()
+         SEPARATOR
+         MENUITEM "Preferences..."
+         SEPARATOR
+
+         if Len( oIni:Files ) > 0          
+            MENUITEM "Recent files"
+            MENU
+               for each cFileName in oIni:Files
+                  MENUITEM ( cFileName ) ACTION Open( o:cPrompt ) 
+               next
+               SEPARATOR
+               MENUITEM "Clear list" ACTION oIni:ClearSection( "files" )
+            ENDMENU
+         SEPARATOR
+         endif
+
+         MENUITEM "Exit" ACTION oWndMain:End()
+      ENDMENU
+   ENDMENU
+
+return oMenu
+
+//----------------------------------------------------------------------------//
+
+function New()
+
+   DEFINE WINDOW oWnd TITLE "Form"
+
+   ACTIVATE WINDOW oWnd CENTERED
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+function Open()
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+function Save()
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+function LoadPreferences()
+
+   INI oIni FILENAME "./fiveform.ini"
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+function AddButton()
+ 
+   local oBtn
+
+   @ 20, 20 BUTTON oBtn PROMPT "Button" OF oWnd ;
+      SIZE 80, 30 PIXEL DESIGN
+
+   oBtn:cVarName = "oBtn" + oBtn:GetCtrlIndex()
+
+   // oBtn:bGotFocus = { || oWndInsp:SetControl( oBtn ) }
+ 
+   /*
+   oWndInsp:AddItem( oBtn )
+ 
+   oWndInsp:SetFocus()
+   oWnd:SetFocus()
+   */ 
+
+return nil
+
+//----------------------------------------------------------------------------//

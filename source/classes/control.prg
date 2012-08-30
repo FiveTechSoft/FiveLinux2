@@ -11,6 +11,8 @@ CLASS TControl FROM TWindow
    DATA   lDrag  INIT .F.  // moveable with the mouse
    DATA   nStartRow, nStartCol // initial coors when design drag starts
 
+   METHOD GetCtrlIndex()
+
    METHOD LostFocus()
 
    METHOD End() INLINE WndDestroy( ::hWnd )
@@ -30,6 +32,20 @@ CLASS TControl FROM TWindow
 
 ENDCLASS
 
+//----------------------------------------------------------------------------//
+ 
+METHOD GetCtrlIndex() CLASS TControl
+ 
+   local n, nIndex := 0
+ 
+   for n = 1 to Len( ::oWnd:aControls )
+      if ::oWnd:aControls[ n ]:ClassName() == ::ClassName()
+         nIndex++
+      endif
+   next
+ 
+return AllTrim( Str( nIndex ) )         
+ 
 //----------------------------------------------------------------------------//
 
 METHOD LButtonDown( nRow, nCol ) CLASS TControl

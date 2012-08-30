@@ -19,11 +19,13 @@ CLASS TWindow
    DATA      bRClicked // A codeblock to evaluate when the mouse is R clicked
    DATA      bReSized // A codeblock to evaluate when the window is resized
    DATA      bKeyDown // A codeblock to evaluate when a key is pressed
+   DATA      bGotFocus // A codeblock to evaluate when the focus is gained
    DATA      bLostFocus // A codeblock to evaluate when the focus is lost
    DATA      Cargo // user defined cargo value
    DATA      bStart // codeblock to evaluate after the window is painted for the first time
    DATA      oFont  // used font object
    DATA      nClrText, nClrPane
+   DATA      cVarName // variable name that holds this object
 
    METHOD New( cTitle, oMenu, nWidth, nHeight )
 

@@ -21,7 +21,7 @@ HB_FUNC( CREATEWINDOW )
    gtk_object_set_data( GTK_OBJECT( hWnd ), "vbox", ( gpointer ) hVBox );
    gtk_object_set_data( GTK_OBJECT( hWnd ), "fixed", ( gpointer ) hFixed );
 
-   gtk_window_set_default_size( GTK_WINDOW( hWnd ), 500, 300 );
+   gtk_window_set_default_size( GTK_WINDOW( hWnd ), 100, 100 );
 
    gtk_signal_connect( GTK_OBJECT( hWnd ), "delete_event",
                        ( GtkSignalFunc ) DeleteEvent, NULL );
