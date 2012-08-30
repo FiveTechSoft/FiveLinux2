@@ -274,9 +274,12 @@ extern ErrorLink
 	     [ SIZE <nWidth>, <nHeight> ] ;
 	     [ <update: UPDATE> ] ;
 	     [ FONT <oFont> ] ;
+	     [ <pixel: PIXEL> ] ;       
+	     [ <design: DESIGN> ] ;       
        => ;
              [ <oSay> := ] TSay():New( <nRow>, <nCol>, [<oWnd>],;
-	     <cText>, [<nWidth>], [<nHeight>], <.update.>, [ <oFont> ] )
+	     <cText>, [<nWidth>], [<nHeight>], <.update.>, [ <oFont> ],;
+             <.pixel.>, <.design.> )
 
 #xcommand @ <nRow>, <nCol> SCROLLBAR [ <oSbr> ] ;
              [ <of: OF, WINDOW, DIALOG> <oWnd> ] ;

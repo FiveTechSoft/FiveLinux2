@@ -4,7 +4,8 @@
 
 CLASS TSay FROM TControl
 
-   METHOD New( nRow, nCol, oWnd, cText, nWidth, nHeight, lUpdate, oFont )
+   METHOD New( nRow, nCol, oWnd, cText, nWidth, nHeight, lUpdate, oFont,;
+               lPixel, lDesign )
 
    METHOD SetText( cText ) INLINE SaySetText( ::hWnd, cText )
 
@@ -16,18 +17,20 @@ ENDCLASS
 
 //----------------------------------------------------------------------------//
 
-METHOD New( nRow, nCol, oWnd, cText, nWidth, nHeight, lUpdate, oFont ) CLASS TSay
+METHOD New( nRow, nCol, oWnd, cText, nWidth, nHeight, lUpdate, oFont,;
+            lPixel, lDesign ) CLASS TSay
 
    DEFAULT oWnd := GetWndDefault(), nWidth := 70, nHeight := 20,;
-           lUpdate := .f.
+           lUpdate := .f., lPixel := .F., lDesign := .F.
 
    ::hWnd    = CreateSay( cText )
    ::lUpdate = lUpdate
+   ::lDrag   = lDesign
 
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   ::SetPos( nRow * 10, nCol * 10 )
+   ::SetPos( nRow * If( lPixel, 1, 10 ), nCol * If( lPixel, 1, 10 ) )
    ::SetSize( nWidth, nHeight )
 
    if oFont != nil
@@ -35,6 +38,7 @@ METHOD New( nRow, nCol, oWnd, cText, nWidth, nHeight, lUpdate, oFont ) CLASS TSa
    endif
 
    ::Link()
+   ::Show()
 
 return Self
 

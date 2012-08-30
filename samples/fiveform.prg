@@ -30,7 +30,10 @@ function Main()
 
    DEFINE BUTTON OF oBar PROMPT "Preferences" RESOURCE "gtk-preferences" GROUP
 
-   DEFINE BUTTON OF oBar PROMPT "Button" RESOURCE "gtk-button" ;
+   DEFINE BUTTON OF oBar PROMPT "Say" RESOURCE "label" ;
+      ACTION AddSay()
+
+   DEFINE BUTTON OF oBar PROMPT "Button" RESOURCE "button" ;
       ACTION AddButton()
 
    DEFINE BUTTON OF oBar PROMPT "Exit" RESOURCE "gtk-quit" GROUP ;
@@ -135,6 +138,30 @@ function AddButton()
       SIZE 80, 30 PIXEL DESIGN
 
    oBtn:cVarName = "oBtn" + oBtn:GetCtrlIndex()
+
+   // oBtn:bGotFocus = { || oWndInsp:SetControl( oBtn ) }
+ 
+   /*
+   oWndInsp:AddItem( oBtn )
+ 
+   oWndInsp:SetFocus()
+   oWnd:SetFocus()
+   */ 
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+function AddSay()
+ 
+   local oSay
+
+   @ 20, 20 SAY oSay PROMPT "Label" OF oWnd ;
+      SIZE 60, 20 PIXEL DESIGN
+
+   oSay:cVarName = "oSay" + oSay:GetCtrlIndex()
+
+   oSay:bLClicked = { || MsgBeep() }
 
    // oBtn:bGotFocus = { || oWndInsp:SetControl( oBtn ) }
  
