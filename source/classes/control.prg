@@ -28,6 +28,8 @@ CLASS TControl FROM TWindow
 
    METHOD SetPos( nTop, nLeft ) INLINE CtrlSetPos( ::hWnd, nTop, nLeft )
 
+   METHOD SetSize( nWidth, nHeight ) INLINE CtrlSetSize( ::hWnd, nWidth, nHeight )
+
    METHOD MouseMove( nRow, nCol )
 
 ENDCLASS

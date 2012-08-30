@@ -14,7 +14,7 @@ function Main()
 
    LoadPreferences()
 
-   DEFINE WINDOW oWndMain TITLE "FiveDbu" ;
+   DEFINE WINDOW oWndMain TITLE "FiveForm" ;
       MENU BuildMenu()
 
    DEFINE BUTTONBAR oBar OF oWndMain
@@ -36,7 +36,7 @@ function Main()
    DEFINE BUTTON OF oBar PROMPT "Exit" RESOURCE "gtk-quit" GROUP ;
       ACTION oWndMain:End()
 
-   DEFINE MSGBAR OF oWndMain PROMPT "FiveForm"
+   DEFINE MSGBAR OF oWndMain PROMPT "FiveLinux forms designer"
 
    oWndMain:SetPos( 0, 0 )
    oWndMain:SetSize( 1024, 100 )

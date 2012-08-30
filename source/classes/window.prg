@@ -86,7 +86,7 @@ CLASS TWindow
 
    METHOD SetPos( nTop, nLeft ) INLINE WndSetPos( ::hWnd, nLeft, nTop )
 
-   METHOD SetSize( nWidth, nHeight ) INLINE CtrlSetSize( ::hWnd, nWidth, nHeight )
+   METHOD SetSize( nWidth, nHeight ) INLINE WndSetSize( ::hWnd, nWidth, nHeight )
 
    METHOD SetText( cText ) INLINE WndSetText( ::hWnd, cText )
 

@@ -123,6 +123,11 @@ HB_FUNC( CTRLSETPOS )
    gtk_widget_set_uposition( ( GtkWidget * ) hb_parnl( 1 ), hb_parnl( 3 ), hb_parnl( 2 ) );
 }
 
+HB_FUNC( WNDSETSIZE )
+{
+   gtk_window_set_default_size( ( GtkWindow * ) hb_parnl( 1 ), hb_parnl( 2 ), hb_parnl( 3 ) );
+}
+
 HB_FUNC( WNDSETPOS )
 {
    gtk_window_move( GTK_WINDOW( hb_parnl( 1 ) ), hb_parnl( 2 ), hb_parnl( 3 ) );
