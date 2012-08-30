@@ -12,6 +12,8 @@ CLASS TDialog FROM TWindow
 
    METHOD HandleEvent( nMsg, nWParam, nLParam )
 
+   METHOD SetSize( nWidth, nHeight ) INLINE CtrlSetSize( ::hWnd, nWidth, nHeight )
+
 ENDCLASS
 
 //----------------------------------------------------------------------------//
