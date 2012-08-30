@@ -44,6 +44,8 @@ function Main()
    oWndMain:SetPos( 0, 0 )
    oWndMain:SetSize( 1024, 100 )
 
+   New()
+
    ACTIVATE WINDOW oWndMain ;
       VALID CloseAllWindows() 
 
@@ -104,7 +106,10 @@ function New()
 
    DEFINE WINDOW oWnd TITLE "Form"
 
-   ACTIVATE WINDOW oWnd CENTERED
+   oWnd:Center()
+   oWnd:Show()
+
+   oWnd:bLClicked = { || MsgInfo( "here" ) }
 
 return nil
 
