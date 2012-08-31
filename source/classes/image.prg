@@ -1,5 +1,7 @@
 #include "FiveLinux.ch"
 
+//----------------------------------------------------------------------------//
+
 CLASS TImage FROM TControl
 
    DATA   cFileName   // The name of the file that holds the image
@@ -9,6 +11,8 @@ CLASS TImage FROM TControl
    METHOD LoadImage( cFileName )
 
 ENDCLASS
+
+//----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, oWnd, cFileName, nWidth, nHeight, lUpdate ) ;
    CLASS TImage
@@ -21,7 +25,7 @@ METHOD New( nRow, nCol, oWnd, cFileName, nWidth, nHeight, lUpdate ) ;
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   SetCoors( ::hWnd, nRow * 10, nCol * 10 )
+   ::SetPos( ::hWnd, nRow * 10, nCol * 10 )
 
    ::Link()
 
@@ -29,9 +33,13 @@ METHOD New( nRow, nCol, oWnd, cFileName, nWidth, nHeight, lUpdate ) ;
 
    DEFAULT nWidth := ImgGetWidth( ::hWnd ), nHeight := ImgGetHeight( ::hWnd )
 
-   SetSize( ::hWnd, nWidth, nHeight )
+   ::SetSize( nWidth, nHeight )
+
+   ::Show()
 
 return Self
+
+//----------------------------------------------------------------------------//
 
 METHOD LoadImage( cFileName ) CLASS TImage
 
@@ -40,3 +48,5 @@ METHOD LoadImage( cFileName ) CLASS TImage
    ImgLoadFile( ::hWnd, cFileName )
 
 return nil
+
+//----------------------------------------------------------------------------//

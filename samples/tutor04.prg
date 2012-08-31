@@ -28,7 +28,8 @@ function Main()
 
    @ 18, 2 COMBOBOX cItem OF oWnd ITEMS { "one", "two", "three" }
 
-   @ 9, 22 LISTBOX cLbx OF oWnd ITEMS { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve" }
+   @ 9, 22 LISTBOX cLbx OF oWnd ;
+      ITEMS { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve" }
 
    @ 21, 2 METER nVal TOTAL 200 OF oWnd
 

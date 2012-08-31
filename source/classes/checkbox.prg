@@ -1,5 +1,7 @@
 #include "FiveLinux.ch"
 
+//----------------------------------------------------------------------------//
+
 CLASS TCheckBox FROM TControl
 
    METHOD New( nRow, nCol, cText, oWnd, bSetGet, nWidth, nHeight, bWhen,;
@@ -18,6 +20,8 @@ CLASS TCheckBox FROM TControl
 
 ENDCLASS
 
+//----------------------------------------------------------------------------//
+
 METHOD New( nRow, nCol, cText, oWnd, bSetGet, nWidth, nHeight, bWhen,;
             bValid, lUpdate ) CLASS TCheckBox
 
@@ -33,14 +37,17 @@ METHOD New( nRow, nCol, cText, oWnd, bSetGet, nWidth, nHeight, bWhen,;
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   SetCoors( ::hWnd, nRow * 10, nCol * 10 )
-   SetSize( ::hWnd, nWidth, nHeight )
+   ::SetPos( nRow * 10, nCol * 10 )
+   ::SetSize( nWidth, nHeight )
 
    ::Link()
+   ::Show()
 
    ::SetCheck( Eval( bSetGet ) )
 
 return Self
+
+//----------------------------------------------------------------------------//
 
 METHOD Click() CLASS TCheckBox
 
@@ -49,6 +56,8 @@ METHOD Click() CLASS TCheckBox
    endif
 
 return nil
+
+//----------------------------------------------------------------------------//
 
 METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TCheckBox
 
@@ -61,3 +70,5 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TCheckBox
    endcase
 
 return nil
+
+//----------------------------------------------------------------------------//

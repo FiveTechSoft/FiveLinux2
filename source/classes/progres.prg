@@ -1,5 +1,7 @@
 #include "FiveLinux.ch"
 
+//----------------------------------------------------------------------------//
+
 CLASS TProgress FROM TControl
 
    DATA   nTotal   // The total amount represented by the progress bar
@@ -15,6 +17,8 @@ CLASS TProgress FROM TControl
 
 ENDCLASS
 
+//----------------------------------------------------------------------------//
+
 METHOD New( nRow, nCol, oWnd, bSetGet, nTotal, nWidth, nHeight, lUpdate ) ;
    CLASS TProgress
 
@@ -29,11 +33,14 @@ METHOD New( nRow, nCol, oWnd, bSetGet, nTotal, nWidth, nHeight, lUpdate ) ;
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   SetCoors( ::hWnd, nRow * 10, nCol * 10 )
-   SetSize( ::hWnd, nWidth, nHeight )
+   ::SetPos( nRow * 10, nCol * 10 )
+   ::SetSize( nWidth, nHeight )
 
    ::Link()
+   ::Show()
 
    ::Set( Eval( bSetGet ) )
 
 return Self
+
+//----------------------------------------------------------------------------//

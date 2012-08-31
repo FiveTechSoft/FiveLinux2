@@ -136,8 +136,8 @@ METHOD KeyDown( nKey ) CLASS TGet
       endif
    endif
 
-   if ::oGet:pos != ::GetPos()
-      ::oGet:pos = ::GetPos() + 1
+   if ::oGet:pos != ::GetCurPos()
+      ::oGet:pos = ::GetCurPos() + 1
    endif
 
    if nKey >= K_KEYPAD0 .and. nKey <= K_KEYPAD0 + 9
