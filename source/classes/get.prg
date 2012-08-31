@@ -10,7 +10,7 @@ CLASS TGet FROM TControl
    METHOD New( nRow, nCol, oWnd, bSetGet, cPicture, nWidth, nHeight,;
                bWhen, bValid, lUpdate, lPassword, lDesign, lPixel )
 
-   METHOD GetPos() INLINE GetGetCurPos( ::hWnd )
+   METHOD GetCurPos() INLINE GetGetCurPos( ::hWnd )
 
    METHOD HandleEvent( nMsg, nWParam, nLParam )
 
@@ -118,9 +118,8 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TGet
              return ::GotFocus()
 
         case nMsg == WM_LBUTTONDOWN
-             MsgInfo( "here" )
-        //      ::oGet:pos = ::GetCurPos()
-        //      return .T. 
+             ::oGet:pos = ::GetCurPos()
+             return Super:HandleEvent( nMsg, nWParam, nLParam )
    endcase
 
 return Super:HandleEvent( nMsg, nWParam, nLParam ) 

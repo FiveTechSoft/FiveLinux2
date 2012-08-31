@@ -9,7 +9,7 @@ CLASS TListBox FROM TControl
    DATA   lInit    // has it been initialized ?
 
    METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
-               bValid, lUpdate )
+               bValid, lUpdate, lDesign, lPixel )
 
    METHOD HandleEvent( nMsg, nWParam, nLParam )
 
@@ -26,12 +26,12 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
-            bValid, lUpdate ) CLASS TListBox
+            bValid, lUpdate, lDesign, lPixel ) CLASS TListBox
 
    local cText, nAt
 
    DEFAULT oWnd := GetWndDefault(), nWidth := 176, nHeight := 160,;
-           lUpdate := .f.
+           lUpdate := .F., lDesign := .F., lPixel := .F.
 
    ::bSetGet = bSetGet
    ::hWnd    = CreateListBox()
@@ -39,6 +39,7 @@ METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
    ::bValid  = bValid
    ::lUpdate = lUpdate
    ::lInit   = .f.
+   ::lDrag   = lDesign
 
    if ValType( cText := Eval( bSetGet ) ) == "C" .and. ;
       ( nAt := AScan( aItems, cText ) ) != 0
@@ -53,10 +54,11 @@ METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   ::SetPos( nRow * 10, nCol * 10 )
+   ::SetPos( nRow * If( lPixel, 1, 10 ), nCol * If( lPixel, 1, 10 ) )
    ::SetSize( nWidth, nHeight )
 
    ::Link()
+   ::Show()
 
 return Self
 
@@ -74,6 +76,6 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TListBox
              return ::Change( nWParam )
    endcase
 
-return nil
+return Super:HandleEvent( nMsg, nMsg, nLParam )
 
 //----------------------------------------------------------------------------//

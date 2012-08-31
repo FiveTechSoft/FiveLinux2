@@ -39,6 +39,9 @@ function Main()
    DEFINE BUTTON OF oBar PROMPT "Get" RESOURCE "get" ;
       ACTION AddGet()
 
+   DEFINE BUTTON OF oBar PROMPT "Listbox" RESOURCE "listbox" ;
+      ACTION AddListbox()
+
    DEFINE BUTTON OF oBar PROMPT "Exit" RESOURCE "gtk-quit" GROUP ;
       ACTION oWndMain:End()
 
@@ -169,6 +172,25 @@ function AddGet()
  
    oGet:cVarName = "oGet" + oGet:GetCtrlIndex()
    oGet:bGotFocus = { || oWndInsp:SetControl( oGet ) }
+ 
+   // oWndInsp:AddItem( oGet )
+ 
+   // oWndInsp:SetFocus()
+   oWnd:SetFocus()
+ 
+return nil
+ 
+//----------------------------------------------------------------------------//
+
+function AddListbox()
+ 
+   local oLbx, cItem, aItems := { "one", "two", "three" }
+ 
+   @ 20, 20 LISTBOX oLbx VAR cItem ITEMS aItems OF oWnd ;
+      SIZE 120, 120 PIXEL DESIGN
+ 
+   oLbx:cVarName = "oLbx" + oLbx:GetCtrlIndex()
+   oLbx:bGotFocus = { || oWndInsp:SetControl( oLbx ) }
  
    // oWndInsp:AddItem( oGet )
  

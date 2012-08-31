@@ -9,6 +9,7 @@ gboolean GotFocusEvent( GtkWidget * hWnd, GdkEventFocus * event,
 gboolean KeyPressEvent( GtkWidget * hWnd, GdkEventKey * event,
                         gpointer user_data );
 gboolean ButtonPressEvent( GtkWidget * hWnd, GdkEventButton * event );
+gboolean motion_notify_event( GtkWidget * hWnd, GdkEventMotion * event );
 
 HB_FUNC( CREATEGET )
 {
@@ -24,7 +25,7 @@ HB_FUNC( CREATEGET )
                        G_CALLBACK( KeyPressEvent ), NULL );
 
    gtk_signal_connect( GTK_OBJECT( hWnd ), "button_press_event",
-                       ( GtkSignalFunc ) button_press_event, NULL );
+                       ( GtkSignalFunc ) ButtonPressEvent, NULL );
 
    gtk_signal_connect( GTK_OBJECT( hWnd ), "motion_notify_event",
                        ( GtkSignalFunc ) motion_notify_event, NULL );

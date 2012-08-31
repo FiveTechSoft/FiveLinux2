@@ -243,11 +243,13 @@ extern ErrorLink
 	     [ WHEN <uWhen> ] ;
 	     [ VALID <uValid> ] ;
 	     [ <update: UPDATE> ] ;
+	     [ <design: DESIGN> ] ;       
+	     [ <pixel: PIXEL> ] ;       
 	  => ;
              [ <oLbx> := ] TListBox():New( <nRow>, <nCol>,;
 	     [<oWnd>], bSETGET( <cnVar> ), <aItems>, <nWidth>,;
 	     <nHeight>, [ \{|o| <uWhen> \} ],;
-	     [ \{|o| <uValid> \} ], <.update.> )
+	     [ \{|o| <uValid> \} ], <.update.>, <.design.>, <.pixel.> )
 
 #xcommand @ <nRow>, <nCol> <met: METER, PROGRESS> [ <oMeter> VAR ] <nVar> ;
              [ TOTAL <nTotal> ] ;
