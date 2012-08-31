@@ -8,7 +8,7 @@ CLASS TGet FROM TControl
    DATA   lPassword  // password style
 
    METHOD New( nRow, nCol, oWnd, bSetGet, cPicture, nWidth, nHeight,;
-               bWhen, bValid, lUpdate, lPassword )
+               bWhen, bValid, lUpdate, lPassword, lDesign, lPixel )
 
    METHOD GetPos() INLINE GetGetCurPos( ::hWnd )
 
@@ -39,10 +39,10 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, oWnd, bSetGet, cPicture, nWidth, nHeight, bWhen,;
-            bValid, lUpdate, lPassword ) CLASS TGet
+            bValid, lUpdate, lPassword, lDesign, lPixel ) CLASS TGet
 
    DEFAULT oWnd := GetWndDefault(), nWidth := 60, nHeight := 25,;
-           lUpdate := .f., lPassword := .F.
+           lUpdate := .f., lPassword := .F., lDesign := .F., lPixel := .F.
 
    ::hWnd    = CreateGet()
    ::bSetGet = bSetGet
@@ -51,6 +51,7 @@ METHOD New( nRow, nCol, oWnd, bSetGet, cPicture, nWidth, nHeight, bWhen,;
    ::bValid  = bValid
    ::lUpdate = lUpdate
    ::lPassword = lPassword
+   ::lDrag   = lDesign
 
    ::oGet:SetFocus()
    ::SetText( If( ! ::lPassword, ::oGet:buffer, Replicate( "*", Len( AllTrim( ::oGet:buffer ) ) ) ) )
@@ -58,10 +59,11 @@ METHOD New( nRow, nCol, oWnd, bSetGet, cPicture, nWidth, nHeight, bWhen,;
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   ::SetPos( nRow * 10, nCol * 10 )
+   ::SetPos( nRow * If( lPixel, 1, 10 ), nCol * If( lPixel, 1, 10 ) )
    ::SetSize( nWidth, nHeight )
 
    ::Link()
+   ::Show()
 
 return Self
 
@@ -115,12 +117,13 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TGet
         case nMsg == WM_GOTFOCUS
              return ::GotFocus()
 
-        // case nMsg == WM_LBUTTONDOWN
-        //      ::oGet:pos = ::GetPos()
+        case nMsg == WM_LBUTTONDOWN
+             MsgInfo( "here" )
+        //      ::oGet:pos = ::GetCurPos()
         //      return .T. 
    endcase
 
-return nil
+return Super:HandleEvent( nMsg, nWParam, nLParam ) 
 
 //----------------------------------------------------------------------------//
 

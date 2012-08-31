@@ -36,6 +36,9 @@ function Main()
    DEFINE BUTTON OF oBar PROMPT "Button" RESOURCE "button" ;
       ACTION AddButton()
 
+   DEFINE BUTTON OF oBar PROMPT "Get" RESOURCE "get" ;
+      ACTION AddGet()
+
    DEFINE BUTTON OF oBar PROMPT "Exit" RESOURCE "gtk-quit" GROUP ;
       ACTION oWndMain:End()
 
@@ -109,7 +112,7 @@ function New()
    oWnd:Center()
    oWnd:Show()
 
-   oWnd:bLClicked = { || MsgInfo( "here" ) }
+   // oWnd:bLClicked = { || MsgInfo( "here" ) }
 
 return nil
 
@@ -155,6 +158,25 @@ function AddButton()
 
 return nil
 
+//----------------------------------------------------------------------------//
+ 
+function AddGet()
+ 
+   local oGet, cValue := Space( 20 )
+ 
+   @ 20, 20 GET oGet VAR cValue OF oWnd ;
+      SIZE 120, 25 PIXEL DESIGN
+ 
+   oGet:cVarName = "oGet" + oGet:GetCtrlIndex()
+   oGet:bGotFocus = { || oWndInsp:SetControl( oGet ) }
+ 
+   // oWndInsp:AddItem( oGet )
+ 
+   // oWndInsp:SetFocus()
+   oWnd:SetFocus()
+ 
+return nil
+ 
 //----------------------------------------------------------------------------//
 
 function AddSay()

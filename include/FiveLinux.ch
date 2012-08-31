@@ -210,11 +210,14 @@ extern ErrorLink
 	     [ <update: UPDATE> ] ;
              [ <pass: PASSWORD> ] ;
              [ FONT <oFont> ] ;
+	     [ <design: DESIGN> ] ;       
+	     [ <pixel: PIXEL> ] ;       
 	  => ;
              [ <oGet> := ] TGet():New( <nRow>, <nCol>, [<oWnd>],;
 	     bSETGET( <uVar> ), <cPicture>, [<nWidth>],;
 	     [<nHeight>], [ \{|o| <uWhen> \} ],;
-	     [ \{|o| <uValid> \} ], <.update.>, <.pass.>, [<oFont>] )
+	     [ \{|o| <uValid> \} ], <.update.>, <.pass.>, [<oFont>],;
+             <.design.>, <.pixel.> )
 
 #xcommand @ <nRow>, <nCol> GROUP [ <oGroup> ] ;
 	     [ <label: LABEL, PROMPT> <cText> ] ;
