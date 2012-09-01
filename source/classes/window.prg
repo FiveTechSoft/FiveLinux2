@@ -12,7 +12,7 @@ CLASS TWindow
    DATA      oMenu  // The pulldown menu object if defined
    DATA      oPopup // The popup menu object if defined
    DATA      oMsgBar // The message bar object if defined
-   DATA      aControls // An array with all the child controls objects
+   DATA      aControls INIT {} // An array with all the child controls objects
    DATA      bValid // A block to allow the close or focus loose on controls
    DATA      bLClicked // A codeblock to evaluate when the mouse is L clicked
    DATA      bLDblClick // A codeblock to evaluate when the mouse is L double clicked
@@ -186,8 +186,14 @@ METHOD cGenPrg() CLASS TWindow
 
    cCode += "   DEFINE WINDOW " + ::cVarName + ;
             " SIZE " + AllTrim( Str( ::nWidth ) ) + ", " + ;
-                     + AllTrim( Str( ::nHeight ) ) + CRLF + CRLF
-   cCode += "   ACTIVATE WINDOW " + ::cVarName + " CENTERED" + CRLF + CRLF
+                     + AllTrim( Str( ::nHeight ) )
+
+   if ! Empty( ::aControls )
+      cCode += CRLF
+      AEval( ::aControls, { | oCtrl | cCode += oCtrl:cGenPRG() } )
+   endif
+
+   cCode += CRLF + "   ACTIVATE WINDOW " + ::cVarName + " CENTERED" + CRLF + CRLF
 
    cCode += "return " + ::cVarName + CRLF + CRLF
    cCode += "//" + Replicate( "-", 76 ) + "//" + CRLF

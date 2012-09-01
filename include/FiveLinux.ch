@@ -135,7 +135,7 @@ extern ErrorLink
 	     <cPrompt>, [<oWnd>], [ \{|o| <uAction> \} ],;
 	     <nWidth>, <nHeight>, [ \{|o| <uValid> \} ],;
 	     [ \{|o| <uWhen> \} ], <.update.>, <cImgName>, [ <oFont> ],;
-             [<.design.>], [<.pixel.>] )
+             [<.design.>], [<.pixel.>], <(oBtn)> )
 
 #xcommand REDEFINE BUTTON [ <oBtn> ] ;
              [ <of: OF, WINDOW, DIALOG> <oWnd> ] ;

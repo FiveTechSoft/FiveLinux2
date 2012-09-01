@@ -7,11 +7,13 @@ CLASS TButton FROM TControl
    DATA   bAction   // The action to execute when the button is clicked
 
    METHOD New( nRow, nCol, cText, oWnd, bAction, nWidth, nHeight, bValid,;
-               bWhen, lUpdate, cImgName, oFont, lDesign, lPixel )
+               bWhen, lUpdate, cImgName, oFont, lDesign, lPixel, cVarName )
 
    METHOD NewBar( oBar, cText, cImgName, bAction, lGroup )
 
    METHOD Redefine( cId, oWnd, bAction, bValid, bWhen, lUpdate )
+
+   METHOD cGenPrg()
 
    METHOD Click()
 
@@ -28,7 +30,7 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, cText, oWnd, bAction, nWidth, nHeight, bValid,;
-            bWhen, lUpdate, cImgName, oFont, lDesign, lPixel ) CLASS TButton
+            bWhen, lUpdate, cImgName, oFont, lDesign, lPixel, cVarName ) CLASS TButton
 
    DEFAULT cText := "_Button", oWnd := GetWndDefault(), nWidth := 80,;
            nHeight := 27, lUpdate := .F., lDesign := .F., lPixel := .F.
@@ -39,6 +41,7 @@ METHOD New( nRow, nCol, cText, oWnd, bAction, nWidth, nHeight, bValid,;
    ::bWhen     = bWhen
    ::lUpdate   = lUpdate
    ::lDrag     = lDesign
+   ::cVarName  = cVarName
 
    oWnd:AddControl( Self )
 
@@ -87,6 +90,26 @@ METHOD Redefine( cId, oWnd, bAction, bValid, bWhen, lUpdate ) CLASS TButton
    ::Link()
 
 return Self
+
+//----------------------------------------------------------------------------//
+
+METHOD cGenPrg() CLASS TButton
+
+   local cCode := ""
+   local cTop, cLeft, cWidth, cHeight
+ 
+   cTop    = LTrim( Str( Int( ::nTop ) ) )
+   cLeft   = LTrim( Str( Int( ::nLeft ) ) )
+   cWidth  = LTrim( Str( Int( ::nWidth ) ) )
+   cHeight = LTrim( Str( Int( ::nHeight ) ) )
+ 
+   cCode += CRLF + "   @ " + cTop + ", " + cLeft + ;
+            " BUTTON " + ::cVarName + ' PROMPT "' + ::GetText() + '"' + ;
+            " ;" + CRLF + '      SIZE ' + cWidth + ", " + cHeight + ;
+            " PIXEL OF " + ::oWnd:cVarName + " ;" + CRLF + ;
+            '      ACTION MsgInfo( "Not defined yet!" )' + CRLF
+ 
+return cCode
 
 //----------------------------------------------------------------------------//
 

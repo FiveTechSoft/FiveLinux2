@@ -11,6 +11,8 @@ CLASS TControl FROM TWindow
    DATA   lDrag  INIT .F.  // moveable with the mouse
    DATA   nStartRow, nStartCol // initial coors when design drag starts
 
+   METHOD GenLocals() INLINE ", " + ::cVarName
+
    METHOD GetCtrlIndex()
 
    METHOD LostFocus()

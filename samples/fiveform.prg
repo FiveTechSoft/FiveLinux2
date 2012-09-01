@@ -84,6 +84,7 @@ function BuildMenu()
       MENU
          MENUITEM "New..." ACTION New()
          MENUITEM "Open..." ACTION Open()
+         MENUITEM "Save..." ACTION Save()
          SEPARATOR
          MENUITEM "Preferences..."
          SEPARATOR
@@ -111,6 +112,8 @@ return oMenu
 function New()
 
    DEFINE WINDOW oWnd TITLE "Form"
+
+   oWnd:cVarName = "oForm1"
 
    oWnd:Center()
    oWnd:Show()
@@ -143,6 +146,10 @@ return nil
 //----------------------------------------------------------------------------//
 
 function Save()
+
+   local cFileName := cGetFile( "Save as", oWnd:cVarName + ".prg" )
+
+   MemoWrit( cFileName, oWnd:cGenPrg() ) 
 
 return nil
 
