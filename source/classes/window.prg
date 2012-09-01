@@ -191,6 +191,8 @@ METHOD cGenPrg() CLASS TWindow
    if ! Empty( ::aControls )
       cCode += CRLF
       AEval( ::aControls, { | oCtrl | cCode += oCtrl:cGenPRG() } )
+   else
+      cCode += CRLF
    endif
 
    cCode += CRLF + "   ACTIVATE WINDOW " + ::cVarName + " CENTERED" + CRLF + CRLF
