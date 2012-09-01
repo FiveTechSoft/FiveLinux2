@@ -48,7 +48,7 @@ extern ErrorLink
 	     [ SIZE <nWidth>, <nHeight> ] ;
 	  => ;
 	     <oWnd> := TWindow():New( [<cTitle>], [<oMenu>],;
-	     <nWidth>, <nHeight> )
+	     <nWidth>, <nHeight>, <(oWnd)> )
 
 #xcommand ACTIVATE WINDOW <oWnd> ;
              [ VALID <uValid> ] ;

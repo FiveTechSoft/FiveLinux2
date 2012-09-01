@@ -115,7 +115,22 @@ function New()
    oWnd:Center()
    oWnd:Show()
 
-   // oWnd:bLClicked = { || MsgInfo( "here" ) }
+   oWnd:bRClicked = { | nRow, nCol | MenuPopup( nRow, nCol, oWnd ) }
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+function MenuPopup( nRow, nCol, oWnd )
+
+   local oPopup
+
+   MENU oPopup POPUP
+      MENUITEM "Source code..." ;
+         ACTION MemoEdit( oWnd:cGenPrg(), "Source code" ) 
+   ENDMENU
+
+   ACTIVATE MENU oPopup OF oWnd AT nRow, nCol
 
 return nil
 

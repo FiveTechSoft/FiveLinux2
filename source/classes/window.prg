@@ -27,7 +27,7 @@ CLASS TWindow
    DATA      nClrText, nClrPane
    DATA      cVarName // variable name that holds this object
 
-   METHOD New( cTitle, oMenu, nWidth, nHeight )
+   METHOD New( cTitle, oMenu, nWidth, nHeight, cVarName )
 
    METHOD Activate( bValid, bLClicked, bRClicked, lMaximized, lCentered, bResized )
 
@@ -38,6 +38,8 @@ CLASS TWindow
 
    METHOD Center() INLINE WndCenter( ::hWnd )
 
+   METHOD cGenPrg()
+
    METHOD _cToolTip( cText ) INLINE WndSetToolTip( ::hWnd, cText )
 
    METHOD Disable() INLINE WndEnable( ::hWnd, .f. )
@@ -45,6 +47,8 @@ CLASS TWindow
    METHOD Enable() INLINE WndEnable( ::hWnd, .t. )
 
    METHOD End()
+
+   METHOD GenLocals()
 
    METHOD GetText() INLINE WndGetText( ::hWnd )
 
@@ -99,12 +103,13 @@ ENDCLASS
 
 //----------------------------------------------------------------------------//
 
-METHOD New( cTitle, oMenu, nWidth, nHeight ) CLASS TWindow
+METHOD New( cTitle, oMenu, nWidth, nHeight, cVarName ) CLASS TWindow
 
    DEFAULT cTitle := "FiveLinux", nWidth := 522, nHeight := 314
 
    ::hWnd   = CreateWindow()
    ::aControls = {}
+   ::cVarName = cVarName
 
    ::SetText( cTitle )
 
@@ -169,6 +174,28 @@ return nil
 
 //----------------------------------------------------------------------------//
 
+METHOD cGenPrg() CLASS TWindow
+
+   local cCode := ""
+
+   cCode += '#include "FiveLinux.ch"' + CRLF + CRLF
+   cCode += "//" + Replicate( "-", 76 ) + "//" + CRLF + CRLF
+   cCode += "function BuildWindow()" + CRLF + CRLF
+
+   cCode += ::GenLocals() + CRLF + CRLF
+
+   cCode += "   DEFINE WINDOW " + ::cVarName + ;
+            " SIZE " + AllTrim( Str( ::nWidth ) ) + ", " + ;
+                     + AllTrim( Str( ::nHeight ) ) + CRLF + CRLF
+   cCode += "   ACTIVATE WINDOW " + ::cVarName + " CENTERED" + CRLF + CRLF
+
+   cCode += "return " + ::cVarName + CRLF + CRLF
+   cCode += "//" + Replicate( "-", 76 ) + "//" + CRLF
+
+return cCode
+
+//----------------------------------------------------------------------------//
+
 METHOD End() CLASS TWindow
 
    local lEnd := .t.
@@ -188,6 +215,18 @@ METHOD End() CLASS TWindow
 
 return lEnd
 
+//----------------------------------------------------------------------------//
+
+METHOD GenLocals() CLASS TWindow
+ 
+   local cLocals := "   local " + ::cVarName, n
+ 
+   for n = 1 to Len( ::aControls )
+      cLocals += ::aControls[ n ]:GenLocals()
+   next
+ 
+return cLocals    
+ 
 //----------------------------------------------------------------------------//
 
 METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TWindow
