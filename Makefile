@@ -15,6 +15,7 @@ PRG_OBJS = ./obj/bar.o        \
 	   ./obj/filename.o   \
 	   ./obj/folder.o     \
 	   ./obj/font.o       \
+	   ./obj/form.o       \
 	   ./obj/get.o        \
 	   ./obj/group.o      \
 	   ./obj/harbour.o    \
@@ -49,6 +50,7 @@ PRGX_OBJS = ./objx/bar.o        \
 	   ./objx/file.o       \
 	   ./objx/folder.o     \
 	   ./objx/font.o       \
+	   ./objx/form.o       \
 	   ./objx/get.o        \
 	   ./objx/group.o      \
 	   ./objx/harbour.o    \

@@ -158,8 +158,53 @@ return Eval( ErrorBlock(), oError )
 //----------------------------------------------------------------------------//
 
 #ifndef __XHARBOUR__
+
+function Execute( cCode, ... )
+ 
+   local oHrb, cResult, bOldError, uRet
+   local cFWheaders := If( lIsDir( "./include" ), "./include", "../include" )
+   local cHBheaders := If( lIsDir( "./include" ), "./include", "../../harbour/include" )
+ 
+   // FReOpen_Stderr ( "comp.log", "w" )
+   oHrb = HB_CompileFromBuf( cCode, "-n", "-I" + cFWheaders, "-I" + cHBheaders )
+   if ! Empty( oHrb )
+      BEGIN SEQUENCE
+      bOldError = ErrorBlock( { | o | DoBreak( o ) } )
+      uRet = hb_HrbDo( hb_HrbLoad( oHrb ), ... )
+      END SEQUENCE
+      ErrorBlock( bOldError )
+   endif
+
+return uRet
+
+//----------------------------------------------------------------------------//
+ 
+static function DoBreak( oError )
+ 
+   local cInfo := oError:operation, n
+ 
+   if ValType( oError:Args ) == "A"
+      cInfo += "   Args:" + CRLF
+      for n = 1 to Len( oError:Args )
+         MsgInfo( oError:Args[ n ] )
+         cInfo += "[" + Str( n, 4 ) + "] = " + ValType( oError:Args[ n ] ) + ;
+                   "   " + cValToChar( oError:Args[ n ] ) + CRLF
+      next
+   endif
+ 
+   MsgStop( oError:Description + CRLF + cInfo,;
+            "Script error at line: " + AllTrim( Str( ProcLine( 2 ) ) ) )
+ 
+   BREAK
+ 
+return nil
+ 
+//----------------------------------------------------------------//
+
 function ASend( aObjects, cMsg, ... )
+
    local n
+
    if aObjects == nil
       return nil
    endif
@@ -167,9 +212,13 @@ function ASend( aObjects, cMsg, ... )
    for n = 1 to Len( aObjects )
       OSend( aObjects[ n ], cMsg, ... )
    next
+
    return nil
+
 #else   
+
 function ASend( ... ) //aObjects, cMsg, uPar1,...
+
    local aParams := hb_aParams()
    local aObjects, n, j
    local aParams2 := {}

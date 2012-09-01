@@ -2,7 +2,7 @@
 
 #include "FiveLinux.ch"
 
-static oWndMain, oWnd, aWindows := {}, oIni
+static oWndMain, oWnd, aForms := {}, oIni
 
 //----------------------------------------------------------------------------//
 
@@ -118,13 +118,13 @@ function New()
    oWnd:Center()
    oWnd:Show()
 
-   oWnd:bRClicked = { | nRow, nCol | MenuPopup( nRow, nCol, oWnd ) }
+   oWnd:bRClicked = { | nRow, nCol | ShowPopup( nRow, nCol, oWnd ) }
 
 return nil
 
 //----------------------------------------------------------------------------//
 
-function MenuPopup( nRow, nCol, oWnd )
+function ShowPopup( nRow, nCol, oWnd )
 
    local oPopup
 
@@ -139,9 +139,41 @@ return nil
 
 //----------------------------------------------------------------------------//
 
-function Open()
+function Open( cFileName )
 
+   local n
+ 
+   DEFAULT cFileName := cGetFile( "Select form to open", "*.prg" )
+ 
+   if File( cFileName )
+      oWnd = Execute( MemoRead( cFileName ) )
+      HB_SetClsHandle( oWnd, TForm():ClassH )
+      oWnd:Initiate()  
+      oWnd:lDesign = .T.
+      // oWnd:oInspector = oWndInsp
+      // oWnd:bLClicked = { | nRow, nCol, nFlags, Self | oWnd := Self, oWndInsp:SetForm( oWnd ) }
+      oWnd:bRClicked = { | nRow, nCol | ShowPopup( nRow, nCol, oWnd ) }
+ 
+      for n = 1 to Len( oWnd:aControls )
+         oWnd:aControls[ n ]:bGotFocus = GenLocalFocusBlock( oWnd:aControls[ n ] )
+         if oWnd:aControls[ n ]:ClassName() == "TSay"
+            oWnd:aControls[ n ]:lWantClick = .T.
+         endif   
+      next   
+ 
+      // oWndInsp:SetForm( oWnd )
+      // oWndInsp:Show()
+ 
+      AAdd( aForms, oWnd )
+   endif   
+ 
 return nil
+ 
+//----------------------------------------------------------------------------//
+
+static function GenLocalFocusBlock( oCtrl )
+ 
+return { || oWndInsp:SetControl( oCtrl ) }
 
 //----------------------------------------------------------------------------//
 
