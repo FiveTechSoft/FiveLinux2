@@ -191,7 +191,7 @@ function AddListbox()
  
    oLbx:cVarName = "oLbx" + oLbx:GetCtrlIndex()
    oLbx:bGotFocus = { || oWndInsp:SetControl( oLbx ) }
- 
+
    // oWndInsp:AddItem( oGet )
  
    // oWndInsp:SetFocus()
