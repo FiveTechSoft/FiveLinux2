@@ -9,7 +9,9 @@ CLASS TListBox FROM TControl
    DATA   lInit    // has it been initialized ?
 
    METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
-               bValid, lUpdate, lDesign, lPixel )
+               bValid, lUpdate, lDesign, lPixel, cVarName )
+
+   METHOD cGenPrg()
 
    METHOD HandleEvent( nMsg, nWParam, nLParam )
 
@@ -26,20 +28,21 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
-            bValid, lUpdate, lDesign, lPixel ) CLASS TListBox
+            bValid, lUpdate, lDesign, lPixel, cVarName ) CLASS TListBox
 
    local cText, nAt
 
    DEFAULT oWnd := GetWndDefault(), nWidth := 176, nHeight := 160,;
            lUpdate := .F., lDesign := .F., lPixel := .F.
 
-   ::bSetGet = bSetGet
-   ::hWnd    = CreateListBox()
-   ::bWhen   = bWhen
-   ::bValid  = bValid
-   ::lUpdate = lUpdate
-   ::lInit   = .f.
-   ::lDrag   = lDesign
+   ::bSetGet  = bSetGet
+   ::hWnd     = CreateListBox()
+   ::bWhen    = bWhen
+   ::bValid   = bValid
+   ::lUpdate  = lUpdate
+   ::lInit    = .f.
+   ::lDrag    = lDesign
+   ::cVarName = cVarName
 
    if ValType( cText := Eval( bSetGet ) ) == "C" .and. ;
       ( nAt := AScan( aItems, cText ) ) != 0
@@ -61,6 +64,29 @@ METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
    ::Show()
 
 return Self
+
+//----------------------------------------------------------------------------//
+
+METHOD cGenPrg() CLASS TListBox
+ 
+   local cCode := ""
+   local n
+ 
+   cCode += CRLF + "   @ " + Str( ::nTop, 3 ) + ", " + Str( ::nLeft, 3 ) + ;
+            " LISTBOX oLbx ITEMS { "
+ 
+   for n = 1 to Len( ::aItems )
+      if n > 1
+         cCode += ", "
+      endif
+      cCode += '"' + ::aItems[ n ] + '"'
+   next
+ 
+   cCode += " } ;" + CRLF + ;
+            "      SIZE " + Str( ::nWidth, 3 ) + ", " + ;
+            Str( ::nHeight, 3 ) + " PIXEL OF oWnd" + CRLF
+
+return cCode
 
 //----------------------------------------------------------------------------//
 

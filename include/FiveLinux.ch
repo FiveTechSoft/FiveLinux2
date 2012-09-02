@@ -249,7 +249,8 @@ extern ErrorLink
              [ <oLbx> := ] TListBox():New( <nRow>, <nCol>,;
 	     [<oWnd>], bSETGET( <cnVar> ), <aItems>, <nWidth>,;
 	     <nHeight>, [ \{|o| <uWhen> \} ],;
-	     [ \{|o| <uValid> \} ], <.update.>, <.design.>, <.pixel.> )
+	     [ \{|o| <uValid> \} ], <.update.>, <.design.>, <.pixel.>,;
+             <(oLbx)> )
 
 #xcommand @ <nRow>, <nCol> <met: METER, PROGRESS> [ <oMeter> VAR ] <nVar> ;
              [ TOTAL <nTotal> ] ;
