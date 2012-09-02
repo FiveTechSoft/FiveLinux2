@@ -5,7 +5,9 @@
 CLASS TSay FROM TControl
 
    METHOD New( nRow, nCol, oWnd, cText, nWidth, nHeight, lUpdate, oFont,;
-               lPixel, lDesign )
+               lPixel, lDesign, cVarName )
+
+   METHOD cGenPrg()
 
    METHOD SetText( cText ) INLINE SaySetText( ::hWnd, cText )
 
@@ -18,14 +20,15 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, oWnd, cText, nWidth, nHeight, lUpdate, oFont,;
-            lPixel, lDesign ) CLASS TSay
+            lPixel, lDesign, cVarName ) CLASS TSay
 
    DEFAULT oWnd := GetWndDefault(), nWidth := 70, nHeight := 20,;
            lUpdate := .f., lPixel := .F., lDesign := .F.
 
-   ::hWnd    = CreateSay( cText )
-   ::lUpdate = lUpdate
-   ::lDrag   = lDesign
+   ::hWnd     = CreateSay( cText )
+   ::lUpdate  = lUpdate
+   ::lDrag    = lDesign
+   ::cVarName = cVarName
 
    oWnd:AddControl( Self )
 
@@ -43,3 +46,14 @@ METHOD New( nRow, nCol, oWnd, cText, nWidth, nHeight, lUpdate, oFont,;
 return Self
 
 //----------------------------------------------------------------------------//
+ 
+METHOD cGenPrg() CLASS TSay 
+ 
+   local cCode := CRLF + "   @ " + Str( ::nTop, 3 ) + ", " + ; 
+                  Str( ::nLeft, 3 ) + " SAY " + ::cVarName + ;
+                  ' PROMPT "' + ::GetText() + '"' + ; 
+                  ' SIZE ' + Str( ::nWidth, 3 ) + ", " + ; 
+                  Str( ::nHeight, 3 ) + " PIXEL OF " + ::oWnd:cVarName + CRLF 
+return cCode 
+ 
+//----------------------------------------------------------------------------// 

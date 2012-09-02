@@ -285,7 +285,7 @@ extern ErrorLink
        => ;
              [ <oSay> := ] TSay():New( <nRow>, <nCol>, [<oWnd>],;
 	     <cText>, [<nWidth>], [<nHeight>], <.update.>, [ <oFont> ],;
-             <.pixel.>, <.design.> )
+             <.pixel.>, <.design.>, <(oSay)> )
 
 #xcommand @ <nRow>, <nCol> SCROLLBAR [ <oSbr> ] ;
              [ <of: OF, WINDOW, DIALOG> <oWnd> ] ;
