@@ -38,10 +38,10 @@ HB_FUNC( SAYSETTEXT )
 HB_FUNC( SAYGETTEXT )
 {
    GtkWidget * hWnd = ( GtkWidget * ) hb_parnl( 1 );
+   GList * children = gtk_container_get_children( ( GtkContainer * ) hWnd );
 
-   hb_retc( ( char * ) gtk_label_get_text( ( GtkLabel * ) hWnd ) );
+   hb_retc( ( char * ) gtk_label_get_text( children->data ) );
 }
-
 
 HB_FUNC( SAYSETJUSTIFY )
 {
