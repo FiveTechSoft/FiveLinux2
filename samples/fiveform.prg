@@ -64,9 +64,9 @@ function CloseAllWindows()
    local lExit := .F.
 
    if MsgYesNo( "Want to end ?" )
-      while Len( aWindows ) > 0
-         ATail( aWindows ):End()
-         ASize( aWindows, Len( aWindows ) - 1 )   
+      while Len( aForms ) > 0
+         ATail( aForms ):End()
+         ASize( aForms, Len( aForms ) - 1 )   
       end
       lExit = .T.
    endif   
