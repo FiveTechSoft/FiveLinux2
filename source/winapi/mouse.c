@@ -11,3 +11,14 @@ HB_FUNC( ISLBTNPRESSED )
 	
    hb_retl( state & GDK_BUTTON1_MASK );
 }
+
+HB_FUNC( MOUSEGETROW )
+{
+   GtkWidget * hWnd = ( GtkWidget * ) hb_parnl( 1 ); 
+   int x, y;
+   GdkModifierType state;
+   
+   gdk_window_get_pointer( hWnd->window, &x, &y, &state );
+	
+   hb_retnl( y );
+}

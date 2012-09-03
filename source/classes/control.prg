@@ -101,7 +101,11 @@ METHOD MouseMove( nRow, nCol ) CLASS TControl
 
    if ::lDrag
       if IsLBtnPressed( ::hWnd ) .and. ::nStartRow != nil
-         ::SetPos( nRow - ::nStartRow, nCol - ::nStartCol )
+         if ::ClassName() == "TLISTBOX"
+            ::SetPos( MouseGetRow( ::oWnd:hWnd ) - ::nStartRow, nCol - ::nStartCol )
+         else
+            ::SetPos( nRow - ::nStartRow, nCol - ::nStartCol )
+         endif
       endif
    endif
 
