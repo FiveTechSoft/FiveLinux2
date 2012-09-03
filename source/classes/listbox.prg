@@ -73,7 +73,7 @@ METHOD cGenPrg() CLASS TListBox
    local n
  
    cCode += CRLF + "   @ " + Str( ::nTop, 3 ) + ", " + Str( ::nLeft, 3 ) + ;
-            " LISTBOX oLbx ITEMS { "
+            " LISTBOX " + ::cVarName + " ITEMS { "
  
    for n = 1 to Len( ::aItems )
       if n > 1
@@ -84,7 +84,7 @@ METHOD cGenPrg() CLASS TListBox
  
    cCode += " } ;" + CRLF + ;
             "      SIZE " + Str( ::nWidth, 3 ) + ", " + ;
-            Str( ::nHeight, 3 ) + " PIXEL OF oWnd" + CRLF
+            Str( ::nHeight, 3 ) + " PIXEL OF " + ::oWnd:cVarName + CRLF
 
 return cCode
 

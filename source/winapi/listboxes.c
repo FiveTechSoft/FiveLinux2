@@ -64,8 +64,10 @@ HB_FUNC( LBXSETITEMS ) // ( hWnd, aItems )
    for( i = 0; i < iLen; i++ )
    {
       GtkWidget * listItem = gtk_list_item_new_with_label( hb_parc( 2, i + 1 ) );
+      
       gtk_object_set_data( GTK_OBJECT( listItem ), "index", ( gpointer ) ( i + 1 ) );
       gtk_container_add( GTK_CONTAINER( hWnd ), listItem );
+      gtk_widget_show( listItem );
    }
 }
 
