@@ -214,5 +214,3 @@ HB_FUNC( SETFONT )
 
    gtk_widget_modify_font( hWnd, ( PangoFontDescription * ) hb_parnl( 2 ) );
 }
-
-

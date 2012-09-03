@@ -19,8 +19,6 @@ CLASS TButton FROM TControl
 
    METHOD HandleEvent( nMsg, nWParam, nLParam )
 
-   METHOD LostFocus()
-
    METHOD SetText( cText ) INLINE BtnSetText( ::hWnd, cText )
 
    METHOD GetText() INLINE BtnGetText( ::hWnd )
@@ -128,23 +126,8 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TButton
    do case
       case nMsg == WM_CLICK
            return ::Click()
-
-      case nMsg == WM_LOSTFOCUS
-	   return ::LostFocus()
    endcase
 
 return Super:HandleEvent( nMsg, nWParam, nLParam )
-
-//----------------------------------------------------------------------------//
-
-METHOD LostFocus() CLASS TButton
-
-   if ::bValid != nil
-      if ! Eval( ::bValid, Self )
-         ::SetFocus()
-      endif
-   endif
-
-return nil
 
 //----------------------------------------------------------------------------//

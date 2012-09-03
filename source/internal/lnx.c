@@ -328,7 +328,7 @@ gboolean motion_notify_event( GtkWidget * hWnd, GdkEventMotion * event )
    int x, y;
    GdkModifierType state;
 
-   gdk_window_get_pointer( hWnd->window, &x, &y, &state );
+   gdk_window_get_pointer( gtk_widget_get_parent( hWnd )->window, &x, &y, &state );
 
    hb_vmPushSymbol( pFLH );
    hb_vmPushNil();
