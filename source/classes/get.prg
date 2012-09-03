@@ -8,7 +8,11 @@ CLASS TGet FROM TControl
    DATA   lPassword  // password style
 
    METHOD New( nRow, nCol, oWnd, bSetGet, cPicture, nWidth, nHeight,;
-               bWhen, bValid, lUpdate, lPassword, lDesign, lPixel )
+               bWhen, bValid, lUpdate, lPassword, oFont, lDesign, lPixel )
+
+   METHOD GenLocals()
+
+   METHOD cGenPrg()
 
    METHOD GetCurPos() INLINE GetGetCurPos( ::hWnd )
 
@@ -39,7 +43,7 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, oWnd, bSetGet, cPicture, nWidth, nHeight, bWhen,;
-            bValid, lUpdate, lPassword, lDesign, lPixel ) CLASS TGet
+            bValid, lUpdate, lPassword, oFont, lDesign, lPixel ) CLASS TGet
 
    DEFAULT oWnd := GetWndDefault(), nWidth := 60, nHeight := 25,;
            lUpdate := .f., lPassword := .F., lDesign := .F., lPixel := .F.
@@ -62,12 +66,36 @@ METHOD New( nRow, nCol, oWnd, bSetGet, cPicture, nWidth, nHeight, bWhen,;
    ::SetPos( nRow * If( lPixel, 1, 10 ), nCol * If( lPixel, 1, 10 ) )
    ::SetSize( nWidth, nHeight )
 
+   if ! Empty( oFont )
+      ::SetFont( oFont )
+   endif
+
    ::Link()
    ::Show()
 
 return Self
 
 //----------------------------------------------------------------------------//
+ 
+METHOD GenLocals() CLASS TGet
+ 
+return ", " + ::cVarName + ", " + "c" + SubStr( ::cVarName, 2 ) + " := " + ;
+       If( Empty( ::GetText() ), "Space( 20 )", '"' + ::GetText() + '"' )
+ 
+//---------------------------------------------------------------------------//
+ 
+METHOD cGenPrg() CLASS TGet
+ 
+   local cCode := ""
+ 
+   cCode += CRLF + "   @ " + Str( ::nTop, 3 ) + ", " + Str( ::nLeft, 3 ) + ;
+            " GET " + ::cVarName + " VAR " + "c" + SubStr( ::cVarName, 2 ) + ;
+            " SIZE " + Str( ::nWidth, 3 ) + ", " + Str( ::nHeight, 3 ) + ;
+            " PIXEL OF " + ::oWnd:cVarName + CRLF
+ 
+return cCode
+ 
+//---------------------------------------------------------------------------//
 
 METHOD LostFocus() CLASS TGet
 

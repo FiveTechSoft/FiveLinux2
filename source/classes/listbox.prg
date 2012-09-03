@@ -11,6 +11,8 @@ CLASS TListBox FROM TControl
    METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
                bValid, lUpdate, lDesign, lPixel, cVarName )
 
+   METHOD GenLocals()
+
    METHOD cGenPrg()
 
    METHOD HandleEvent( nMsg, nWParam, nLParam )
@@ -66,6 +68,12 @@ METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
 return Self
 
 //----------------------------------------------------------------------------//
+ 
+METHOD GenLocals() CLASS TListBox
+ 
+return ", " + ::cVarName + ", " + "c" + SubStr( ::cVarName, 2 )
+ 
+//---------------------------------------------------------------------------//
 
 METHOD cGenPrg() CLASS TListBox
  
@@ -73,7 +81,8 @@ METHOD cGenPrg() CLASS TListBox
    local n
  
    cCode += CRLF + "   @ " + Str( ::nTop, 3 ) + ", " + Str( ::nLeft, 3 ) + ;
-            " LISTBOX " + ::cVarName + " ITEMS { "
+            " LISTBOX " + ::cVarName + ;
+            " VAR " + "c" + SubStr( ::cVarName, 2 ) + " ITEMS { "
  
    for n = 1 to Len( ::aItems )
       if n > 1

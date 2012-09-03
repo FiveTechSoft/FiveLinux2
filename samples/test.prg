@@ -60,7 +60,7 @@ motion_notify_event( GtkWidget *widget, GdkEventMotion *event ) {
  
 HB_FUNC( TEST )
 {
-   GtkLabel * label = gtk_label_new( "hello" );
+   GtkLabel * label = gtk_entry_new();
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
  
 	button = gtk_button_new_with_label ("A button");
