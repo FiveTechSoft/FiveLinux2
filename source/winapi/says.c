@@ -49,3 +49,10 @@ HB_FUNC( SAYSETJUSTIFY )
 
    gtk_label_set_justify( ( GtkLabel * ) hWnd, ( GtkJustification ) hb_parnl( 2 ) );
 }
+
+HB_FUNC( SAYSETANGLE )
+{
+   GtkWidget * hWnd = ( GtkWidget * ) hb_parnl( 1 );
+  GList * children = gtk_container_get_children( ( GtkContainer * ) hWnd );
+   gtk_label_set_angle(  children->data ,  hb_parnl( 2 ) );
+}
