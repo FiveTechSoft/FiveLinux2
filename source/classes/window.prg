@@ -185,8 +185,9 @@ METHOD cGenPrg() CLASS TWindow
    cCode += ::GenLocals() + CRLF + CRLF
 
    cCode += "   DEFINE WINDOW " + ::cVarName + ;
-            " SIZE " + AllTrim( Str( ::nWidth ) ) + ", " + ;
-                     + AllTrim( Str( ::nHeight ) )
+            ' TITLE "' + ::GetText() + '" ;' + CRLF + ;
+            "      SIZE " + AllTrim( Str( ::nWidth ) ) + ", " + ;
+                          + AllTrim( Str( ::nHeight ) )
 
    if ! Empty( ::aControls )
       cCode += CRLF
