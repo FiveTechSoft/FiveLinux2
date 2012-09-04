@@ -60,14 +60,16 @@ return Self
 
 METHOD NewBar( oBar, cText, cImgName, bAction, lGroup ) CLASS TButton
 
-   DEFAULT lGroup := .f.
+   DEFAULT lGroup := .F.
 
-   ::hWnd = CreateBtn( oBar:hWnd, cText, cImgName, lGroup )
+   ::hWnd = CreateBtn( oBar:hWnd, cText, cImgName, lGroup,;
+                       If( File( cImgName ), cImgName, nil )  )
    ::bAction = bAction
 
    oBar:AddControl( Self )
 
    ::Link()
+   ::Show()
 
 return Self
 

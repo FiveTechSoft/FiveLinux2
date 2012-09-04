@@ -92,7 +92,7 @@ extern ErrorLink
 #xcommand DEFINE BUTTON [<oBtn>] ;
 	     [ OF <oBar> ] ;
 	     [ <label: LABEL, PROMPT> <cText> ] ;
-	     [ <img: IMAGE, RESOURCE> <cImgName> ] ;
+	     [ <img: IMAGE, FILENAME, RESOURCE> <cImgName> ] ;
 	     [ ACTION <uAction> ] ;
 	     [ <group: GROUP> ] ;
 	  => ;

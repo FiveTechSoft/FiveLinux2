@@ -36,6 +36,8 @@ HB_FUNC( CREATEBUTTON )
    hb_retnl( ( HB_ULONG ) hWnd );
 }
 
+void MsgInfo( char * msg );
+
 HB_FUNC( CREATEBTN )
 {
    GtkWidget * hToolBar = ( GtkWidget * ) gtk_object_get_data( GTK_OBJECT(
@@ -45,7 +47,15 @@ HB_FUNC( CREATEBTN )
    if( hb_parl( 4 ) )
       gtk_toolbar_append_space( GTK_TOOLBAR( hToolBar ) );
 
-   if( HB_ISCHAR( 3 ) )
+   if( HB_ISCHAR( 5 ) )
+   {
+      GtkWidget * image = gtk_image_new_from_file( hb_parc( 5 ) );
+
+      hWnd = gtk_toolbar_append_item( GTK_TOOLBAR( hToolBar), hb_parc( 2 ),
+                                      hb_parc( 6 ), "Private", 
+                                      image, NULL, NULL );
+   }
+   else if( HB_ISCHAR( 3 ) )
    {
       hWnd = gtk_toolbar_insert_stock( GTK_TOOLBAR( hToolBar ),
                                        hb_parc( 3 ),
