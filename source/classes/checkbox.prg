@@ -5,7 +5,11 @@
 CLASS TCheckBox FROM TControl
 
    METHOD New( nRow, nCol, cText, oWnd, bSetGet, nWidth, nHeight, bWhen,;
-               bValid, lUpdate )
+               bValid, lUpdate, lDesign, lPixel, cVarName )
+
+   METHOD GenLocals()
+
+   METHOD cGenPrg()
 
    METHOD Click()
 
@@ -23,21 +27,23 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, cText, oWnd, bSetGet, nWidth, nHeight, bWhen,;
-            bValid, lUpdate ) CLASS TCheckBox
+            bValid, lUpdate, lDesign, lPixel, cVarName ) CLASS TCheckBox
 
    DEFAULT cText := "_Checkbox", oWnd := GetWndDefault(), lUpdate := .f.,;
-           nWidth := 80, nHeight := 25
+           nWidth := 80, nHeight := 25, lDesign := .F., lPixel := .F.
 
    ::bSetGet   = bSetGet
    ::hWnd      = CreateCheckBox( cText )
    ::bWhen     = bWhen
    ::bValid    = bValid
    ::lUpdate   = lUpdate
+   ::lDrag     = lDesign
+   ::cVarName  = cVarName
 
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   ::SetPos( nRow * 10, nCol * 10 )
+   ::SetPos( nRow * If( lPixel, 1, 10 ), nCol * If( lPixel, 1, 10 ) )
    ::SetSize( nWidth, nHeight )
 
    ::Link()
@@ -58,17 +64,39 @@ METHOD Click() CLASS TCheckBox
 return nil
 
 //----------------------------------------------------------------------------//
+ 
+METHOD GenLocals() CLASS TCheckBox
+ 
+return ", " + ::cVarName + ", " + "l" + SubStr( ::cVarName, 2 ) + ;
+       " := " + If( ::GetCheck(), ".T.", ".F." )
+ 
+//----------------------------------------------------------------------------//
+ 
+METHOD cGenPRG() CLASS TCheckBox
+ 
+   local cCode := ""
+ 
+   cCode += CRLF + ;
+            "   @ " + LTrim( Str( ::nTop ) ) + ", " + ;
+            LTrim( Str( ::nLeft ) ) + ;
+            " CHECKBOX " + ::cVarName + " VAR " + "l" + SubStr( ::cVarName, 2 ) + ;
+            ' PROMPT "' + ::GetText() + ;
+            '" SIZE ' + ;
+            LTrim( Str( ::nWidth ) ) + ", " + ;
+            LTrim( Str( ::nHeight ) ) + ;
+            " PIXEL OF " + ::oWnd:cVarName + CRLF
+ 
+return cCode
+ 
+//----------------------------------------------------------------------------//
 
 METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TCheckBox
 
    do case
         case nMsg == WM_CLICK
              return ::Click()
-
-	case nMsg == WM_LOSTFOCUS
-	     return ::LostFocus()     
    endcase
 
-return nil
+return Super:HandleEvent( nMsg, nWParam, nLParam )
 
 //----------------------------------------------------------------------------//

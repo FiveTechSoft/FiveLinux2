@@ -158,11 +158,14 @@ extern ErrorLink
 	     [ WHEN <uWhen> ] ;
 	     [ VALID <uValid> ] ;
 	     [ <update: UPDATE> ] ;
+	     [ <design: DESIGN> ] ;       
+	     [ <pixel: PIXEL> ] ;       
 	  => ;
              [ <oCbx> := ] TCheckBox():New( <nRow>, <nCol>,;
 	     <cPrompt>, [<oWnd>], bSETGET( <lVar> ),;
 	     <nWidth>, <nHeight>, [ \{|o| <uWhen> \} ],;
-	     [ \{|o| <uValid> \} ], <.update.> )
+	     [ \{|o| <uValid> \} ], <.update.>, <.design.>,;
+             <.pixel.>, <(oCbx)> )
 
 #xcommand @ <nRow>, <nCol> COMBOBOX [ <oCbx> VAR ] <cVar> ;
              [ <of: OF, WINDOW, DIALOG> <oWnd> ] ;

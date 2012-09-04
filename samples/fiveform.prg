@@ -39,6 +39,9 @@ function Main()
    DEFINE BUTTON OF oBar PROMPT "Get" RESOURCE "get" ;
       ACTION AddGet()
 
+   DEFINE BUTTON OF oBar PROMPT "Checkbox" RESOURCE "checkbox" ;
+      ACTION AddCheckbox()
+
    DEFINE BUTTON OF oBar PROMPT "Listbox" RESOURCE "listbox" ;
       ACTION AddListbox()
 
@@ -111,9 +114,11 @@ return oMenu
 
 function New()
 
-   DEFINE WINDOW oWnd TITLE "Form"
+   DEFINE WINDOW oWnd
 
-   oWnd:cVarName = "oForm1"
+   AAdd( aForms, oWnd )
+   oWnd:cVarName = "oForm" + AllTrim( Str( Len( aForms ) ) )
+   oWnd:SetText( "Form" + AllTrim( Str( Len( aForms ) ) ) ) 
 
    oWnd:Center()
    oWnd:Show()
@@ -217,6 +222,25 @@ return nil
 
 //----------------------------------------------------------------------------//
  
+function AddCheckbox()
+ 
+   local oChk, lValue := .F.
+ 
+   @ 20, 20 CHECKBOX oChk VAR lValue PROMPT "Checkbox" OF oWnd ;
+      SIZE 90, 25 PIXEL DESIGN
+ 
+   oChk:cVarName = "oChk" + oChk:GetCtrlIndex()
+   oChk:bGotFocus = { || oWndInsp:SetControl( oChk ) }
+ 
+   // oWndInsp:AddItem( oChk )
+ 
+   // oWndInsp:SetFocus()
+   // oWnd:SetFocus()
+ 
+return nil
+ 
+//----------------------------------------------------------------------------//
+
 function AddGet()
  
    local oGet, cValue := Space( 20 )
