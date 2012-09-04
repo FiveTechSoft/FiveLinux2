@@ -1,4 +1,4 @@
-// Starting a forms designer
+// FiveLinux forms designer
 
 #include "FiveLinux.ch"
 
