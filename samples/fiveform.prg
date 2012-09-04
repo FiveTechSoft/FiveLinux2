@@ -30,7 +30,7 @@ function Main()
 
    DEFINE BUTTON OF oBar PROMPT "Preferences" RESOURCE "gtk-preferences" GROUP
 
-   DEFINE BUTTON OF oBar PROMPT "Say" ;
+   DEFINE BUTTON OF oBar PROMPT "Say" GROUP ;
       FILENAME "./../bitmaps/say.png" ;
       ACTION AddSay()
 
@@ -38,14 +38,16 @@ function Main()
       FILENAME "./../bitmaps/button.png" ;
       ACTION AddButton()
 
-   DEFINE BUTTON OF oBar PROMPT "Get" RESOURCE "get" ;
+   DEFINE BUTTON OF oBar PROMPT "Get" ;
+      FILENAME "./../bitmaps/get.png" ;
       ACTION AddGet()
 
    DEFINE BUTTON OF oBar PROMPT "Checkbox" ;
       FILENAME "./../bitmaps/checkbox.png" ;
       ACTION AddCheckbox()
 
-   DEFINE BUTTON OF oBar PROMPT "Listbox" RESOURCE "listbox" ;
+   DEFINE BUTTON OF oBar PROMPT "Listbox" ;
+      FILENAME "./../bitmaps/listbox.png" ;
       ACTION AddListbox()
 
    DEFINE BUTTON OF oBar PROMPT "Exit" RESOURCE "gtk-quit" GROUP ;
