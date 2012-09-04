@@ -7,7 +7,7 @@ CLASS TComboBox FROM TControl
    DATA   aItems   // The items displayed at the dropdown list
 
    METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight,;
-               bWhen, bValid, lUpdate, bChange )
+               bWhen, bValid, lUpdate, bChange, lDesign, lPixel, cVarName )
 
    METHOD Change() INLINE Eval( ::bSetGet, ::GetText() )
 
@@ -27,17 +27,20 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
-            bValid, lUpdate, bChange ) CLASS TComboBox
+            bValid, lUpdate, bChange, lDesign, lPixel, cVarName ) CLASS TComboBox
 
    DEFAULT oWnd := GetWndDefault(), lUpdate := lUpdate, nWidth := 175,;
-           nHeight := 22
+           nHeight := 22, aItems := { "one", "two", "three" }, lDesign := .F.,;
+           lPixel := .F.
 
-   ::bSetGet = bSetGet
-   ::hWnd    = CreateComboBox()
-   ::bWhen   = bWhen
-   ::bValid  = bValid
-   ::lUpdate = lUpdate
-   ::bChange = bChange
+   ::bSetGet  = bSetGet
+   ::hWnd     = CreateComboBox()
+   ::bWhen    = bWhen
+   ::bValid   = bValid
+   ::lUpdate  = lUpdate
+   ::bChange  = bChange
+   ::lDrag    = lDesign
+   ::cVarName = cVarName
 
    if Eval( bSetGet ) == nil
       Eval( bSetGet, aItems[ 1 ] )
@@ -49,10 +52,11 @@ METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   ::SetPos( nRow * 10, nCol * 10 )
+   ::SetPos( nRow * If( lPixel, 1, 10 ), nCol * If( lPixel, 1, 10 ) )
    ::SetSize( nWidth, nHeight )
 
    ::Link()
+   ::Show()
 
 return Self
 

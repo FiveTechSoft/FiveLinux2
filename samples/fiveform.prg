@@ -64,6 +64,8 @@ function Main()
 
    New()
 
+   BuildInspector()
+
    ACTIVATE WINDOW oWndMain ;
       VALID CloseAllWindows() 
 
@@ -86,6 +88,28 @@ function CloseAllWindows()
 return lExit
 
 //----------------------------------------------------------------------------//
+
+function BuildInspector()
+
+   local oWnd, cVal, oBrw1
+
+   DEFINE WINDOW oWnd TITLE "Inspector" ;
+      SIZE 287, 342
+
+   @ 12, 13 COMBOBOX cVal OF oWnd PIXEL SIZE 262, 20
+
+   @ 62, 13 BROWSE oBrw1 ;
+      FIELDS "", "" ;
+      HEADERS "Data", "Value" ;
+      SIZE 242, 250 PIXEL OF oWnd
+
+   oWnd:SetPos( 180, 70 )
+   oWnd:Show()   
+
+return oWnd
+
+//----------------------------------------------------------------------------//
+
 
 function BuildMenu()
 
@@ -129,7 +153,7 @@ function New()
    oWnd:cVarName = "oForm" + AllTrim( Str( Len( aForms ) ) )
    oWnd:SetText( "Form" + AllTrim( Str( Len( aForms ) ) ) ) 
 
-   oWnd:Center()
+   oWnd:SetPos( 200, 440 )
    oWnd:Show()
 
    oWnd:bRClicked = { | nRow, nCol | ShowPopup( nRow, nCol, oWnd ) }

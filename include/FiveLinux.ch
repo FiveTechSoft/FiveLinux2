@@ -178,11 +178,14 @@ extern ErrorLink
 	     [ VALID <uValid> ] ;
 	     [ <update: UPDATE> ] ;
 	     [ ON CHANGE <uChange> ] ;
+	     [ <design: DESIGN> ] ;       
+	     [ <pixel: PIXEL> ] ;       
 	  => ;
              [ <oCbx> := ] TComboBox():New( <nRow>, <nCol>,;
 	     [<oWnd>], bSETGET( <cVar> ), <aItems>, <nWidth>,;
 	     <nHeight>, [ \{|o| <uWhen> \} ],;
-	     [ \{|o| <uValid> \} ], <.update.>, [ \{|o| <uChange> \} ] )
+	     [ \{|o| <uValid> \} ], <.update.>, [ \{|o| <uChange> \} ],;
+             <.design.>, <.pixel.>, <(oCbx)> )
 
 #xcommand @ <nRow>, <nCol> FOLDER [<oFolder>] ;
 	     [ <of: OF, WINDOW, DIALOG> <oWnd> ] ;
