@@ -4,6 +4,7 @@
 gboolean PaintEvent( GtkWidget * widget, GdkEventExpose * event );
 gboolean KeyPressEvent( GtkWidget * hWnd, GdkEventKey * event );
 gboolean ButtonPressEvent( GtkWidget * hWnd, GdkEventButton * event );
+gboolean motion_notify_event( GtkWidget * hWnd, GdkEventMotion * event );
 
 #define GTK_BROWSE(obj)          GTK_CHECK_CAST(obj, gtk_browse_get_type(), GtkBrowse)
 #define GTK_BROWSE_CLASS(klass)  GTK_CHECK_CLASS_CAST(klass, gtk_browse_get_type(), GtkBrowseClass)
@@ -155,6 +156,18 @@ GtkWidget * gtk_browse_new( void )
 HB_FUNC( CREATEBROWSE )
 {
    GtkBrowse * hWnd = ( GtkBrowse * ) gtk_browse_new();
+
+   gtk_signal_connect( GTK_OBJECT( hWnd ), "button_press_event",
+                       ( GtkSignalFunc ) ButtonPressEvent, NULL );
+
+   gtk_signal_connect( GTK_OBJECT( hWnd ), "motion_notify_event",
+                       ( GtkSignalFunc ) motion_notify_event, NULL );
+
+   gtk_widget_set_events( ( GtkWidget * ) hWnd, GDK_EXPOSURE_MASK
+			 | GDK_LEAVE_NOTIFY_MASK
+			 | GDK_BUTTON_PRESS_MASK
+			 | GDK_POINTER_MOTION_MASK
+			 | GDK_POINTER_MOTION_HINT_MASK );
 
    hb_retnl( ( HB_ULONG ) hWnd );
 }

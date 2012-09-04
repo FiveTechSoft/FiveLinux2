@@ -10,8 +10,10 @@ CLASS TScrollBar FROM TControl
    DATA   bPos     // A codeblock to evaluate when the scrollbar thumbpos is moved
    DATA   nMax
 
-   METHOD New( nRow, nCol, oWnd, nWidth, nHeight, lVertical, lPixel, bGoDown,;
-               bGoUp, bPos )
+   METHOD New( nRow, nCol, oWnd, nWidth, nHeight, lVertical, bGoDown,;
+               bGoUp, bPos, lPixel, lDesign, cVarName )
+
+   METHOD cGenPrg()
 
    METHOD GoBottom() INLINE ::SetValue( ::nMax )
 
@@ -40,10 +42,10 @@ ENDCLASS
 
 //----------------------------------------------------------------------------//
 
-METHOD New( nRow, nCol, oWnd, nWidth, nHeight, lVertical, lPixel, bGoDown,;
-            bGoUp, bPos ) CLASS TScrollBar
+METHOD New( nRow, nCol, oWnd, nWidth, nHeight, lVertical, bGoDown,;
+            bGoUp, bPos, lPixel, lDesign, cVarName ) CLASS TScrollBar
 
-   DEFAULT oWnd := GetWndDefault(), lVertical := .t., lPixel := .f.
+   DEFAULT oWnd := GetWndDefault(), lVertical := .T., lPixel := .F.
 
    if nWidth == nil
       if lVertical
@@ -60,6 +62,7 @@ METHOD New( nRow, nCol, oWnd, nWidth, nHeight, lVertical, lPixel, bGoDown,;
    ::bGoDown = bGoDown
    ::bGoUp   = bGoUp
    ::bPos    = bPos
+   ::lDrag   = lDesign
 
    oWnd:AddControl( Self )
 
@@ -68,8 +71,28 @@ METHOD New( nRow, nCol, oWnd, nWidth, nHeight, lVertical, lPixel, bGoDown,;
    ::SetSize( nWidth, nHeight )
 
    ::Link()
+   ::Show()
 
 return Self
+
+//----------------------------------------------------------------------------//
+
+METHOD cGenPrg() CLASS TScrollBar
+
+   local cCode := ""
+   local cTop, cLeft, cWidth, cHeight
+ 
+   cTop    = LTrim( Str( Int( ::nTop ) ) )
+   cLeft   = LTrim( Str( Int( ::nLeft ) ) )
+   cWidth  = LTrim( Str( Int( ::nWidth ) ) )
+   cHeight = LTrim( Str( Int( ::nHeight ) ) )
+ 
+   cCode += CRLF + "   @ " + cTop + ", " + cLeft + ;
+            " SCROLLBAR " + ::cVarName + " ;" + CRLF + ;
+            '      SIZE ' + cWidth + ", " + cHeight + ;
+            " PIXEL OF " + ::oWnd:cVarName
+
+return cCode
 
 //----------------------------------------------------------------------------//
 

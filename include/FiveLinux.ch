@@ -112,12 +112,15 @@ extern ErrorLink
 	     [ <update: UPDATE> ] ;
 	     [ ON CHANGE <uChange> ] ;
 	     [ ON DBLCLICK <uDblClick> ] ;
+	     [ <design: DESIGN> ] ;       
+	     [ <pixel: PIXEL> ] ;       
 	  => ;
              [ <oBrw> := ] TWBrowse():New( <nRow>, <nCol>,;
 	     [<oWnd>], [\{<cHeading>\}], [\{<aColSizes>\}],;
 	     \{ [\{|o|<Expr1>\}] [ ,\{|o|<ExprN>\} ] \}, <cAlias>,;
 	     <nWidth>, <nHeight>, <.update.>, [ \{|o| <uChange> \} ],;
-             [ \{| nRow, nCol, o| <uDblClick> \} ] )
+             [ \{| nRow, nCol, o| <uDblClick> \} ], <.design.>,;
+             <.pixel.>, <(oBrw)> )
 		       
 #xcommand @ <nRow>, <nCol> BUTTON [ <oBtn> PROMPT ] <cPrompt> ;
              [ <of: OF, WINDOW, DIALOG> <oWnd> ] ;
@@ -295,16 +298,17 @@ extern ErrorLink
              [ SIZE <nWidth>, <nHeight> ] ;
 	     [ <v: VERTICAL> ] ;
 	     [ <h: HORIZONTAL> ] ;
-             [ <pixel: PIXEL> ] ;
 	     [ <dn: DOWN, ON DOWN> <uDownAction> ] ;
 	     [ <up: UP, ON UP> <uUpAction> ] ;
 	     [ <pos: ON THUMBPOS> <uPos> ] ;
+	     [ <pixel: PIXEL> ] ;       
+	     [ <design: DESIGN> ] ;       
 	  => ;
              [ <oSbr> := ] TScrollbar():New( <nRow>, <nCol>,;
 	     [<oWnd>], <nWidth>, <nHeight>,;
-	     (.not. <.h.> ) [ .or. <.v.> ], <.pixel.>,;
+	     (.not. <.h.> ) [ .or. <.v.> ],;
 	     [\{|o|<uDownAction>\}], [\{|o|<uUpAction>\}],;
-	     [\{|nPos| <uPos> \}] )
+	     [\{|nPos| <uPos> \}], <.pixel.>, <.design.>, <(oSbr)> )
 
 #xcommand MENU [ <oObjMenu> ] ;
 	     [ <popup: POPUP> ] ;

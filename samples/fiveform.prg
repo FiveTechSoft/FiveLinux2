@@ -50,6 +50,10 @@ function Main()
       FILENAME "./../bitmaps/listbox.png" ;
       ACTION AddListbox()
 
+   DEFINE BUTTON OF oBar PROMPT "Browse" ;
+      FILENAME "./../bitmaps/browse.png" ;
+      ACTION AddBrowse()
+
    DEFINE BUTTON OF oBar PROMPT "Exit" RESOURCE "gtk-quit" GROUP ;
       ACTION oWndMain:End()
 
@@ -200,6 +204,31 @@ return nil
 function LoadPreferences()
 
    INI oIni FILENAME "./fiveform.ini"
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+function AddBrowse()
+ 
+   local oBtn
+
+   @ 20, 20 BROWSE oBrw ;
+      FIELDS "", "", "" ;
+      HEADERS "Col 1", "Col 2", "Col 3" ;
+      COLSIZES 70, 70, 70 ;
+      OF oWnd SIZE 220, 162 PIXEL DESIGN
+
+   oBrw:cVarName = "oBrw" + oBrw:GetCtrlIndex()
+
+   // oBtn:bGotFocus = { || oWndInsp:SetControl( oBtn ) }
+ 
+   /*
+   oWndInsp:AddItem( oBtn )
+ 
+   oWndInsp:SetFocus()
+   oWnd:SetFocus()
+   */ 
 
 return nil
 

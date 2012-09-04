@@ -191,7 +191,7 @@ METHOD cGenPrg() CLASS TWindow
 
    if ! Empty( ::aControls )
       cCode += CRLF
-      AEval( ::aControls, { | oCtrl | cCode += oCtrl:cGenPRG() } )
+      AEval( ::aControls, { | oCtrl | If( oCtrl:ClassName() != "TSCROLLBAR", cCode += oCtrl:cGenPRG(),) } )
    else
       cCode += CRLF
    endif
@@ -231,7 +231,9 @@ METHOD GenLocals() CLASS TWindow
    local cLocals := "   local " + ::cVarName, n
  
    for n = 1 to Len( ::aControls )
-      cLocals += ::aControls[ n ]:GenLocals()
+      if ::aControls[ n ]:ClassName() != "TSCROLLBAR"
+         cLocals += ::aControls[ n ]:GenLocals()
+      endif
    next
  
 return cLocals    

@@ -21,11 +21,14 @@ CLASS TWBrowse FROM TControl
    DATA   nAt          // array current position
 
    METHOD New( nRow, nCol, oWnd, aHeaders, aColSizes, abFields, cAlias,;
-               nWidth, nHeight, lUpdate, bChange, bLDblClick )
+               nWidth, nHeight, lUpdate, bChange, bLDblClick, lDesign, lPixel,;
+               cVarName )
 
    METHOD AddCol( bData, cHeader, nSize ) 
 
    METHOD AddColumn( oCol ) INLINE AAdd( ::aColumns, oCol ), ::oHScroll:SetRange( 1, Len( ::aColumns ) )
+
+   METHOD cGenPrg() 
 
    METHOD DrawHeaders( nPEvent )
 
@@ -57,6 +60,8 @@ CLASS TWBrowse FROM TControl
 
    METHOD LButtonDown( nRow, nCol )
 
+   METHOD MouseMove( nRow, nCol )
+
    METHOD nRowCount() INLINE BrwRowCount( ::hWnd )
 
    METHOD PageDown( nLines )
@@ -80,21 +85,23 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, oWnd, aHeaders, aColSizes, abFields, cAlias, nWidth,;
-            nHeight, lUpdate, bChange, bLDblClick ) CLASS TWBrowse
+            nHeight, lUpdate, bChange, bLDblClick, lDesign, lPixel, cVarName ) CLASS TWBrowse
 
    local n
 
    DEFAULT cAlias := Alias(), nWidth := 460, nHeight := 240, lUpdate := .f.,;
-           oWnd := GetWndDefault()
+           oWnd := GetWndDefault(), lPixel := .F., lDesign := .F.
 
    ::hWnd       = CreateBrowse()
    ::aColumns   = {}
    ::cAlias     = cAlias
-   ::lHitTop    = .f.
-   ::lHitBottom = .f.
+   ::lHitTop    = .F.
+   ::lHitBottom = .F.
    ::nRowPos    = 1
    ::nColPos    = 1
-   ::lSetVRange = .f.
+   ::lSetVRange = .F.
+   ::lDrag      = lDesign
+   ::cVarName   = cVarName
 
    if ! Empty( cAlias )
       ::bGoBottom  = { || ( ::cAlias )->( DbGoBottom() ) }
@@ -111,10 +118,11 @@ METHOD New( nRow, nCol, oWnd, aHeaders, aColSizes, abFields, cAlias, nWidth,;
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   ::SetPos( nRow := ( nRow * 10 ), nCol := ( nCol * 10 ) )
+   ::SetPos( nRow := ( nRow * If( lPixel, 1, 10 ) ), nCol := ( nCol * If( lPixel, 1, 10 ) ) )
    ::SetSize( nWidth, nHeight )
 
    ::Link()
+   ::Show()
 
    if Empty( aHeaders )
       aHeaders = GetFieldNames()
@@ -170,6 +178,26 @@ METHOD AddCol( bData, cHeader, nSize ) CLASS TWBrowse
    ::oHScroll:SetRange( 1, Len( ::aColumns ) )
 
 return oCol
+
+//----------------------------------------------------------------------------//
+
+METHOD cGenPrg() CLASS TWBrowse
+
+   local cCode := "" 
+   local cTop, cLeft, cWidth, cHeight
+ 
+   cTop    = LTrim( Str( Int( ::nTop ) ) )
+   cLeft   = LTrim( Str( Int( ::nLeft ) ) )
+   cWidth  = LTrim( Str( Int( ::nWidth ) ) )
+   cHeight = LTrim( Str( Int( ::nHeight ) ) )
+ 
+   cCode += CRLF + "   @ " + cTop + ", " + cLeft + ;
+            " BROWSE " + ::cVarName + " ;" + CRLF + ;
+            '      FIELDS "", "", ""' + " ;" + CRLF + ;
+            "      SIZE " + cWidth + ", " + cHeight + ;
+            " PIXEL OF " + ::oWnd:cVarName + CRLF
+
+return cCode
 
 //----------------------------------------------------------------------------//
 
@@ -432,9 +460,6 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TWBrowse
       case nMsg == WM_KEYDOWN
            ::KeyDown( nWParam )
 
-      case nMsg == WM_LBUTTONDOWN
-           ::LButtonDown( nWParam, nLParam )
-
       case nMsg == WM_LDBLCLICK
            ::LDblClick( nWParam, nLParam )
 
@@ -446,7 +471,7 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TWBrowse
 
    endcase
 
-return nil
+return Super:HandleEvent( nMsg, nWParam, nLParam )
 
 //----------------------------------------------------------------------------//
 
@@ -498,6 +523,10 @@ METHOD LButtonDown( nRow, nCol ) CLASS TWBrowse
    local nRowPos  := ::nRowPos
    local nSkipped
 
+   if ::lDrag
+      return Super:LButtonDown( nRow, nCol )
+   endif
+
    ::SetFocus()
 
    if nRowAt == 0 // .or. nRowAt == nRowPos // so we can use bLClicked on the selected row
@@ -518,6 +547,21 @@ METHOD LButtonDown( nRow, nCol ) CLASS TWBrowse
    endif
 
    ::DrawSelect()
+
+return nil
+
+//----------------------------------------------------------------------------//
+
+METHOD MouseMove( nRow, nCol ) CLASS TWBrowse
+
+   if ::lDrag
+      if IsLBtnPressed( ::hWnd ) .and. ::nStartRow != nil
+         Super:MouseMove( nRow, nCol )
+
+         ::oVScroll:SetPos( ::nTop, ::nLeft + ::nWidth + 2 )
+         ::oHScroll:SetPos( ::nTop + ::nHeight + 2, ::nLeft )
+      endif
+   endif
 
 return nil
 
