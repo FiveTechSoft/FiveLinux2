@@ -79,11 +79,11 @@ METHOD cGenPRG() CLASS TCheckBox
    cCode += CRLF + ;
             "   @ " + LTrim( Str( ::nTop ) ) + ", " + ;
             LTrim( Str( ::nLeft ) ) + ;
-            " CHECKBOX " + ::cVarName + " VAR " + "l" + SubStr( ::cVarName, 2 ) + ;
-            ' PROMPT "' + ::GetText() + ;
-            '" SIZE ' + ;
-            LTrim( Str( ::nWidth ) ) + ", " + ;
-            LTrim( Str( ::nHeight ) ) + ;
+            " CHECKBOX " + ::cVarName + ;
+            " VAR " + "l" + SubStr( ::cVarName, 2 ) + " ;" + CRLF + ;
+            '      PROMPT "' + ::GetText() + ;
+            " SIZE " + LTrim( Str( ::nWidth ) ) + ", " + ;
+                       LTrim( Str( ::nHeight ) ) + ;
             " PIXEL OF " + ::oWnd:cVarName + CRLF
  
 return cCode
