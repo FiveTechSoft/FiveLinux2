@@ -15,6 +15,8 @@ CLASS TSay FROM TControl
 
    METHOD SetJustify( nType ) INLINE SaySetJustify( ::hWnd, nType ) // LEFT = 0, RIGHT = 1, CENTER = 2, FILL = 3
 
+   METHOD setangle(nAngle) INLINE SaySetAngle(::hWnd,nAngle)
+
 ENDCLASS
 
 //----------------------------------------------------------------------------//

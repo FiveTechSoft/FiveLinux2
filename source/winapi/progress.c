@@ -23,3 +23,13 @@ HB_FUNC( PROSETTEXT )
 
    gtk_progress_bar_set_text( ( GtkProgressBar * ) hWnd, hb_parc( 2 ) );
 }
+
+
+HB_FUNC( PROSETVERTICAL )
+{
+   GtkWidget * hWnd = ( GtkWidget * ) hb_parnl( 1 );
+
+   gtk_progress_bar_set_orientation( ( GtkProgressBar * ) hWnd, GTK_PROGRESS_BOTTOM_TO_TOP );
+}
+
+

@@ -15,6 +15,8 @@ CLASS TProgress FROM TControl
    METHOD SetTotal( nTotal ) INLINE ::nTotal := nTotal,;
                                     ::Set( Eval( ::bSetGet ) )
 
+   METHOD SetVertical() INLINE ProSetVertical( ::hWnd )
+
 ENDCLASS
 
 //----------------------------------------------------------------------------//
