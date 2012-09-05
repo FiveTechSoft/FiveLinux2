@@ -102,10 +102,13 @@ function BuildInspector()
 
    @ 12, 13 COMBOBOX cVal OF oWnd PIXEL SIZE 262, 20
 
-   @ 62, 13 BROWSE oBrw1 ;
+   @ 46, 13 FOLDER oFld PROMPTS "Properties", "Events" ;
+      OF oWnd PIXEL SIZE 262, 287
+
+   @ 75, 14 BROWSE oBrw1 ;
       FIELDS "", "" ;
       HEADERS "Data", "Value" ;
-      SIZE 242, 250 PIXEL OF oWnd
+      SIZE 240, 240 PIXEL OF oFld:aDialogs[ 1 ]
 
    oWnd:SetPos( 180, 70 )
    oWnd:Show()   

@@ -1,37 +1,48 @@
 #include "FiveLinux.ch"
 
+//----------------------------------------------------------------------------//
+
 CLASS TFolder FROM TControl
 
    DATA   aPrompts   // The labels to display on each folder page
    DATA   aDialogs   // An array of dialogboxes, one by each folder page
 
-   METHOD New( nRow, nCol, oWnd, aPrompts, nWidth, nHeight, lUpdate )
+   METHOD New( nRow, nCol, oWnd, aPrompts, nWidth, nHeight, lUpdate,;
+               lDesign, lPixel, cVarName )
 
    METHOD SetPrompts( aPrompts )
 
 ENDCLASS
 
-METHOD New( nRow, nCol, oWnd, aPrompts, nWidth, nHeight, lUpdate ) ;
-   CLASS TFolder
+//----------------------------------------------------------------------------//
+
+METHOD New( nRow, nCol, oWnd, aPrompts, nWidth, nHeight, lUpdate, lDesign,;
+            lPixel, cVarName ) CLASS TFolder
 
    DEFAULT oWnd := GetWndDefault(), aPrompts := { "_One", "_Two", "T_hree" },;
-           lUpdate := .f., nWidth := 288, nHeight := 196
+           lUpdate := .F., nWidth := 288, nHeight := 196, lDesign := .F.,;
+           lPixel := .F.
 
    ::hWnd     = CreateFolder()
    ::aPrompts = aPrompts
    ::lUpdate  = lUpdate
+   ::lDrag    = lDesign
+   ::cVarName = cVarName
 
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   SetCoors( ::hWnd, nRow * 10, nCol * 10 )
-   SetSize( ::hWnd, nWidth, nHeight )
+   ::SetPos( nRow * If( lPixel, 1, 10 ), nCol * If( lPixel, 1, 10 ) )
+   ::SetSize( nWidth, nHeight )
 
    ::Link()
 
    ::SetPrompts()
+   ::Show()
 
 return Self
+
+//----------------------------------------------------------------------------//
 
 METHOD SetPrompts( aPrompts ) CLASS TFolder
 
@@ -51,3 +62,5 @@ METHOD SetPrompts( aPrompts ) CLASS TFolder
    next
 
 return nil
+
+//----------------------------------------------------------------------------//

@@ -192,10 +192,12 @@ extern ErrorLink
              [ <prm: PROMPT, PROMPTS, ITEMS> <cPrompt,...> ] ;
 	     [ SIZE <nWidth>, <nHeight> ] ;
 	     [ <update: UPDATE> ] ;
+	     [ <design: DESIGN> ] ;       
+	     [ <pixel: PIXEL> ] ;       
 	  => ;
 	     [<oFolder> := ] TFolder():New( <nRow>, <nCol>,;
 	     [<oWnd>], [\{<cPrompt>\}], <nWidth>, <nHeight>,;
-	     <.update.> )
+	     <.update.>, <.design.>, <.pixel.>, <(oFolder)> )
 
 #xcommand @ <nRow>, <nCol> GET [ <oGet> VAR ] <uVar> ;
 	     [ <of: OF, WINDOW, DIALOG> <oWnd> ] ;
