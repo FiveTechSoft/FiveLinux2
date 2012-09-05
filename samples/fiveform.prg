@@ -131,7 +131,7 @@ return oMenu
 
 function New()
 
-   DEFINE WINDOW oWnd
+   oWnd = TForm():New()
 
    AAdd( aForms, oWnd )
    oWnd:cVarName = "oForm" + AllTrim( Str( Len( aForms ) ) )
@@ -147,6 +147,7 @@ function New()
       oWndInsp = BuildInspector()
    endif 
 
+   oWnd:oInspector = oWndInsp
    oWndInsp:SetForm( oWnd )
 
 return nil
@@ -236,14 +237,11 @@ function AddBrowse()
 
    oBrw:cVarName = "oBrw" + oBrw:GetCtrlIndex()
 
-   // oBtn:bGotFocus = { || oWndInsp:SetControl( oBtn ) }
+   oBrw:bGotFocus = { || oWndInsp:SetControl( oBtn ) }
  
-   /*
-   oWndInsp:AddItem( oBtn )
- 
-   oWndInsp:SetFocus()
+   oWndInsp:AddItem( oBrw )
+   oWndInsp:SetControl( oBrw )
    oWnd:SetFocus()
-   */ 
 
 return nil
 
@@ -262,8 +260,6 @@ function AddButton()
 
    oWndInsp:AddItem( oBtn )
    oWndInsp:SetControl( oBtn )
- 
-   oWndInsp:Refresh()
    oWnd:SetFocus()
 
 return nil
@@ -280,10 +276,9 @@ function AddCheckbox()
    oChk:cVarName = "oChk" + oChk:GetCtrlIndex()
    oChk:bGotFocus = { || oWndInsp:SetControl( oChk ) }
  
-   // oWndInsp:AddItem( oChk )
- 
-   // oWndInsp:SetFocus()
-   // oWnd:SetFocus()
+   oWndInsp:AddItem( oChk )
+   oWndInsp:SetControl( oChk )
+   oWnd:SetFocus()
  
 return nil
  
@@ -299,9 +294,8 @@ function AddComboBox()
    oCbx:cVarName = "oCbx" + oCbx:GetCtrlIndex()
    oCbx:bGotFocus = { || oWndInsp:SetControl( oCbx ) }
 
-   // oWndInsp:AddItem( oCbx )
- 
-   // oWndInsp:SetFocus()
+   oWndInsp:AddItem( oCbx )
+   oWndInsp:SetControl( oCbx )
    oWnd:SetFocus()
  
 return nil
@@ -318,9 +312,8 @@ function AddGet()
    oGet:cVarName = "oGet" + oGet:GetCtrlIndex()
    oGet:bGotFocus = { || oWndInsp:SetControl( oGet ) }
  
-   // oWndInsp:AddItem( oGet )
- 
-   // oWndInsp:SetFocus()
+   oWndInsp:AddItem( oGet )
+   oWndInsp:SetControl( oGet )
    oWnd:SetFocus()
  
 return nil
@@ -337,9 +330,8 @@ function AddListbox()
    oLbx:cVarName = "oLbx" + oLbx:GetCtrlIndex()
    oLbx:bGotFocus = { || oWndInsp:SetControl( oLbx ) }
 
-   // oWndInsp:AddItem( oGet )
- 
-   // oWndInsp:SetFocus()
+   oWndInsp:AddItem( oLbx )
+   oWndInsp:SetControl( oLbx )
    oWnd:SetFocus()
  
 return nil
@@ -357,14 +349,11 @@ function AddSay()
 
    oSay:bLClicked = { || MsgBeep() }
 
-   // oBtn:bGotFocus = { || oWndInsp:SetControl( oBtn ) }
+   oSay:bGotFocus = { || oWndInsp:SetControl( oSay ) }
  
-   /*
-   oWndInsp:AddItem( oBtn )
- 
-   oWndInsp:SetFocus()
+   oWndInsp:AddItem( oSay )
+   oWndInsp:SetControl( oSay )
    oWnd:SetFocus()
-   */ 
 
 return nil
 

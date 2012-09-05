@@ -57,6 +57,9 @@ METHOD LButtonDown( nRow, nCol ) CLASS TControl
    if ::lDrag
       ::nStartRow = nRow
       ::nStartCol = nCol
+      if ::oWnd:oInspector != nil
+         ::oWnd:oInspector:SetControl( Self )
+      endif
    endif
 
    Super:LButtonDown( nRow, nCol )
