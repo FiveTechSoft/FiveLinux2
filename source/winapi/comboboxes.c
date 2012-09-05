@@ -8,6 +8,8 @@
 gint LostFocusEvent( GtkWidget * hWnd, GdkEventFocus * event,
                      gpointer user_data );
 void CbxChangeEvent( GtkList * hWnd, GtkWidget * hItem, gpointer user_data );
+gboolean button_press_event( GtkWidget * hWnd, GdkEventButton * event );
+gboolean motion_notify_event( GtkWidget * hWnd, GdkEventMotion * event );
 
 HB_FUNC( CREATECOMBOBOX )
 {
@@ -20,6 +22,18 @@ HB_FUNC( CREATECOMBOBOX )
 
    gtk_signal_connect( GTK_OBJECT( GTK_COMBO( hWnd )->list ), "select-child",
                        GTK_SIGNAL_FUNC( CbxChangeEvent ), ( gpointer ) hWnd );
+
+   gtk_signal_connect( GTK_OBJECT( hWnd ), "button_press_event",
+                       ( GtkSignalFunc ) button_press_event, NULL );
+
+   gtk_signal_connect( GTK_OBJECT( hWnd ), "motion_notify_event",
+                       ( GtkSignalFunc ) motion_notify_event, NULL );
+
+   gtk_widget_set_events( hWnd, GDK_EXPOSURE_MASK
+			 | GDK_LEAVE_NOTIFY_MASK
+			 | GDK_BUTTON_PRESS_MASK
+			 | GDK_POINTER_MOTION_MASK
+			 | GDK_POINTER_MOTION_HINT_MASK );
 
    hb_retnl( ( HB_ULONG ) hWnd );
 }

@@ -28,9 +28,9 @@ function Main()
    DEFINE BUTTON OF oBar PROMPT "Save" RESOURCE "gtk-save" ;
       ACTION Save()
 
-   DEFINE BUTTON OF oBar PROMPT "Preferences" RESOURCE "gtk-preferences" GROUP
+   DEFINE BUTTON OF oBar RESOURCE "gtk-preferences"
 
-   DEFINE BUTTON OF oBar PROMPT "Say" GROUP ;
+   DEFINE BUTTON OF oBar PROMPT "Say" ;
       FILENAME "./../bitmaps/say.png" ;
       ACTION AddSay()
 
@@ -42,13 +42,17 @@ function Main()
       FILENAME "./../bitmaps/get.png" ;
       ACTION AddGet()
 
-   DEFINE BUTTON OF oBar PROMPT "Checkbox" ;
+   DEFINE BUTTON OF oBar PROMPT "CheckBox" ;
       FILENAME "./../bitmaps/checkbox.png" ;
       ACTION AddCheckbox()
 
    DEFINE BUTTON OF oBar PROMPT "Listbox" ;
       FILENAME "./../bitmaps/listbox.png" ;
       ACTION AddListbox()
+
+   DEFINE BUTTON OF oBar PROMPT "ComboBox" ;
+      FILENAME "./../bitmaps/combobox.png" ;
+      ACTION AddComboBox()
 
    DEFINE BUTTON OF oBar PROMPT "Browse" ;
       FILENAME "./../bitmaps/browse.png" ;
@@ -109,7 +113,6 @@ function BuildInspector()
 return oWnd
 
 //----------------------------------------------------------------------------//
-
 
 function BuildMenu()
 
@@ -294,6 +297,25 @@ function AddCheckbox()
  
    // oWndInsp:SetFocus()
    // oWnd:SetFocus()
+ 
+return nil
+ 
+//----------------------------------------------------------------------------//
+
+function AddComboBox()
+ 
+   local oCbx, cItem, aItems := { "one", "two", "three" }
+ 
+   @ 20, 20 COMBOBOX oCbx VAR cItem ITEMS aItems OF oWnd ;
+      SIZE 120, 120 PIXEL DESIGN
+ 
+   oCbx:cVarName = "oCbx" + oCbx:GetCtrlIndex()
+   oCbx:bGotFocus = { || oWndInsp:SetControl( oCbx ) }
+
+   // oWndInsp:AddItem( oCbx )
+ 
+   // oWndInsp:SetFocus()
+   oWnd:SetFocus()
  
 return nil
  

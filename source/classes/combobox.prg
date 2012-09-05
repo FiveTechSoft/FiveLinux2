@@ -9,6 +9,10 @@ CLASS TComboBox FROM TControl
    METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight,;
                bWhen, bValid, lUpdate, bChange, lDesign, lPixel, cVarName )
 
+   METHOD GenLocals()
+
+   METHOD cGenPrg()
+
    METHOD Change() INLINE Eval( ::bSetGet, ::GetText() )
 
    METHOD HandleEvent( nMsg, nWParam, nLParam )
@@ -61,17 +65,44 @@ METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
 return Self
 
 //----------------------------------------------------------------------------//
+ 
+METHOD GenLocals() CLASS TComboBox
+ 
+return ", " + ::cVarName + ", " + "c" + SubStr( ::cVarName, 2 )
+ 
+//---------------------------------------------------------------------------//
+
+METHOD cGenPrg() CLASS TComboBox
+ 
+   local cCode := ""
+   local n
+ 
+   cCode += CRLF + "   @ " + Str( ::nTop, 3 ) + ", " + Str( ::nLeft, 3 ) + ;
+            " COMBOBOX " + ::cVarName + ;
+            " VAR " + "c" + SubStr( ::cVarName, 2 ) + " ITEMS { "
+ 
+   for n = 1 to Len( ::aItems )
+      if n > 1
+         cCode += ", "
+      endif
+      cCode += '"' + ::aItems[ n ] + '"'
+   next
+ 
+   cCode += " } ;" + CRLF + ;
+            "      SIZE " + Str( ::nWidth, 3 ) + ", " + ;
+            Str( ::nHeight, 3 ) + " PIXEL OF " + ::oWnd:cVarName + CRLF
+
+return cCode
+
+//----------------------------------------------------------------------------//
 
 METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TComboBox
 
    do case
         case nMsg == WM_CHANGE
              return ::Change()
-
-	case nMsg == WM_LOSTFOCUS
-             return ::LostFocus()
    endcase
 
-return nil
+return Super:HandleEvent( nMsg, nWParam, nLParam )
 
 //----------------------------------------------------------------------------//
