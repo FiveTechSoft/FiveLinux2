@@ -27,6 +27,10 @@ CLASS TWindow
    DATA      nClrText, nClrPane
    DATA      cVarName // variable name that holds this object
 
+   CLASSDATA aProperties INIT { "cTitle", "cVarName", "nClrText",;
+                                "nClrPane", "nTop", "nLeft", "nWidth", "nHeight",;
+                                "Cargo", "oMenu", "oFont" }
+
    METHOD New( cTitle, oMenu, nWidth, nHeight, cVarName )
 
    METHOD Activate( bValid, bLClicked, bRClicked, lMaximized, lCentered, bResized )
@@ -39,6 +43,8 @@ CLASS TWindow
    METHOD Center() INLINE WndCenter( ::hWnd )
 
    METHOD cGenPrg()
+
+   METHOD cTitle() INLINE ::GetText()
 
    METHOD _cToolTip( cText ) INLINE WndSetToolTip( ::hWnd, cText )
 

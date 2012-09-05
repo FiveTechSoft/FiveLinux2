@@ -2,7 +2,11 @@
 
 #include "FiveLinux.ch"
 
-static oWndMain, oWnd, aForms := {}, oIni
+#define CLR_GRAY1 0xCCCCCC
+#define CLR_GRAY2 0xEEEEEE
+#define CLR_TEXT  0x303030
+
+static oWndMain, oWnd, aForms := {}, oCtrl, oIni
 
 //----------------------------------------------------------------------------//
 
@@ -106,9 +110,13 @@ function BuildInspector()
       OF oWnd PIXEL SIZE 262, 287
 
    @ 75, 14 BROWSE oBrw1 ;
-      FIELDS "", "" ;
+      FIELDS oCtrl:aProperties[ oBrw1:nAt ],;
+             cValToChar( __ObjSendMsg( oCtrl, oCtrl:aProperties[ oBrw1:nAt ] ) ) ;
       HEADERS "Data", "Value" ;
       SIZE 240, 240 PIXEL OF oFld:aDialogs[ 1 ]
+
+   oBrw1:SetArray( oCtrl:aProperties )
+   oBrw1:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
 
    oWnd:SetPos( 180, 70 )
    oWnd:Show()   
@@ -163,6 +171,8 @@ function New()
    oWnd:Show()
 
    oWnd:bRClicked = { | nRow, nCol | ShowPopup( nRow, nCol, oWnd ) }
+
+   oCtrl = oWnd
 
 return nil
 
