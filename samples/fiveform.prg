@@ -6,7 +6,7 @@
 #define CLR_GRAY2 0xEEEEEE
 #define CLR_TEXT  0x303030
 
-static oWndMain, oWnd, aForms := {}, oCtrl, oIni
+static oWndMain, oWnd, aForms := {}, oWndInsp, oIni
 
 //----------------------------------------------------------------------------//
 
@@ -72,8 +72,6 @@ function Main()
 
    New()
 
-   BuildInspector()
-
    ACTIVATE WINDOW oWndMain ;
       VALID CloseAllWindows() 
 
@@ -94,34 +92,6 @@ function CloseAllWindows()
    endif   
 
 return lExit
-
-//----------------------------------------------------------------------------//
-
-function BuildInspector()
-
-   local oWnd, cVal, oBrw1
-
-   DEFINE WINDOW oWnd TITLE "Inspector" ;
-      SIZE 287, 342
-
-   @ 12, 13 COMBOBOX cVal OF oWnd PIXEL SIZE 262, 20
-
-   @ 46, 13 FOLDER oFld PROMPTS "Properties", "Events" ;
-      OF oWnd PIXEL SIZE 262, 287
-
-   @ 75, 14 BROWSE oBrw1 ;
-      FIELDS oCtrl:aProperties[ oBrw1:nAt ],;
-             cValToChar( __ObjSendMsg( oCtrl, oCtrl:aProperties[ oBrw1:nAt ] ) ) ;
-      HEADERS "Data", "Value" ;
-      SIZE 240, 240 PIXEL OF oFld:aDialogs[ 1 ]
-
-   oBrw1:SetArray( oCtrl:aProperties )
-   oBrw1:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
-
-   oWnd:SetPos( 180, 70 )
-   oWnd:Show()   
-
-return oWnd
 
 //----------------------------------------------------------------------------//
 
@@ -170,9 +140,14 @@ function New()
    oWnd:SetPos( 200, 440 )
    oWnd:Show()
 
+   oWnd:bLClicked = { | nRow, nCol | oWndInsp:SetForm( oWnd ) }
    oWnd:bRClicked = { | nRow, nCol | ShowPopup( nRow, nCol, oWnd ) }
 
-   oCtrl = oWnd
+   if oWndInsp == nil
+      oWndInsp = BuildInspector()
+   endif 
+
+   oWndInsp:SetForm( oWnd )
 
 return nil
 
@@ -283,14 +258,13 @@ function AddButton()
 
    oBtn:cVarName = "oBtn" + oBtn:GetCtrlIndex()
 
-   // oBtn:bGotFocus = { || oWndInsp:SetControl( oBtn ) }
- 
-   /*
+   oBtn:bGotFocus = { || oWndInsp:SetControl( oBtn ) }
+
    oWndInsp:AddItem( oBtn )
+   oWndInsp:SetControl( oBtn )
  
-   oWndInsp:SetFocus()
+   oWndInsp:Refresh()
    oWnd:SetFocus()
-   */ 
 
 return nil
 
@@ -395,3 +369,133 @@ function AddSay()
 return nil
 
 //----------------------------------------------------------------------------//
+
+function BuildInspector()
+
+   local oWnd := TInspector():New()
+
+return oWnd
+
+//----------------------------------------------------------------------------//
+
+CLASS TInspector FROM TWindow
+ 
+   DATA   oCtrl         // Inspected control
+   DATA   oCbxControls
+   DATA   oFld
+   DATA   oBrwProps
+   // DATA   oBrwEvents
+ 
+   METHOD New()
+ 
+   METHOD BuildBrwProps()
+ 
+   METHOD AddItem( oCtrl )
+ 
+   METHOD SetControl( oCtrl )
+ 
+   METHOD SetForm( oForm )
+ 
+   METHOD Refresh() INLINE ::oBrwProps:Refresh()
+ 
+ENDCLASS   
+
+//----------------------------------------------------------------------------//
+
+METHOD New() CLASS TInspector
+
+   local cVal := ""
+ 
+   Super:New()
+ 
+   ::SetText( "Object Inspector" )
+   ::SetSize( 287, 342 )
+   ::SetPos( 183, 60 )
+ 
+   @ 12, 13 COMBOBOX ::oCbxControls VAR cVal OF Self PIXEL SIZE 262, 20
+
+   @ 46, 13 FOLDER ::oFld PROMPTS "Properties", "Events" ;
+      OF Self PIXEL SIZE 262, 287
+ 
+   ::BuildBrwProps()
+ 
+   /*
+   ::bReSized = { || If( ::oBrwProps != nil, ::oBrwProps:aCols[ 2 ]:nWidth := ::nWidth - ;
+                     ::oBrwProps:aCols[ 1 ]:nWidth - 63,) }
+   */
+ 
+   ::Show()
+   ::bValid = { || .F. } // can't be closed
+ 
+return Self
+
+//----------------------------------------------------------------------------//
+
+METHOD BuildBrwProps() CLASS TInspector
+
+   @ 75, 14 BROWSE ::oBrwProps ;
+      FIELDS ::oCtrl:aProperties[ ::oBrwProps:nAt ],;
+             cValToChar( __ObjSendMsg( ::oCtrl,;
+                         ::oCtrl:aProperties[ ::oBrwProps:nAt ] ) ) ;
+      HEADERS "Data", "Value" ;
+      SIZE 240, 240 PIXEL OF ::oFld:aDialogs[ 1 ]
+
+   ::oBrwProps:SetArray( If( ::oCtrl != nil, ::oCtrl:aProperties, {} ) )
+   ::oBrwProps:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
+
+return nil
+
+//----------------------------------------------------------------------------//
+ 
+METHOD AddItem( oCtrl ) CLASS TInspector
+ 
+   AAdd( ::oCbxControls:aItems, oCtrl:cVarName + " AS " + ;
+         oCtrl:ClassName() )
+ 
+   ::oCbxControls:SetItems( ::oCbxControls:aItems )
+   ::oCbxControls:Select( Len( ::oCbxControls:aItems ) )
+ 
+return nil                         
+ 
+//----------------------------------------------------------------//
+ 
+METHOD SetControl( oCtrl ) CLASS TInspector
+ 
+   local nAt := AScan( ::oCbxControls:aItems,;
+      { | cItem | SubStr( cItem, 1, Len( oCtrl:cVarName ) ) == oCtrl:cVarName } )
+ 
+   if nAt != 0
+      if ::oCbxControls:GetText() != ::oCbxControls:aItems[ nAt ]
+         ::oCbxControls:Select( nAt )
+      endif
+   endif
+ 
+   ::oCtrl = oCtrl
+   ::Refresh()
+ 
+return nil
+ 
+//----------------------------------------------------------------//
+ 
+METHOD SetForm( oForm ) CLASS TInspector
+ 
+   local aItems := {}, n, oCtrl
+ 
+   if ! ::oCtrl == oForm
+      ::oCtrl = oForm
+      AAdd( aItems, oForm:cVarName + " AS " + oForm:ClassName() )
+      for n = 1 to Len( oForm:aControls )
+         oCtrl = oForm:aControls[ n ]
+         if oCtrl:ClassName() != "TSCROLLBAR"
+            AAdd( aItems, oCtrl:cVarName + " AS " + oCtrl:ClassName() )
+         endif
+      next   
+      ::oCbxControls:SetItems( aItems )
+      ::oCbxControls:Select( 1 )
+      ::oBrwProps:SetArray( oForm:aProperties )
+      ::oBrwProps:Refresh()
+   endif
+ 
+return nil
+ 
+//----------------------------------------------------------------// 

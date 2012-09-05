@@ -26,6 +26,8 @@ CLASS TComboBox FROM TControl
 
    METHOD GetText() INLINE CbxGetText( ::hWnd )
 
+   METHOD Select( nItem ) INLINE ::SetText( ::aItems[ nItem ] )
+
 ENDCLASS
 
 //----------------------------------------------------------------------------//
