@@ -20,6 +20,10 @@ CLASS TWBrowse FROM TControl
    DATA   lSetVRange // checks if the vertical scrollbar has been initialized
    DATA   nAt          // array current position
 
+   CLASSDATA aProperties INIT { "aColumns", "cVarName", "nClrText",;
+                                "nClrPane", "nTop", "nLeft", "nWidth", "nHeight",;
+                                "Cargo", "oFont" }
+
    METHOD New( nRow, nCol, oWnd, aHeaders, aColSizes, abFields, cAlias,;
                nWidth, nHeight, lUpdate, bChange, bLDblClick, lDesign, lPixel,;
                cVarName )

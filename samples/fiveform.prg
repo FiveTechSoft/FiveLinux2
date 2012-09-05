@@ -460,6 +460,7 @@ METHOD SetControl( oCtrl ) CLASS TInspector
    endif
  
    ::oCtrl = oCtrl
+   ::oBrwProps:SetArray( oCtrl:aProperties )
    ::Refresh()
  
 return nil

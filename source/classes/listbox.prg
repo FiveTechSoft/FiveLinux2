@@ -8,6 +8,10 @@ CLASS TListBox FROM TControl
    DATA   nAt      // The index of the selected item
    DATA   lInit    // has it been initialized ?
 
+   CLASSDATA aProperties INIT { "aItems", "cVarName", "nClrText",;
+                                "nClrPane", "nTop", "nLeft", "nWidth", "nHeight",;
+                                "Cargo", "oFont" }
+
    METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
                bValid, lUpdate, lDesign, lPixel, cVarName )
 
