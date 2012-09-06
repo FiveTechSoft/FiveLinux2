@@ -6,6 +6,7 @@ CLASS TForm FROM TWindow
 
    DATA  oInspector
    DATA  lDesign
+   DATA  lCtrlResize INIT .F.
 
    METHOD Initiate() VIRTUAL
 
@@ -21,17 +22,24 @@ METHOD MouseMove( nRow, nCol ) CLASS TForm
 
    for n = 1 to Len( ::aControls )
       if ::aControls[ n ]:ClassName() != "TSCROLLBAR"
-         if nRow >= ::aControls[ n ]:nTop + ::aControls[ n ]:nHeight .and. ;
-            nRow <= ::aControls[ n ]:nTop + ::aControls[ n ]:nHeight + 5 .and. ;
-            nCol >= ::aControls[ n ]:nLeft + ::aControls[ n ]:nWidth .and. ;
-            nCol <= ::aControls[ n ]:nLeft + ::aControls[ n ]:nWidth + 5
+         if nRow >= ::aControls[ n ]:nTop + ::aControls[ n ]:nHeight - 10 .and. ;
+            nRow <= ::aControls[ n ]:nTop + ::aControls[ n ]:nHeight + 10 .and. ;
+            nCol >= ::aControls[ n ]:nLeft + ::aControls[ n ]:nWidth - 10 .and. ;
+            nCol <= ::aControls[ n ]:nLeft + ::aControls[ n ]:nWidth + 10
             CursorSize( ::hWnd )
-            exit
-         else
-            CursorArrow( ::hWnd )
+            exit 
          endif
       endif
    next
+
+   if IsLBtnPressed( ::hWnd ) .and. n <= Len( ::aControls )
+      ::aControls[ n ]:SetSize( nCol - ::aControls[ n ]:nLeft,;
+                                nRow - ::aControls[ n ]:nTop )
+   endif
+
+   if n > Len( ::aControls ) 
+      CursorArrow( ::hWnd )
+   endif 
 
 return nil 
 

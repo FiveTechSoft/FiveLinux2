@@ -22,3 +22,14 @@ HB_FUNC( MOUSEGETROW )
 	
    hb_retnl( y );
 }
+
+HB_FUNC( MOUSEGETCOL )
+{
+   GtkWidget * hWnd = ( GtkWidget * ) hb_parnl( 1 ); 
+   int x, y;
+   GdkModifierType state;
+   
+   gdk_window_get_pointer( hWnd->window, &x, &y, &state );
+	
+   hb_retnl( x );
+}
