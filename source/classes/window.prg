@@ -17,6 +17,7 @@ CLASS TWindow
    DATA      bLClicked // A codeblock to evaluate when the mouse is L clicked
    DATA      bLDblClick // A codeblock to evaluate when the mouse is L double clicked
    DATA      bRClicked // A codeblock to evaluate when the mouse is R clicked
+   DATA      bMMoved // A codeblock to evaluate when the mouse is moved over this object
    DATA      bReSized // A codeblock to evaluate when the window is resized
    DATA      bKeyDown // A codeblock to evaluate when a key is pressed
    DATA      bGotFocus // A codeblock to evaluate when the focus is gained
@@ -73,6 +74,8 @@ CLASS TWindow
    METHOD Link()
 
    METHOD Maximize() INLINE WndMaximize( ::hWnd )
+
+   METHOD MouseMove( nRow, nCol ) INLINE If( ! Empty( ::bMMoved ), Eval( ::bMMoved, nRow, nCol, Self ),) 
 
    METHOD nLeft() INLINE If( ::oWnd != nil, GetLeft( ::hWnd ), WndGetPos( ::hWnd )[ 1 ] )
 
@@ -273,11 +276,8 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TWindow
        case nMsg == WM_SIZE
 	    return ::ReSize( nWParam, nLParam )
 
-       case nMsg == WM_BTNPRESS  // drag operation
-            return ::BtnPress( nWParam, nLParam )
-
-       case nMsg == WM_MOTION
-            return ::Motion()
+       case nMsg == WM_MOUSEMOVE
+            return ::MouseMove( nWParam, nLParam )
    endcase
 
 return nil

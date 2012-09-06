@@ -5,6 +5,7 @@ int MsgInfo( char * szMsg );
 gint ButtonPressEvent( GtkWidget * hWnd, GdkEventButton * event );
 gint DeleteEvent( GtkWidget * hWnd, gpointer Data );
 gint ConfigureEvent( GtkWidget * hWnd, GdkEventConfigure * event );
+gboolean motion_notify_event( GtkWidget * hWnd, GdkEventMotion * event );
 void SetWndMain( GtkWidget * hWnd );
 
 HB_FUNC( CREATEWINDOW )
@@ -31,6 +32,9 @@ HB_FUNC( CREATEWINDOW )
 
    gtk_signal_connect( GTK_OBJECT( hWnd ), "configure_event",
                        ( GtkSignalFunc ) ConfigureEvent, NULL );
+
+   gtk_signal_connect( GTK_OBJECT( hWnd ), "motion_notify_event",
+                       ( GtkSignalFunc ) motion_notify_event, NULL );
 
    gtk_widget_set_events( hWnd, GDK_CONFIGURE |
                                 GDK_EXPOSURE_MASK |

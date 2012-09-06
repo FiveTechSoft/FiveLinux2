@@ -142,6 +142,7 @@ function New()
 
    oWnd:bLClicked = { | nRow, nCol | oWndInsp:SetForm( oWnd ) }
    oWnd:bRClicked = { | nRow, nCol | ShowPopup( nRow, nCol, oWnd ) }
+   oWnd:bMMoved   = { | nRow, nCol | oWnd:MouseMove( nRow, nCol, oWnd ) }
 
    if oWndInsp == nil
       oWndInsp = BuildInspector()

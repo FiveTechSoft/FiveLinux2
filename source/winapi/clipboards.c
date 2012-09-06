@@ -5,7 +5,7 @@ HB_FUNC( CREATECLIPBOARD )
 {
    GtkClipboard * hClipboard = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
 
-   hb_retnl( ( ULONG ) hClipboard );
+   hb_retnl( ( HB_LONG ) hClipboard );
 }
 
 HB_FUNC( CLPSETTEXT )

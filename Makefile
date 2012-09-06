@@ -77,6 +77,7 @@ C_OBJS = ./objc/bars.o        \
          ./objc/buttons.o     \
          ./objc/checkboxes.o  \
 	 ./objc/comboboxes.o  \
+	 ./objc/cursors.o     \
 	 ./objc/dialogs.o     \
 	 ./objc/files.o       \
 	 ./objc/folders.o     \
