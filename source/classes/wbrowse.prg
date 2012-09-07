@@ -18,7 +18,8 @@ CLASS TWBrowse FROM TControl
    DATA   oVScroll   // The related vertical scrollbar object
    DATA   oHScroll   // The related horizontal scrollbar object
    DATA   lSetVRange // checks if the vertical scrollbar has been initialized
-   DATA   nAt          // array current position
+   DATA   nAt        // array current position
+   DATA   oGet       // used for cell editing
 
    CLASSDATA aProperties INIT { "aColumns", "cVarName", "nClrText",;
                                 "nClrPane", "nTop", "nLeft", "nWidth", "nHeight",;
@@ -43,6 +44,8 @@ CLASS TWBrowse FROM TControl
    METHOD DrawRows()
 
    METHOD DrawSelect() INLINE ::DrawLine( ::nRowPos, .t. )
+
+   METHOD Edit()
 
    METHOD GoBottom()
 
@@ -134,7 +137,7 @@ METHOD New( nRow, nCol, oWnd, aHeaders, aColSizes, abFields, cAlias, nWidth,;
 
    if aHeaders != nil
       for n = 1 to Len( aHeaders )
-         AAdd( ::aColumns, TWBColumn():New( aHeaders[ n ] ) )
+         AAdd( ::aColumns, TWBColumn():New( aHeaders[ n ],,, Self ) )
 	 if ! Empty( abFields )
 	    ATail( ::aColumns ):bBlock = abFields[ n ]
 	 else
@@ -175,7 +178,7 @@ METHOD AddCol( bData, cHeader, nSize ) CLASS TWBrowse
 
    local oCol 
 
-   AAdd( ::aColumns, oCol := TWBColumn():New( cHeader ) )
+   AAdd( ::aColumns, oCol := TWBColumn():New( cHeader,,, Self ) )
    oCol:bBlock = bData
    oCol:nWidth = nSize
 
@@ -289,6 +292,23 @@ METHOD DrawRows() CLASS TWBrowse
    endif
 
 return nil
+
+//----------------------------------------------------------------------------//
+
+METHOD Edit( nCol ) CLASS TWBrowse
+
+   local aPos := ::aColumns[ nCol ]:GetCellPos()
+   local cTemp := cValToChar( Eval( ::aColumns[ nCol ]:bBlock ) )
+
+   if ::oGet == nil
+      @ aPos[ 1 ], aPos[ 2 ] GET ::oGet VAR cTemp OF Self ;
+         SIZE ::aColumns[ nCol ]:nWidth, 20 PIXEL
+   else
+      ::oGet:Show()
+      ::oGet:SetFocus()
+   endif
+
+return nil   
 
 //----------------------------------------------------------------------------//
 
@@ -461,18 +481,8 @@ return nil
 METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TWBrowse
 
    do case
-      case nMsg == WM_KEYDOWN
-           ::KeyDown( nWParam )
-
-      case nMsg == WM_LDBLCLICK
-           ::LDblClick( nWParam, nLParam )
-
       case nMsg == WM_PAINT
-           ::Paint( nWParam )
-
-      case nMsg == WM_RBUTTONDOWN
-           ::RButtonDown( nWParam, nLParam )
-
+           return ::Paint( nWParam )
    endcase
 
 return Super:HandleEvent( nMsg, nWParam, nLParam )

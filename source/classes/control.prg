@@ -19,8 +19,6 @@ CLASS TControl FROM TWindow
 
    METHOD End() INLINE WndDestroy( ::hWnd )
 
-   METHOD HandleEvent( nMsg, nWParam, nLParam )
-
    METHOD LButtonDown( nRow, nCol )
 
    METHOD Show() INLINE ShowControl( ::hWnd )
@@ -81,20 +79,6 @@ METHOD LostFocus() CLASS TControl
    if ::bLostFocus != nil
       Eval( ::bLostFocus, Self )
    endif   
-
-return nil
-
-//----------------------------------------------------------------------------//
-
-METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TControl
-
-   do case
-      case nMsg == WM_LBUTTONDOWN
-           return ::LButtonDown( nWParam, nLParam )
-
-      case nMsg == WM_MOUSEMOVE
-           return ::MouseMove( nWParam, nLParam )
-   endcase
 
 return nil
 
