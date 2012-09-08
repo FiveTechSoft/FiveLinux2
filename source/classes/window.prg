@@ -46,6 +46,8 @@ CLASS TWindow
    METHOD cGenPrg()
 
    METHOD cTitle() INLINE ::GetText()
+ 
+   METHOD _cTitle( cText ) INLINE ::SetText( cText )
 
    METHOD _cToolTip( cText ) INLINE WndSetToolTip( ::hWnd, cText )
 
@@ -79,9 +81,15 @@ CLASS TWindow
 
    METHOD nLeft() INLINE If( ::oWnd != nil, GetLeft( ::hWnd ), WndGetPos( ::hWnd )[ 1 ] )
 
+   METHOD _nLeft( nLeft ) INLINE If( ::oWnd != nil, CtrlSetPos( ::hWnd, ::nTop, nLeft ),;
+                                   WndSetPos( ::hWnd, ::nTop, nLeft ) ) 
+
    METHOD nHeight() INLINE GetHeight( ::hWnd )
 
    METHOD nTop() INLINE If( ::oWnd != nil, GetTop( ::hWnd ), WndGetPos( ::hWnd )[ 2 ] )
+
+   METHOD _nTop( nTop ) INLINE If( ::oWnd != nil, CtrlSetPos( ::hWnd, nTop, ::nLeft ),;
+                                   WndSetPos( ::hWnd, nTop, ::nLeft ) ) 
 
    METHOD nWidth() INLINE GetWidth( ::hWnd )
 

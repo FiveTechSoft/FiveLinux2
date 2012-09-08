@@ -137,7 +137,7 @@ function New()
    oWnd:cVarName = "oForm" + AllTrim( Str( Len( aForms ) ) )
    oWnd:SetText( "Form" + AllTrim( Str( Len( aForms ) ) ) ) 
 
-   oWnd:SetPos( 200, 440 )
+   oWnd:SetPos( 440, 200 )
    oWnd:Show()
 
    oWnd:bLClicked = { | nRow, nCol | oWndInsp:SetForm( oWnd ) }
@@ -386,6 +386,8 @@ CLASS TInspector FROM TWindow
  
    METHOD SetForm( oForm )
  
+   METHOD SetProp( cData )
+
    METHOD Refresh() INLINE ::oBrwProps:Refresh()
  
 ENDCLASS   
@@ -400,7 +402,7 @@ METHOD New() CLASS TInspector
  
    ::SetText( "Object Inspector" )
    ::SetSize( 287, 342 )
-   ::SetPos( 183, 60 )
+   ::SetPos( 60, 183 )
  
    @ 12, 13 COMBOBOX ::oCbxControls VAR cVal OF Self PIXEL SIZE 262, 20
 
@@ -434,6 +436,7 @@ METHOD BuildBrwProps() CLASS TInspector
    ::oBrwProps:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
 
    ::oBrwprops:bLClicked = { || ::oBrwProps:Edit( 2 ) } 
+   ::oBrwProps:bSetValue = { | cData | ::SetProp( cData ) }
 
 return nil
 
@@ -491,4 +494,28 @@ METHOD SetForm( oForm ) CLASS TInspector
  
 return nil
  
+//----------------------------------------------------------------//
+
+METHOD SetProp( cData ) CLASS TInspector
+
+   local cProp, cType, oCtrl := ::oCtrl
+ 
+   if oCtrl != nil
+      cProp = oCtrl:aProperties[ ::oBrwprops:nAt ]
+      cType = ValType( __ObjSendMsg( oCtrl, cProp ) )
+ 
+      do case
+         case cType == "C"
+              __ObjSendMsg( oCtrl, "_" + cProp, cData )
+ 
+         case cType == "N"
+              __ObjSendMsg( oCtrl, "_" + cProp, Val( cData ) )
+
+         case cType == "L"
+              __ObjSendMsg( oCtrl, "_" + cProp, Lower( cData ) == ".t." )
+      endcase
+   endif
+
+return nil
+
 //----------------------------------------------------------------// 

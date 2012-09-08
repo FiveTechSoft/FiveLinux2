@@ -20,6 +20,7 @@ CLASS TWBrowse FROM TControl
    DATA   lSetVRange // checks if the vertical scrollbar has been initialized
    DATA   nAt        // array current position
    DATA   oGet       // used for cell editing
+   DATA   bSetValue  // A codeblock to evaluate to save a edited cell
 
    CLASSDATA aProperties INIT { "aColumns", "cVarName", "nClrText",;
                                 "nClrPane", "nTop", "nLeft", "nWidth", "nHeight",;
@@ -310,6 +311,9 @@ METHOD Edit( nCol ) CLASS TWBrowse
       ::oGet:Show()
       ::oGet:SetFocus()
    endif
+
+   ::oGet:bKeyDown = { | nKey | If( nKey == K_ENTER,;
+                       ( Eval( ::bSetValue, ::oGet:GetText() ), .T. ),) }
 
 return nil   
 

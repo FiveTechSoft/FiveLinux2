@@ -5,6 +5,7 @@
 #include "msgs.h"
 #include "colors.ch"
 
+#define K_ENTER     65293
 #define K_ESC       65307
 #define K_HOME      65360
 #define K_END       65367
