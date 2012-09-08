@@ -301,9 +301,12 @@ METHOD Edit( nCol ) CLASS TWBrowse
    local cTemp := cValToChar( Eval( ::aColumns[ nCol ]:bBlock ) )
 
    if ::oGet == nil
-      @ aPos[ 1 ], aPos[ 2 ] GET ::oGet VAR cTemp OF Self ;
+      @ aPos[ 1 ] + ::oWnd:nTop, aPos[ 2 ] + ::oWnd:nLeft GET ::oGet ;
+         VAR cTemp OF ::oWnd ;
          SIZE ::aColumns[ nCol ]:nWidth, 20 PIXEL
    else
+      ::oGet:SetPos( aPos[ 1 ] + ::oWnd:nTop, aPos[ 2 ] + ::oWnd:nLeft )
+      ::oGet:SetText( cTemp )
       ::oGet:Show()
       ::oGet:SetFocus()
    endif

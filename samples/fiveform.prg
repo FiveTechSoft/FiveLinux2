@@ -433,7 +433,7 @@ METHOD BuildBrwProps() CLASS TInspector
    ::oBrwProps:SetArray( If( ::oCtrl != nil, ::oCtrl:aProperties, {} ) )
    ::oBrwProps:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
 
-   ::oBrwprops:bLDblClick = { || ::oBrwProps:Edit( 2 ) } 
+   ::oBrwprops:bLClicked = { || ::oBrwProps:Edit( 2 ) } 
 
 return nil
 

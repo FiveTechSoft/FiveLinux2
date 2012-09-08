@@ -59,6 +59,7 @@ METHOD SetPrompts( aPrompts ) CLASS TFolder
    for n = 1 to Len( aHandlesPages )
       ::aDialogs[ n ] = TDialog()
       ::aDialogs[ n ]:hWnd = aHandlesPages[ n ]
+      ::aDialogs[ n ]:oWnd = Self
    next
 
 return nil
