@@ -185,7 +185,7 @@ static function ErrorDialog( oError )
    DEFINE DIALOG oDlg TITLE DLG_TITLE ;
       SIZE 400, 350
 
-   @ 1, 1 SAY oSay PROMPT cMessage OF oDlg SIZE 300, 50
+   @ 1, 4 SAY oSay PROMPT cMessage OF oDlg SIZE 300, 40
 
    @ 5, 1 SAY "Stack List"
 
