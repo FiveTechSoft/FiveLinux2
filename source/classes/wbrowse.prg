@@ -303,14 +303,15 @@ METHOD Edit( nCol ) CLASS TWBrowse
 
    if ::oGet == nil
       ::oWnd:Show() // so ::oWnd:nTop has a valid value
-      @ aPos[ 1 ] + If( ::oWnd:ClassName() == "TWINDOW", ::nTop, ::oWnd:nTop ),;
-        aPos[ 2 ] + If( ::oWnd:ClassName() == "TWINDOW", ::nLeft, ::oWnd:nLeft ) ;
+      @ aPos[ 1 ] + ::nTop,;
+        aPos[ 2 ] + ::nLeft ;
         GET ::oGet VAR cTemp OF ::oWnd ;
         SIZE If( nCol < Len( ::aColumns ),;
                  ::aColumns[ nCol ]:nWidth, ::nWidth - aPos[ 2 ] - 1 ), 20 PIXEL
+        ::oGet:Cargo = nCol
    else
-      ::oGet:SetPos( aPos[ 1 ] + If( ::oWnd:ClassName() == "TWINDOW", ::nTop, ::oWnd:nTop ),;
-                     aPos[ 2 ] + If( ::oWnd:ClassName() == "TWINDOW", ::nLeft, ::oWnd:nLeft ) )
+      ::oGet:SetPos( aPos[ 1 ] + ::nTop,;
+                     aPos[ 2 ] + ::nLeft )
       ::oGet:SetText( cTemp )
       ::oGet:Show()
       ::oGet:SetFocus()
@@ -709,6 +710,8 @@ return nil
 
 METHOD SetSize( nWidth, nHeight ) CLASS TWBrowse
 
+   local nCol, aPos
+
    Super:SetSize( nWidth, nHeight )
 
    if ::oVScroll != nil
@@ -719,6 +722,13 @@ METHOD SetSize( nWidth, nHeight ) CLASS TWBrowse
    if ::oHScroll != nil
       ::oHScroll:SetPos( ::nTop + nHeight + 1, ::oHScroll:nLeft )
       ::oHScroll:SetSize( nWidth, ::oHScroll:nHeight )
+   endif
+
+   if ::oGet != nil
+      nCol = ::oGet:Cargo
+      aPos = ::aColumns[ nCol ]:GetCellPos()
+      ::oGet:SetSize( If( nCol < Len( ::aColumns ),;
+                      ::aColumns[ nCol ]:nWidth, ::nWidth - aPos[ 2 ] - 1 ), 20 )
    endif
 
 return nil

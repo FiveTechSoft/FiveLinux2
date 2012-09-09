@@ -437,6 +437,7 @@ METHOD BuildBrwProps() CLASS TInspector
 
    ::oBrwprops:bLClicked = { || ::oBrwProps:Edit( 2 ) } 
    ::oBrwProps:bSetValue = { | cValue | ::SetProp( cValue ) }
+   // ::oBrwProps:Edit( 2 )
 
 return nil
 
