@@ -436,7 +436,7 @@ METHOD BuildBrwProps() CLASS TInspector
    ::oBrwProps:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
 
    ::oBrwprops:bLClicked = { || ::oBrwProps:Edit( 2 ) } 
-   ::oBrwProps:bSetValue = { | cData | ::SetProp( cData ) }
+   ::oBrwProps:bSetValue = { | cValue | ::SetProp( cValue ) }
 
 return nil
 
@@ -496,7 +496,7 @@ return nil
  
 //----------------------------------------------------------------//
 
-METHOD SetProp( cData ) CLASS TInspector
+METHOD SetProp( cValue ) CLASS TInspector
 
    local cProp, cType, oCtrl := ::oCtrl
  
@@ -506,13 +506,13 @@ METHOD SetProp( cData ) CLASS TInspector
  
       do case
          case cType == "C"
-              __ObjSendMsg( oCtrl, "_" + cProp, cData )
+              __ObjSendMsg( oCtrl, "_" + cProp, cValue )
  
          case cType == "N"
-              __ObjSendMsg( oCtrl, "_" + cProp, Val( cData ) )
+              __ObjSendMsg( oCtrl, "_" + cProp, Val( cValue ) )
 
          case cType == "L"
-              __ObjSendMsg( oCtrl, "_" + cProp, Lower( cData ) == ".t." )
+              __ObjSendMsg( oCtrl, "_" + cProp, Lower( cValue ) == ".t." )
       endcase
    endif
 

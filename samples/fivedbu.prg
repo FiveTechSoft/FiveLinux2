@@ -332,6 +332,8 @@ function Edit( cFileName )
    oBrw:SetArray( GetFieldNames() )
    oBrw:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
    oBrw:SetFocus()
+   oBrw:bLClicked = { || oBrw:Edit( 2 ) } 
+   oBrw:Edit( 2 )
 
    DEFINE MSGBAR oMsgBar OF oWnd PROMPT cFileName
 

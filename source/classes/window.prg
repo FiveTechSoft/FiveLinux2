@@ -79,17 +79,15 @@ CLASS TWindow
 
    METHOD MouseMove( nRow, nCol ) INLINE If( ! Empty( ::bMMoved ), Eval( ::bMMoved, nRow, nCol, Self ),) 
 
-   METHOD nLeft() INLINE If( ::oWnd != nil, GetLeft( ::hWnd ), WndGetPos( ::hWnd )[ 1 ] )
+   METHOD nLeft() INLINE WndGetPos( ::hWnd )[ 1 ]
 
-   METHOD _nLeft( nLeft ) INLINE If( ::oWnd != nil, CtrlSetPos( ::hWnd, ::nTop, nLeft ),;
-                                   WndSetPos( ::hWnd, ::nTop, nLeft ) ) 
+   METHOD _nLeft( nLeft ) INLINE WndSetPos( ::hWnd, ::nTop, nLeft ) 
 
    METHOD nHeight() INLINE GetHeight( ::hWnd )
 
-   METHOD nTop() INLINE If( ::oWnd != nil, GetTop( ::hWnd ), WndGetPos( ::hWnd )[ 2 ] )
+   METHOD nTop() INLINE WndGetPos( ::hWnd )[ 2 ]
 
-   METHOD _nTop( nTop ) INLINE If( ::oWnd != nil, CtrlSetPos( ::hWnd, nTop, ::nLeft ),;
-                                   WndSetPos( ::hWnd, nTop, ::nLeft ) ) 
+   METHOD _nTop( nTop ) INLINE WndSetPos( ::hWnd, nTop, ::nLeft ) 
 
    METHOD nWidth() INLINE GetWidth( ::hWnd )
 

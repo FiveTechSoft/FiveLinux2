@@ -302,11 +302,15 @@ METHOD Edit( nCol ) CLASS TWBrowse
    local cTemp := cValToChar( Eval( ::aColumns[ nCol ]:bBlock ) )
 
    if ::oGet == nil
-      @ aPos[ 1 ] + ::oWnd:nTop, aPos[ 2 ] + ::oWnd:nLeft GET ::oGet ;
-         VAR cTemp OF ::oWnd ;
-         SIZE ::aColumns[ nCol ]:nWidth, 20 PIXEL
+      ::oWnd:Show() // so ::oWnd:nTop has a valid value
+      @ aPos[ 1 ] + If( ::oWnd:ClassName() == "TWINDOW", ::nTop, ::oWnd:nTop ),;
+        aPos[ 2 ] + If( ::oWnd:ClassName() == "TWINDOW", ::nLeft, ::oWnd:nLeft ) ;
+        GET ::oGet VAR cTemp OF ::oWnd ;
+        SIZE If( nCol < Len( ::aColumns ),;
+                 ::aColumns[ nCol ]:nWidth, ::nWidth - aPos[ 2 ] - 1 ), 20 PIXEL
    else
-      ::oGet:SetPos( aPos[ 1 ] + ::oWnd:nTop, aPos[ 2 ] + ::oWnd:nLeft )
+      ::oGet:SetPos( aPos[ 1 ] + If( ::oWnd:ClassName() == "TWINDOW", ::nTop, ::oWnd:nTop ),;
+                     aPos[ 2 ] + If( ::oWnd:ClassName() == "TWINDOW", ::nLeft, ::oWnd:nLeft ) )
       ::oGet:SetText( cTemp )
       ::oGet:Show()
       ::oGet:SetFocus()

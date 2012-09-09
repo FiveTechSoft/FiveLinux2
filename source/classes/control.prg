@@ -21,6 +21,14 @@ CLASS TControl FROM TWindow
 
    METHOD LButtonDown( nRow, nCol )
 
+   METHOD nLeft() INLINE GetLeft( ::hWnd )
+
+   METHOD _nLeft( nLeft ) INLINE CtrlSetPos( ::hWnd, ::nTop, nLeft ) 
+
+   METHOD nTop() INLINE GetTop( ::hWnd )
+
+   METHOD _nTop( nTop ) INLINE CtrlSetPos( ::hWnd, nTop, ::nLeft ) 
+
    METHOD Show() INLINE ShowControl( ::hWnd )
 
    METHOD SetFont( oFont ) INLINE If( ::oFont != nil, ::oFont:End(),),;
