@@ -32,7 +32,7 @@ function Main()
    DEFINE BUTTON OF oBar PROMPT "Save" RESOURCE "gtk-save" ;
       ACTION Save()
 
-   DEFINE BUTTON OF oBar RESOURCE "gtk-preferences"
+   DEFINE BUTTON OF oBar PROMPT "Preferences" RESOURCE "gtk-preferences"
 
    DEFINE BUTTON OF oBar PROMPT "Say" ;
       FILENAME "./../bitmaps/say.png" ;

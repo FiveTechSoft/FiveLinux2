@@ -51,22 +51,22 @@ HB_FUNC( CREATEBTN )
    {
       GtkWidget * image = gtk_image_new_from_file( hb_parc( 5 ) );
 
-      hWnd = gtk_toolbar_append_item( GTK_TOOLBAR( hToolBar), hb_parc( 2 ),
-                                      hb_parc( 6 ), "Private", 
+      hWnd = gtk_toolbar_append_item( GTK_TOOLBAR( hToolBar), NULL,
+                                      hb_parc( 2 ), "Private", 
                                       image, NULL, NULL );
    }
    else if( HB_ISCHAR( 3 ) )
    {
       hWnd = gtk_toolbar_insert_stock( GTK_TOOLBAR( hToolBar ),
                                        hb_parc( 3 ),
-                                       NULL, NULL, NULL, NULL, -1 );
+                                       hb_parc( 2 ), NULL, NULL, NULL, -1 );
    }
    else
    {
       hWnd = gtk_toolbar_append_element( GTK_TOOLBAR( hToolBar ),
                                          GTK_TOOLBAR_CHILD_BUTTON,
-                                         NULL, hb_parc( 2 ), NULL, NULL,
-                                         NULL, NULL, NULL);
+                                         NULL, NULL, hb_parc( 2 ), NULL,
+                                         NULL, NULL, NULL );
 
       gtk_label_set_use_underline( GTK_LABEL( ( ( GtkToolbarChild * )
       ( g_list_last( GTK_TOOLBAR( hToolBar )->children )->data ) )->label ),
