@@ -195,13 +195,13 @@ static function ErrorDialog( oError )
       ACTION WinExec( "gedit", "error.log" )
 
    if nButtons == 2
-      @ 32, 22 BUTTON "_Quit" OF oDlg ACTION oDlg:End()
+      @ 32,  9 BUTTON "_Quit" OF oDlg ACTION oDlg:End()
    else
       @ 32, 16 BUTTON "_Quit" OF oDlg ACTION oDlg:End()
    endif
 
    if oError:CanRetry
-      @ 32, If( nButtons == 2, 22, 24 ) BUTTON "_Retry" ;
+      @ 32, If( nButtons == 2, 22, 14 ) BUTTON "_Retry" ;
          OF oDlg ACTION ( lRet  := .t., oDlg:End() )
    endif
 

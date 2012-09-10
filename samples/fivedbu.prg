@@ -108,12 +108,12 @@ function New( cAlias )
                          oDlg:Update() }
    local bEdit := { || If( ! Empty( aFields[ 1, 1 ] ),;
                       ( oBtn:Enable(),;
-                       cFieldName := aFields[ oBrw:nAt, 1 ],;
+                       cFieldName := aFields[ oBrw:nArrayAt, 1 ],;
                        cType := aFields[ oBrw:nArrayAt, 2 ] ,;
                        cType := aType[ aScan(aType, {|x| Left( x, 1 ) = cType } )],;
                        Eval( bChange ),;
-                       nLen := aFields[ oBrw:nAt, 3 ],;
-                       nDec := aFields[ oBrw:nAt, 4 ],;
+                       nLen := aFields[ oBrw:nArrayAt, 3 ],;
+                       nDec := aFields[ oBrw:nArrayAt, 4 ],;
                        oGet:SetCurPos( 0 ),;
                        oGet:SetFocus(),;
                        oDlg:Update() ) ,) }
@@ -157,8 +157,8 @@ function New( cAlias )
    @ 7, 0 SAY "Fields:" OF oDlg
 
    @ 9, 1 BROWSE oBrw ;
-      FIELDS aFields[ oBrw:nAt ][ 1 ], aFields[ oBrw:nAt ][ 2 ],;
-             aFields[ oBrw:nAt ][ 3 ], aFields[ oBrw:nAt ][ 4 ] ;
+      FIELDS aFields[ oBrw:nArrayAt ][ 1 ], aFields[ oBrw:nArrayAt ][ 2 ],;
+             aFields[ oBrw:nArrayAt ][ 3 ], aFields[ oBrw:nArrayAt ][ 4 ] ;
       HEADERS "Name", "Type", "Len", "Dec" ;
       COLSIZES 90, 55, 40, 40 ;
       SIZE 295, 230 OF oDlg ;
@@ -296,8 +296,10 @@ return nil
 
 function Edit( cFileName )
 
-   local oWnd, oBar, oBrw, oMsgBar, cAlias := Alias()
-   local aNames := GetFieldNames()
+   local oWnd, oBar, oBtnSave
+   local oBrw, oMsgBar, cAlias := Alias()
+   local aRecord := ( Alias() )->( LoadRecord() )
+   local nRecNo := ( Alias() )->( RecNo() )
 
    DEFINE WINDOW oWnd TITLE "Edit: " + cAlias MENU BuildMenuChild()
 
@@ -308,13 +310,20 @@ function Edit( cFileName )
 
    DEFINE BUTTONBAR oBar OF oWnd
 
-   DEFINE BUTTON OF oBar PROMPT "Save" RESOURCE "gtk-save"
+   DEFINE BUTTON oBtnSave OF oBar PROMPT "Save" RESOURCE "gtk-save" ;
+      ACTION ( ( cAlias )->( SaveRecord( aRecord, nRecNo ) ), oBtnSave:Disable() )
+
+   oBtnSave:Disable()
 
    DEFINE BUTTON OF oBar PROMPT "Previous" RESOURCE "gtk-go-back" GROUP ;
-      ACTION ( ( cAlias )->( DbSkip( -1 ) ), oBrw:Refresh(), Eval( oBrw:bChange ) )
+      ACTION ( ( cAlias )->( DbSkip( -1 ) ),;
+               oBrw:SetArray( aRecord := ( Alias() )->( LoadRecord() ) ),;
+               oBrw:Refresh(), Eval( oBrw:bChange ) )
 
    DEFINE BUTTON OF oBar PROMPT "Next" RESOURCE "gtk-go-forward" ;
-      ACTION ( ( cAlias )->( DbSkip( 1 ) ), oBrw:Refresh(), Eval( oBrw:bChange ) )
+      ACTION ( ( cAlias )->( DbSkip( 1 ) ),;
+               oBrw:SetArray( aRecord := ( Alias() )->( LoadRecord() ) ),;
+               oBrw:Refresh(), Eval( oBrw:bChange ) )
 
    DEFINE BUTTON OF oBar PROMPT "Print" RESOURCE "gtk-print" GROUP
 
@@ -322,17 +331,19 @@ function Edit( cFileName )
       ACTION oWnd:End() 
 
    @ 5.5, 0 BROWSE oBrw OF oWnd SIZE 682, 300 ;
-      FIELDS aNames[ oBrw:nAt ], FieldGet( oBrw:nAt ) ;
+      FIELDS aRecord[ oBrw:nArrayAt ][ 1 ], aRecord[ oBrw:nArrayAt ][ 2 ] ;
       HEADER "Field", "Value" ;
       ON CHANGE oMsgBar:SetText( cFileName + Space( 50 ) + ;
                                  If( ( cAlias )->( Deleted() ), "| Deleted |", "| Not deleted |" ) + ;
                                  " RecNo: " + AllTrim( Str( ( cAlias )->( RecNo() ) ) ) + " / " + ;
                                  AllTrim( Str( ( cAlias )->( RecCount() ) ) ) + " |" )
 
-   oBrw:SetArray( GetFieldNames() )
+   oBrw:SetArray( aRecord )
    oBrw:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
    oBrw:SetFocus()
    oBrw:bLClicked = { || oBrw:Edit( 2 ) } 
+   oBrw:bSetValue = { | cValue | aRecord[ oBrw:nArrayAt ][ 2 ] := cValue,;
+                                 oBtnSave:Enable(), oBrw:GoDown() }
    oBrw:Edit( 2 )
 
    DEFINE MSGBAR oMsgBar OF oWnd PROMPT cFileName
@@ -344,6 +355,43 @@ function Edit( cFileName )
 
 return nil
 
+//----------------------------------------------------------------------------//
+ 
+function LoadRecord()
+ 
+   local aRecord := {}, n
+ 
+   for n = 1 to FCount()
+      if FieldType( n ) != "M"
+         AAdd( aRecord, { FieldName( n ), FieldGet( n ) } )
+      else
+         AAdd( aRecord, { FieldName( n ),;
+               If( ! Empty( FieldGet( n ) ), "<Memo>", "<memo>" ) } )
+      endif
+   next
+ 
+return aRecord
+ 
+//----------------------------------------------------------------------------//
+ 
+function SaveRecord( aRecord, nRecNo )
+ 
+   local n
+ 
+   ( Alias() )->( DbGoTo( nRecNo ) )
+ 
+   if ( Alias() )->( DbRLock( nRecNo ) )
+      for n = 1 to Len( aRecord )
+         ( Alias() )->( FieldPut( n, aRecord[ n ][ 2 ] ) )
+      next
+      ( Alias() )->( DbUnLock() )
+      MsgInfo( "Record updated" )
+   else
+      MsgAlert( "Record in use, please try it again" )
+   endif
+ 
+return nil
+ 
 //----------------------------------------------------------------------------//
 
 function Indexes( cFileName )
@@ -368,7 +416,7 @@ function Indexes( cFileName )
  
    DEFINE BUTTON OF oBar PROMPT "Del" RESOURCE "gtk-delete" ;
       ACTION If( MsgYesNo( "Want to delete this tag ?" ),;
-                ( ( cAlias )->( OrdDestroy( oBrw:nAt ) ), oBrw:Refresh() ),)
+                ( ( cAlias )->( OrdDestroy( oBrw:nArrayAt ) ), oBrw:Refresh() ),)
 
    DEFINE BUTTON OF oBar PROMPT "Print" RESOURCE "gtk-print" GROUP
 
@@ -377,12 +425,12 @@ function Indexes( cFileName )
 
    @ 5.5, 0 BROWSE oBrw OF oWnd SIZE 682, 300 ;
       HEADERS "Order", "TagName", "Expression", "For", "BagName", "BagExt" ;
-      FIELDS oBrw:nAt,;
-             ( cAlias )->( OrdName( oBrw:nAt ) ),;
-             ( cAlias )->( OrdKey ( oBrw:nAt ) ),;
-             ( cAlias )->( OrdFor ( oBrw:nAt ) ),;
-             ( cAlias )->( OrdBagName( oBrw:nAt ) ),;
-             ( cAlias )->( OrdBagExt( oBrw:nAt ) ) ;
+      FIELDS oBrw:nArrayAt,;
+             ( cAlias )->( OrdName( oBrw:nArrayAt ) ),;
+             ( cAlias )->( OrdKey ( oBrw:nArrayAt ) ),;
+             ( cAlias )->( OrdFor ( oBrw:nArrayAt ) ),;
+             ( cAlias )->( OrdBagName( oBrw:nArrayAt ) ),;
+             ( cAlias )->( OrdBagExt( oBrw:nArrayAt ) ) ;
       COLSIZES 50, 100, 400, 240, 100, 100
 
    oBrw:SetArray( aIndexes )
@@ -425,8 +473,8 @@ function Properties( cFileName )
       ACTION oWnd:End()
 
    @ 5.5, 0 BROWSE oBrw OF oWnd SIZE 481, 307 ;
-      FIELDS aInfo[ oBrw:nAt ][ 1 ], aInfo[ oBrw:nAt ][ 2 ],;
-             aInfo[ oBrw:nAt ][ 3 ], aInfo[ oBrw:nAt ][ 4 ] ;
+      FIELDS aInfo[ oBrw:nArrayAt ][ 1 ], aInfo[ oBrw:nArrayAt ][ 2 ],;
+             aInfo[ oBrw:nArrayAt ][ 3 ], aInfo[ oBrw:nArrayAt ][ 4 ] ;
       HEADERS "Name", "Type", "Len", "Dec" ;
       COLSIZES 120, 120, 120, 120 
 

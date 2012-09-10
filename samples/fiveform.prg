@@ -426,9 +426,9 @@ return Self
 METHOD BuildBrwProps() CLASS TInspector
 
    @ 75, 14 BROWSE ::oBrwProps ;
-      FIELDS ::oCtrl:aProperties[ ::oBrwProps:nAt ],;
+      FIELDS ::oCtrl:aProperties[ ::oBrwProps:nArrayAt ],;
              cValToChar( __ObjSendMsg( ::oCtrl,;
-                         ::oCtrl:aProperties[ ::oBrwProps:nAt ] ) ) ;
+                         ::oCtrl:aProperties[ ::oBrwProps:nArrayAt ] ) ) ;
       HEADERS "Data", "Value" ;
       SIZE 240, 240 PIXEL OF ::oFld:aDialogs[ 1 ]
 
@@ -502,7 +502,7 @@ METHOD SetProp( cValue ) CLASS TInspector
    local cProp, cType, oCtrl := ::oCtrl
  
    if oCtrl != nil
-      cProp = oCtrl:aProperties[ ::oBrwprops:nAt ]
+      cProp = oCtrl:aProperties[ ::oBrwprops:nArrayAt ]
       cType = ValType( __ObjSendMsg( oCtrl, cProp ) )
  
       do case
