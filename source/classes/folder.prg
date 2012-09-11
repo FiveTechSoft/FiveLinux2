@@ -7,8 +7,14 @@ CLASS TFolder FROM TControl
    DATA   aPrompts   // The labels to display on each folder page
    DATA   aDialogs   // An array of dialogboxes, one by each folder page
 
+   CLASSDATA aProperties INIT { "aPrompts", "aDialogs", "cVarName", "nClrText",;
+                                "nClrPane", "nTop", "nLeft", "nWidth", "nHeight",;
+                                "Cargo", "oMenu", "oFont" }
+
    METHOD New( nRow, nCol, oWnd, aPrompts, nWidth, nHeight, lUpdate,;
                lDesign, lPixel, cVarName )
+
+   METHOD cGenPrg()
 
    METHOD SetPrompts( aPrompts )
 
@@ -41,6 +47,25 @@ METHOD New( nRow, nCol, oWnd, aPrompts, nWidth, nHeight, lUpdate, lDesign,;
    ::Show()
 
 return Self
+
+//----------------------------------------------------------------------------//
+
+METHOD cGenPrg() CLASS TFolder
+
+   local cCode := ""
+   local cTop, cLeft, cWidth, cHeight
+ 
+   cTop    = LTrim( Str( Int( ::nTop ) ) )
+   cLeft   = LTrim( Str( Int( ::nLeft ) ) )
+   cWidth  = LTrim( Str( Int( ::nWidth ) ) )
+   cHeight = LTrim( Str( Int( ::nHeight ) ) )
+ 
+   cCode += CRLF + "   @ " + cTop + ", " + cLeft + ;
+            " FOLDER " + ::cVarName + ' PROMPTS "One", "Two"' + ;
+            " ;" + CRLF + '      SIZE ' + cWidth + ", " + cHeight + ;
+            " PIXEL OF " + ::oWnd:cVarName + CRLF
+ 
+return cCode
 
 //----------------------------------------------------------------------------//
 

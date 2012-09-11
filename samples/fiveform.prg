@@ -62,6 +62,10 @@ function Main()
       FILENAME "./../bitmaps/browse.png" ;
       ACTION AddBrowse()
 
+   DEFINE BUTTON OF oBar PROMPT "Folder" ;
+      FILENAME "./../bitmaps/folder.png" ;
+      ACTION AddFolder()
+
    DEFINE BUTTON OF oBar PROMPT "Exit" RESOURCE "gtk-quit" GROUP ;
       ACTION oWndMain:End()
 
@@ -301,6 +305,25 @@ function AddComboBox()
  
 return nil
  
+//----------------------------------------------------------------------------//
+
+function AddFolder()
+
+   local oFld
+
+   @ 20, 20 FOLDER oFld OF oWnd ;
+      PROMPTS "One", "Two" ;
+      SIZE 200, 200 PIXEL DESIGN
+
+   oFld:cVarName = "oFld" + oFld:GetCtrlIndex()
+   oFld:bGotFocus = { || oWndInsp:SetControl( oFld ) }
+ 
+   oWndInsp:AddItem( oFld )
+   oWndInsp:SetControl( oFld )
+   oWnd:SetFocus()
+
+return nil
+
 //----------------------------------------------------------------------------//
 
 function AddGet()
