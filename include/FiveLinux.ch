@@ -244,9 +244,12 @@ extern ErrorLink
              [ <of: OF, WINDOW, DIALOG> <oWnd> ] ;
 	     [ SIZE <nWidth>, <nHeight> ] ;
 	     [ <update: UPDATE> ] ;
+	     [ <design: DESIGN> ] ;       
+	     [ <pixel: PIXEL> ] ;       
 	  => ;
              [ <oImg> := ] TImage():New( <nRow>, <nCol>, [<oWnd>],;
-	     <cFileName>, <nWidth>, <nHeight>, <.update.> )
+	     <cFileName>, <nWidth>, <nHeight>, <.update.>, <(oImg)>,;
+             <.design.>, <.pixel.> )
 
 #xcommand @ <nRow>, <nCol> LISTBOX [ <oLbx> VAR ] <cnVar> ;
              [ <of: OF, WINDOW, DIALOG> <oWnd> ] ;

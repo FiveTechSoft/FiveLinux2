@@ -66,6 +66,10 @@ function Main()
       FILENAME "./../bitmaps/folder.png" ;
       ACTION AddFolder()
 
+   DEFINE BUTTON OF oBar PROMPT "Image" ;
+      FILENAME "./../bitmaps/image.png" ;
+      ACTION AddImage()
+
    DEFINE BUTTON OF oBar PROMPT "Exit" RESOURCE "gtk-quit" GROUP ;
       ACTION oWndMain:End()
 
@@ -342,6 +346,25 @@ function AddGet()
  
 return nil
  
+//----------------------------------------------------------------------------//
+
+function AddImage()
+
+   local oImg
+ 
+   @ 20, 20 IMAGE oImg OF oWnd ;
+      FILENAME "../bitmaps/fivetech.bmp" ; 
+      PIXEL DESIGN
+ 
+   oImg:cVarName = "oImg" + oImg:GetCtrlIndex()
+   oImg:bGotFocus = { || oWndInsp:SetControl( oImg ) }
+
+   oWndInsp:AddItem( oImg )
+   oWndInsp:SetControl( oImg )
+   oWnd:SetFocus()
+ 
+return nil
+
 //----------------------------------------------------------------------------//
 
 function AddListbox()
