@@ -3,7 +3,7 @@
 
 function Main()
                                                                    
-   // local oWA := HB_WhatsApp():New( "34684078311", hb_md5( StrRev( "359028035490117" ) ), "YourNickname" )
+   // local oWA := HB_WhatsApp():New( "34684078311", hb_md5( StrRev( "AndroidIMEI" ) ), "YourNickname" )
    local oWA := HB_WhatsApp():New( "34XXXXXXXXX", hb_md5( "AA:BB:CC:DD:EE:FFAA:BB:CC:DD:EE:FF" ), "YourNickname" )
 
    if oWA:Connect()
