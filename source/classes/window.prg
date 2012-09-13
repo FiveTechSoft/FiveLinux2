@@ -27,6 +27,7 @@ CLASS TWindow
    DATA      oFont  // used font object
    DATA      nClrText, nClrPane
    DATA      cVarName // variable name that holds this object
+   DATA      oInspector // related object inspector if used
 
    CLASSDATA aProperties INIT { "cTitle", "cVarName", "nClrText",;
                                 "nClrPane", "nTop", "nLeft", "nWidth", "nHeight",;

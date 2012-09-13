@@ -3,16 +3,36 @@
 
 function Main()
                                                                    
-   local oWA := HB_WhatsApp():New( "34684078311", hb_md5( StrRev( "359028035490117" ) ), "lukilla" )
+   // local oWA := HB_WhatsApp():New( "34684078311", hb_md5( StrRev( "359028035490117" ) ), "YourNickname" )
+   local oWA := HB_WhatsApp():New( "34XXXXXXXXX", hb_md5( "AA:BB:CC:DD:EE:FFAA:BB:CC:DD:EE:FF" ), "YourNickname" )
 
-   oWA:Connect()
-   oWA:Login()
+   if oWA:Connect()
+      oWA:Login()
 
-   ? oWA:cAccount_status, oWA:cAccount_kind, oWA:cAccount_creation, oWA:cAccount_expiration
+      ? oWA:cAccount_status, oWA:cAccount_kind, oWA:cAccount_creation, oWA:cAccount_expiration
    
-   // oWA:Message( Str( TS2Num() ), "34670463032", "Funcionaaaa !!!" )
+      oWA:RequestLastSeen( "34670463032" )
+      ? oWA:LastSeen[ 'seconds_ago' ]
+   
+      oWA:Message( Str( TS2Num() ), "34XXXXXXXXX", "Testing" )
+   else
+      MsgInfo( "can't connect" )
+   endif
 
 return nil
+
+#IFDEF __XHARBOUR__
+  #xtranslate hb_DateTime([<x,...>])          => DateTime(<x>)
+  #xtranslate hb_tstostr([<x>])               => TToS(<x>)
+  #xtranslate hb_stot([<x>])                  => SToT(<x>)
+  #xtranslate hb_ttod([<x>])                  => TToD(<x>)
+  #xtranslate hb_hour([<x>])                  => Hour(<x>)
+  #xtranslate hb_minute([<x>])                => Minute(<x>)
+  #xtranslate hb_sec([<x>])                   => Secs(<x>)
+  #xtranslate hb_NumToHex([<x>])              => NumToHex(<x>)
+  #xtranslate hb_StrFormat([<x,...>])         => StrFormat(<x>)
+  #xtranslate <x>:__EnumIndex                 => hb_EnumIndex
+#ENDIF
 
 CLASS HB_WhatsApp
 
@@ -29,6 +49,7 @@ CLASS HB_WhatsApp
    DATA  aResArray
    DATA  cMsg
    DATA  _Incomplete_message
+   DATA  LastSeen
 
    METHOD New( cNumber, cPassword, cNickname )
    METHOD Connect()
@@ -36,14 +57,16 @@ CLASS HB_WhatsApp
    METHOD Message( cMmsgid, cTo, cTxt )
    METHOD Read()
    METHOD Send( cData )
-   METHOD parse_received_message( cV ) INLINE MsgInfo( "received msg" )
+   METHOD parse_last_seen( cMsg )
+   METHOD parse_received_message( cMsg )
+   METHOD RequestLastSeen( mobile )
 
    METHOD _Authenticate( cNonce, cNC )
    METHOD _Identify( cStr )
    METHOD _Is_Full_Msg( cStr )
    METHOD parse_account_info( msg )
 
-   DESTRUCTOR Destroy()
+   METHOD Destroy()
 
 ENDCLASS
 
@@ -80,15 +103,15 @@ static function random_uuid()
 return hb_strformat( "%04x%04x-%04x-%04x-%04x-%04x%04x%04x",;
                      hb_Random( 0, 0xffff ), hb_Random( 0, 0xffff ),;
                      hb_Random( 0, 0xffff ),;
-                     hb_BitOr( hb_Random( 0, 0x0fff ), 0x4000 ),;
-                     hb_BitOr( hb_Random( 0, 0x3fff ), 0x8000 ),;
+                     hb_BitOr( Int( hb_Random( 0, 0x0fff ) ), 0x4000 ),;
+                     hb_BitOr( Int( hb_Random( 0, 0x3fff ) ), 0x8000 ),;
                      hb_Random( 0, 0xffff ), hb_Random( 0, 0xffff ), hb_Random( 0, 0xffff ) )
               
 METHOD Login() CLASS HB_WhatsApp
 
    local cBuffer, cResponse, aArrResponse, hAuthData, cValue, aResData, cResData
 
-   ::Send( "WA" + Chr( 0x01 ) + Chr( 0 ) + Chr( 0 ) + ;
+   ::Send( "WA" + Chr( 0x01 ) + Chr( 0x01 ) + Chr( 0 ) + ;
              Chr( 0x19 ) + Chr( 0xF8 ) + Chr( 0x05 ) + Chr( 0x01 ) + ;
              Chr( 0xA0 ) + Chr( 0x8A ) + Chr( 0x84 ) + Chr( 0xFC ) + ;
              Chr( 0x11 ) + "iPhone-2.6.9-5222" + ;
@@ -125,8 +148,8 @@ METHOD Login() CLASS HB_WhatsApp
                Chr( 0xFC ) + Chr( 1 ) + Chr( 0x32 ) + Chr( 0xA2 ) + Chr( 0x3A ) + Chr( 0xA0 ) + ;
                Chr( 0x8A ) + Chr( 0xF8 ) + Chr( 1 ) + Chr( 0xF8 ) + Chr( 3 ) + Chr( 0x1F ) + ;
                Chr( 0xBD ) + Chr( 0xB1 )
-        ::Send( cResponse )
-        ::Read()    
+   ::Send( cResponse )
+   ::Read()    
    
 return nil
 
@@ -152,8 +175,9 @@ return hb_StrFormat( 'username="%s",realm="%s",nonce="%s",cnonce="%s",nc=%s,qop=
 METHOD Message( cMsgid, cTo, cTxt ) CLASS HB_WhatsApp
 
    local lLong_txt_bool := isShort( cTxt )
-   local cStream , cMsg, cContent
-   local cTo_length, cMsgid_length, cTxt_length
+   local cStream , cMsg, cContent, cTxt_length
+   local cTo_length
+   local cMsgid_length
    local cTotal_length
    
    cTo_length = Chr( Len( cTo ) )
@@ -166,7 +190,6 @@ METHOD Message( cMsgid, cTo, cTxt ) CLASS HB_WhatsApp
    cContent += cMsgid
    cContent += Chr( 0xF8 ) + Chr( 0x02 ) + Chr( 0xF8 ) + Chr( 0x04 ) + Chr( 0xBA ) + Chr( 0xBD ) + Chr( 0x4F) + ;
                Chr( 0xF8 ) + Chr( 0x01 ) + Chr( 0xF8 ) + Chr( 0x01 ) + Chr( 0x8C ) + Chr( 0xF8 ) + Chr( 0x02 ) + Chr( 0x16 )
-
 
    if ! lLong_txt_bool
       cContent += Chr( 0xFD ) + Chr( 0 ) + cTxt_length
@@ -184,15 +207,72 @@ METHOD Message( cMsgid, cTo, cTxt ) CLASS HB_WhatsApp
     
    cMsg := cTotal_length + cContent 
    
-   cStream := ::Send(cMsg)
-   ? cStream
+   cStream := ::Send( cMsg )
    ::Read()
    // ::Read()
    // ::Read()
         
 Return nil
  
-       
+METHOD parse_received_message( cMsg ) CLASS HB_WhatsApp
+
+   local message := { => }, nLength
+
+   // RCVD MSG IN STRING 
+   nLength = Asc( SubStr( cMsg, 1, 1 ) )
+   message[ 'length' ] = nLength  // PACKET EXCLUDING 00 AND FIRST HEX SHOULD EQUAL THIS NUMBER
+   
+   cMsg = SubStr( cMsg, 3 )       // Remove Length & F8
+   message[ 'sec_length' ] = Asc( SubStr( cMsg, 1, 1 ) )       // Length of something i dont know excatly what  
+   cMsg = SubStr( cMsg, 6 )       // Remove Second Length ( 1 HEX ) , Remove XML Chrs ( 4 HEX )
+   message[ 'from_number_length' ] = Asc( SubStr( cMsg, 1, 1 ) )
+   
+   cMsg = SubStr( cMsg, 2 )       // Remove Length
+   message[ 'from_number' ] = SubStr( cMsg, 1, message[ 'from_number_length' ] )
+   
+   cMsg = SubStr( cMsg, message[ 'from_number_length' ] + 1 )             // Remove NUMBER
+   cMsg = SubStr( cMsg,4 )       // Remove F8 & XML ( 2 HEX )
+   message[ 'message_id_length' ] = Asc( SubStr( cMsg, 1, 1 ) )
+   cMsg = Substr( cMsg, 2 )       // Remove Length
+   message[ 'message_id' ] = SubStr( cMsg, 1, message[ 'message_id_length' ] )
+   cMsg = SubStr( cMsg, message[ 'message_id_length' ] + 1 )
+   cMsg = SubStr( cMsg, 5 )       // Remove XML ( 4 HEX )
+   message[ 'timestamp_length' ] = Asc( SubStr( cMsg, 1, 1 ) )
+   cMsg = SubStr( cMsg, 2 )       // Remove Length
+   message[ 'timestamp' ] = Num2TS( Val( SubStr( cMsg, 1, message[ 'timestamp_length' ] ) ) )
+   
+   cmsg = SubStr( cMsg, message[ 'timestamp_length' ] + 1 )               // Remove Timestamp
+   // Check for Retry header 
+   if Substr( cMsg, 1, 1 ) == Chr( 0x88 )
+      cMsg = SubStr( cMsg, 5 )       // Remove Retry Length , i dont think i will need it
+   endif
+   
+   cmsg = Substr( cMsg, 10 )      // Remove XMPP XML and Name XML Headers 
+   message[ 'sender_name_length' ] = Asc( SubStr( cMsg, 1, 1 ) )
+   cmsg = SubStr( cMsg, 2 )       // Remove Length
+   message[ 'sender_name' ] = SubStr( cMsg, 1, message[ 'sender_name_length' ] )
+   
+   cMsg = SubStr( cMsg, message[ 'sender_name_length' ] + 1 )   // Remove sender from msg
+   cMsg = SubStr( cMsg, 10 )      // Remove body headers
+   message[ 'body_txt_length' ] = Asc( SubStr( cMsg, 1, 1 ) )
+
+   cMsg = SubStr( cMsg, 2 )       // Remove Length
+   message[ 'body_txt' ] = SubStr( cMsg, 1, message[ 'body_txt_length' ] )
+
+   cMsg = SubStr( cMsg, message[ 'body_txt_length' ] + 1 )  // Remove body txt
+   cMsg = SubStr( cMsg, 10 )      // Remove XMPP XML and Name XML Headers 
+   message[ 'time_length' ] = Asc( SubStr( cMsg, 1, 1 ) )
+
+   cMsg = SubStr( cMsg, 2 )       // Remove Length
+   message[ 'time' ] = SubStr( cMsg, 1, message[ 'time_length' ] )         
+   cMsg = SubStr( cMsg, message[ 'time_length' ] + 1 )
+
+   ? "From: " + message[ 'sender_name' ] + CRLF + ;
+     "msg:  " + message[ 'body_txt' ] + CRLF + ;
+     "date: " + message[ 'timestamp' ]
+   
+return message
+               
 METHOD Read() CLASS HB_WhatsApp
 
    local cBuffer := Space( 1024 ), cV, cRcvdType
@@ -258,6 +338,46 @@ METHOD parse_account_info( cMsg )
     ::cAccount_expiration := Num2TS( Val( SubStr( cMsg, 1, nExpr_length ) ) )
 
 return nil
+
+METHOD RequestLastSeen( mobile ) CLASS HB_WhatsApp
+
+   local mob_len, content, len, total_length, request, stream
+
+   mob_len = Chr( Len( mobile ) )
+   content = Chr( 0xF8 ) + Chr( 0x08 ) + Chr( 0x48 ) + Chr( 0x43 ) + Chr( 0xFC )
+   content += Chr( 0x01 ) + Chr( 0x37 ) + Chr( 0xA2 ) + Chr( 0x3A ) + Chr( 0xA0 )
+   content += Chr( 0xFA ) + Chr( 0xFC ) + mob_len
+   content += mobile
+   content += Chr( 0x8A ) + Chr( 0xF8 ) + Chr( 0x01 ) + Chr( 0xF8 ) + Chr( 0x03 )
+   content += Chr( 0x7B ) + Chr( 0xBD ) + Chr( 0x4C )
+
+   len = Len( content )
+   total_length = Chr( len )
+
+   request = Chr( 0 )
+   request += total_length
+   request += content
+   stream  = ::Send( request )
+   ::Read()
+   ::Read()
+
+return nil
+
+METHOD parse_last_seen( cMsg ) CLASS HB_WhatsApp
+
+   Local lastseen := {=>}, moblen, last_seen_len
+
+   cMsg = SubStr( cMsg, 8 )  // Remove Some XML DATA
+   moblen= Asc( SubStr( cMsg, 1, 1 ) )
+   cMsg = SubStr( cMsg, 2 )  // Remove Length
+   lastseen[ 'mobile' ] = SubStr( cMsg, 1, moblen )
+   cMsg = SubStr( cMsg, moblen + 1 )
+   cMsg = SubStr( cMsg, 17 ) // Remove Some More XML DATA
+   last_seen_len = Asc( SubStr( cMsg, 1, 1 ) ) 
+   cmsg = SubStr( cMsg, 2 )  // Remove Length
+   lastseen[ 'seconds_ago' ] = SubStr( cMsg, 0, last_seen_len )
+
+return lastseen
 
 METHOD Send( cData ) CLASS HB_WhatsApp
 

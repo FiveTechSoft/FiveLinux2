@@ -259,8 +259,10 @@ return nil
 function AddButton()
  
    local oBtn
+   local oWndParent := If( oWndInsp:oCtrl:ClassName() == "TFOLDER",;
+                           oWndInsp:oCtrl:aDialogs[ 1 ], oWnd ) 
 
-   @ 20, 20 BUTTON oBtn PROMPT "Button" OF oWnd ;
+   @ 20, 20 BUTTON oBtn PROMPT "Button" OF oWndParent ;
       SIZE 80, 30 PIXEL DESIGN
 
    oBtn:cVarName = "oBtn" + oBtn:GetCtrlIndex()

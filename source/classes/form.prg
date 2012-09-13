@@ -4,7 +4,7 @@
 
 CLASS TForm FROM TWindow
 
-   DATA  oInspector
+   // DATA  oInspector   moved to Class TWindow
    DATA  lDesign
    DATA  lCtrlResize INIT .F.
 
