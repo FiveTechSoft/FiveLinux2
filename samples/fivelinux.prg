@@ -67,10 +67,10 @@ function Install( oSayName, oMeter1, oMeter2 )
    for n = 1 to nLines
       oMeter1:Set( 0 )
       cLine = MemoLine( cHeader,, n )
-      cName = __StrToken( cLine, 1, "," )
+      cName = StrToken( cLine, 1, "," )
       oSayName:SetText( cName )
-      nBufLen = Val( __StrToken( cLine, 2, "," ) )
-      nSize = Val( __StrToken( cLine, 3, "," ) )
+      nBufLen = Val( StrToken( cLine, 2, "," ) )
+      nSize = Val( StrToken( cLine, 3, "," ) )
       cFile = SubStr( cBuffer, nPos, nSize )
       cFile = HB_Uncompress( nBufLen, cFile )
       nPos += nSize
