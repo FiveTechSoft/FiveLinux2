@@ -21,8 +21,8 @@ METHOD New( nRow, nCol, oWnd, cText, nWidth, nHeight, lUpdate ) CLASS TGroup
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   SetCoors( ::hWnd, nRow * 10, nCol * 10 )
-   SetSize( ::hWnd, nWidth, nHeight )
+   ::SetPos( nRow * 10, nCol * 10 )
+   ::SetSize( nWidth, nHeight )
 
    ::Link()
 

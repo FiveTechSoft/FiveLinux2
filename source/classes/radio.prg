@@ -40,8 +40,8 @@ METHOD New( nRow, nCol, oWnd, cText, nWidth, nHeight, oRadMenu, bWhen,;
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   SetCoors( ::hWnd, nRow * 10, nCol * 10 )
-   SetSize( ::hWnd, nWidth, nHeight )
+   ::SetCoors( nRow * 10, nCol * 10 )
+   ::SetSize( nWidth, nHeight )
 
    ::Link()
 
