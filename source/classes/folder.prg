@@ -18,6 +18,18 @@ CLASS TFolder FROM TControl
 
    METHOD SetPrompts( aPrompts )
 
+   METHOD ShowTabs( lOnOff ) INLINE FldShowTabs( ::hWnd, lOnOff )
+
+   METHOD ShowBorder( lOnOff ) INLINE FldShowBorder( ::hWnd, lOnOff )
+
+   METHOD GetPage() INLINE FldGetPage( ::hWnd )
+
+   METHOD SetPosition( nPos ) INLINE FldSetTabsPos( ::hWnd, nPos )
+
+   METHOD Next() INLINE FldGoNext( ::hWnd )
+
+   METHOD Prev() INLINE FldGoPrev( ::hWnd )
+
 ENDCLASS
 
 //----------------------------------------------------------------------------//

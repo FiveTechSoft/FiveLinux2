@@ -47,3 +47,46 @@ HB_FUNC( FLDSETPROMPTS ) // ( aPrompts ) --> aPagesHandles
       hb_stornl( ( HB_ULONG ) fixed, -1, i + 1 );
    }
 }
+
+HB_FUNC( FLDGOPREV )
+{
+   GtkNotebook * hWnd = ( GtkNotebook * ) hb_parnl( 1 );
+
+   gtk_notebook_prev_page( hWnd );
+}
+
+HB_FUNC( FLDGONEXT )
+{
+   GtkNotebook * hWnd = ( GtkNotebook * ) hb_parnl( 1 );
+
+   gtk_notebook_next_page( hWnd );
+}
+
+HB_FUNC( FLDSHOWTABS )
+{
+   GtkNotebook * hWnd = ( GtkNotebook * ) hb_parnl( 1 );
+
+   gtk_notebook_set_show_tabs( hWnd, hb_parl( 2 ) );
+}
+
+HB_FUNC( FLDSHOWBORDER )
+{
+   GtkNotebook * hWnd = ( GtkNotebook * ) hb_parnl( 1 );
+
+   gtk_notebook_set_show_border( hWnd, hb_parl( 2 ) );
+}
+
+HB_FUNC( FLDSETTABSPOS )
+{
+   GtkNotebook * hWnd = ( GtkNotebook * ) hb_parnl( 1 );
+
+   gtk_notebook_set_tab_pos( hWnd, hb_parnl( 2 ) );
+}
+
+HB_FUNC( FLDGETPAGE )
+{
+   GtkNotebook * hWnd = ( GtkNotebook * ) hb_parnl( 1 );
+
+   hb_retnl( gtk_notebook_get_current_page( hWnd ) + 1 );
+}
+

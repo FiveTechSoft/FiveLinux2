@@ -14,10 +14,10 @@ Function Main()
          @2,40 BUTTON oBtn PROMPT "<" ACTION oFld:Prev() OF oWnd SIZE 40,25
          @2,44 BUTTON oBtn PROMPT ">" ACTION oFld:Next() OF oWnd SIZE 40,25
 
-	 @2,30 BUTTON oBtn PROMPT "Arriba" ACTION oFld:SetPosition( 0 ) OF oWnd
-         @6,30 BUTTON oBtn PROMPT "Abajo" ACTION oFld:SetPosition( 1 ) OF oWnd
-         @10,30 BUTTON oBtn PROMPT "Izquierda" ACTION oFld:SetPosition( 2 ) OF oWnd
-         @14,30 BUTTON oBtn PROMPT "Derecha" ACTION oFld:SetPosition( 3 ) OF oWnd
+	 @2,30 BUTTON oBtn PROMPT "Arriba" ACTION oFld:SetPosition( 2 ) OF oWnd
+         @6,30 BUTTON oBtn PROMPT "Abajo" ACTION oFld:SetPosition( 3 ) OF oWnd
+         @10,30 BUTTON oBtn PROMPT "Izquierda" ACTION oFld:SetPosition( 4 ) OF oWnd
+         @14,30 BUTTON oBtn PROMPT "Derecha" ACTION oFld:SetPosition( 5 ) OF oWnd
 
 	 @22,1 BUTTON oBtn PROMPT "Hide/Show Tabs" ;
 	      ACTION ( oFld:ShowTabs( lShow ), lShow := !lShow ) ;
