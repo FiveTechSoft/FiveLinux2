@@ -43,6 +43,8 @@ extern ErrorLink
        => ;
           [ <oIni> := ] TIni():New( <cFileName> )
 
+#xcommand DATABASE <oDbf> => <oDbf> := TDataBase():New()
+
 #xcommand DEFINE WINDOW <oWnd> ;
              [ TITLE <cTitle> ] ;
 	     [ MENU <oMenu> ] ;

@@ -26,7 +26,9 @@ PRG_OBJS = ./obj/bar.o        \
 	   ./obj/menu.o       \
 	   ./obj/menuitem.o   \
 	   ./obj/mget.o       \
+	   ./obj/missing.o    \
 	   ./obj/msgbar.o     \
+	   ./obj/oemansi.o    \
 	   ./obj/pdmenu.o     \
 	   ./obj/printer.o    \
 	   ./obj/progres.o    \
@@ -36,6 +38,7 @@ PRG_OBJS = ./obj/bar.o        \
 	   ./obj/scrollbar.o  \
 	   ./obj/timer.o      \
 	   ./obj/valblank.o   \
+	   ./obj/valtostr.o   \
 	   ./obj/wbrowse.o    \
 	   ./obj/wbcolumn.o   \
            ./obj/window.o

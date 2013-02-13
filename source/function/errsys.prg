@@ -197,16 +197,16 @@ static function ErrorDialog( oError )
    if nButtons == 2
       @ 32,  9 BUTTON "_Quit" OF oDlg ACTION oDlg:End()
    else
-      @ 32, 16 BUTTON "_Quit" OF oDlg ACTION oDlg:End()
+      @ 32, 26 BUTTON "_Quit" OF oDlg ACTION oDlg:End()
    endif
 
    if oError:CanRetry
-      @ 32, If( nButtons == 2, 22, 14 ) BUTTON "_Retry" ;
+      @ 32, If( nButtons == 2, 22, 16 ) BUTTON "_Retry" ;
          OF oDlg ACTION ( lRet  := .t., oDlg:End() )
    endif
 
    if oError:CanDefault
-      @ 32, 9 BUTTON "_Default"  OF oDlg ACTION ( lRet  := .f., oDlg:End() )
+      @ 32, 6 BUTTON "_Default"  OF oDlg ACTION ( lRet  := .f., oDlg:End() )
    endif
 
    ACTIVATE DIALOG oDlg CENTERED
