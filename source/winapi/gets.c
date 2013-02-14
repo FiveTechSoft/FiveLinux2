@@ -30,7 +30,7 @@ HB_FUNC( CREATEGET )
    gtk_signal_connect( GTK_OBJECT( hWnd ), "motion_notify_event",
                        ( GtkSignalFunc ) motion_notify_event, NULL );
 
-   gtk_widget_set_events( hWnd, GDK_EXPOSURE_MASK
+   gtk_widget_set_events( hWnd, GDK_EXPOSURE_MASK 
 			 | GDK_LEAVE_NOTIFY_MASK
 			 | GDK_BUTTON_PRESS_MASK
 			 | GDK_POINTER_MOTION_MASK
