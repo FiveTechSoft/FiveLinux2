@@ -96,7 +96,7 @@ METHOD MouseMove( nRow, nCol ) CLASS TControl
 
    if ::lDrag
       if IsLBtnPressed( ::hWnd ) .and. ::nStartRow != nil
-         if ::ClassName() $ "TLISTBOX"
+         if ::ClassName() $ "TLISTBOX,TCOMBOBOX"
             ::SetPos( MouseGetRow( ::oWnd:hWnd ) - ::nStartRow, nCol - ::nStartCol )
          else
             ::SetPos( nRow - ::nStartRow, nCol - ::nStartCol )
