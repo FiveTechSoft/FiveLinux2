@@ -52,8 +52,8 @@ METHOD New( nRow, nCol, oWnd, bSetGet, aItems, nWidth, nHeight, bWhen,;
       Eval( bSetGet, aItems[ 1 ] )
    endif
 
-   ::SetText( Eval( bSetGet ) )
    ::SetItems( aItems )
+   ::SetText( Eval( bSetGet ) )
 
    oWnd:AddControl( Self )
 
