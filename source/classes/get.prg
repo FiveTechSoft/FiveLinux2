@@ -151,10 +151,10 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TGet
 
         case nMsg == WM_LBUTTONDOWN
              ::oGet:pos = ::GetCurPos()
-             return Super:HandleEvent( nMsg, nWParam, nLParam )
+             return ::Super:HandleEvent( nMsg, nWParam, nLParam )
    endcase
 
-return Super:HandleEvent( nMsg, nWParam, nLParam ) 
+return ::Super:HandleEvent( nMsg, nWParam, nLParam ) 
 
 //----------------------------------------------------------------------------//
 

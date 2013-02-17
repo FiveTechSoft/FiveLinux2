@@ -130,6 +130,6 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TButton
            return ::Click()
    endcase
 
-return Super:HandleEvent( nMsg, nWParam, nLParam )
+return ::Super:HandleEvent( nMsg, nWParam, nLParam )
 
 //----------------------------------------------------------------------------//

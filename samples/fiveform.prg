@@ -446,7 +446,7 @@ METHOD New() CLASS TInspector
 
    local cVal := ""
  
-   Super:New()
+   ::Super:New()
  
    ::SetText( "Object Inspector" )
    ::SetSize( 287, 342 )

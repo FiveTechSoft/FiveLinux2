@@ -501,7 +501,7 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TWBrowse
            return ::Paint( nWParam )
    endcase
 
-return Super:HandleEvent( nMsg, nWParam, nLParam )
+return ::Super:HandleEvent( nMsg, nWParam, nLParam )
 
 //----------------------------------------------------------------------------//
 
@@ -586,7 +586,7 @@ METHOD MouseMove( nRow, nCol ) CLASS TWBrowse
 
    if ::lDrag
       if IsLBtnPressed( ::hWnd ) .and. ::nStartRow != nil
-         Super:MouseMove( nRow, nCol )
+         ::Super:MouseMove( nRow, nCol )
 
          ::oVScroll:SetPos( ::nTop, ::nLeft + ::nWidth + 2 )
          ::oHScroll:SetPos( ::nTop + ::nHeight + 2, ::nLeft )
@@ -716,7 +716,7 @@ METHOD SetSize( nWidth, nHeight ) CLASS TWBrowse
 
    local nCol, aPos
 
-   Super:SetSize( nWidth, nHeight )
+   ::Super:SetSize( nWidth, nHeight )
 
    if ::oVScroll != nil
       ::oVScroll:SetPos( ::oVScroll:nTop, ::nLeft + nWidth + 1 )

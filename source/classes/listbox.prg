@@ -115,6 +115,6 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TListBox
              return ::Change( nWParam )
    endcase
 
-return Super:HandleEvent( nMsg, nMsg, nLParam )
+return ::Super:HandleEvent( nMsg, nMsg, nLParam )
 
 //----------------------------------------------------------------------------//

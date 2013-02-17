@@ -68,7 +68,7 @@ METHOD LButtonDown( nRow, nCol ) CLASS TControl
       endif
    endif
 
-   Super:LButtonDown( nRow, nCol )
+   ::Super:LButtonDown( nRow, nCol )
 
 return If( ::lDrag, 1, nil )  // no default behavior for lDrag 
 

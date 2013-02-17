@@ -105,6 +105,6 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TComboBox
              return ::Change()
    endcase
 
-return Super:HandleEvent( nMsg, nWParam, nLParam )
+return ::Super:HandleEvent( nMsg, nWParam, nLParam )
 
 //----------------------------------------------------------------------------//
