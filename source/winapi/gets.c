@@ -15,6 +15,9 @@ HB_FUNC( CREATEGET )
 {
    GtkWidget * hWnd = gtk_entry_new();
 
+   g_object_set( gtk_widget_get_settings( hWnd ),
+		 "gtk-entry-select-on-focus", FALSE, NULL );
+
    gtk_signal_connect( GTK_OBJECT( hWnd ), "focus_out_event",
                        G_CALLBACK( LostFocusEvent ), NULL );
 
