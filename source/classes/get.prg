@@ -24,8 +24,6 @@ CLASS TGet FROM TControl
 
    METHOD GotFocus()
 
-   METHOD Refresh() INLINE ::SetText( ::oGet:buffer )
-
    METHOD SetCurPos( nPos ) INLINE GetSetCurPos( ::hWnd, nPos )
 
    METHOD SetText( cText ) INLINE GetSetText( ::hWnd, cText )

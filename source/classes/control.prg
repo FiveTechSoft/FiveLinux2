@@ -31,6 +31,8 @@ CLASS TControl FROM TWindow
 
    METHOD Show() INLINE ShowControl( ::hWnd )
 
+   METHOD Refresh() INLINE ::SetText( cValToChar( Eval( ::bSetGet ) ) )
+
    METHOD SetFont( oFont ) INLINE If( ::oFont != nil, ::oFont:End(),),;
                            ::oFont := oFont, SetFont( ::hWnd, oFont:hFont )
 
