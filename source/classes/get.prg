@@ -26,7 +26,7 @@ CLASS TGet FROM TControl
 
    METHOD SetCurPos( nPos ) INLINE GetSetCurPos( ::hWnd, nPos )
 
-   METHOD SetText( cText ) INLINE GetSetText( ::hWnd, cText )
+   METHOD SetText( cText ) INLINE GetSetText( ::hWnd, cText ), ::oGet:buffer := cText
 
    METHOD GetText() INLINE GetGetText( ::hWnd )
 
