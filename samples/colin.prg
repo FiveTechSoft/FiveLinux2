@@ -14,8 +14,6 @@ function Main()
 
    @ 127, 113 GET oGet2 VAR cGet2 SIZE 200,  29 PIXEL OF oForm1 UPDATE
 
-   oGet2:bGotFocus = { || oGet2:SetText( Time() ), oGet2:SetCurPos( 0 ) }
-
    @ 197, 114 COMBOBOX oCbx1 VAR cCbx1 ITEMS aItems SIZE 200, 24 PIXEL OF oForm1 UPDATE
 
    @ 251, 174 BUTTON oBtn1 PROMPT "Clear" ;
