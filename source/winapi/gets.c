@@ -21,8 +21,8 @@ HB_FUNC( CREATEGET )
    gtk_signal_connect( GTK_OBJECT( hWnd ), "focus_out_event",
                        G_CALLBACK( LostFocusEvent ), NULL );
 
-   gtk_signal_connect( GTK_OBJECT( hWnd ), "focus_in_event",
-                       G_CALLBACK( GotFocusEvent ), NULL );
+   g_signal_connect_after( GTK_OBJECT( hWnd ), "focus_in_event",
+                             G_CALLBACK( GotFocusEvent ), NULL );
 
    gtk_signal_connect( GTK_OBJECT( hWnd ), "key_press_event",
                        G_CALLBACK( KeyPressEvent ), NULL );

@@ -25,7 +25,7 @@ METHOD New( nRow, nCol, oWnd, bSetGet, nWidth, nHeight, bWhen, bValid,;
    DEFAULT oWnd := GetWndDefault(), nWidth := 224, nHeight := 124,;
            lUpdate := .f.
 
-   ::hWnd = CreateText()
+   ::hWnd    = CreateText()
    ::bSetGet = bSetGet
    ::bWhen   = bWhen
    ::bValid  = bValid

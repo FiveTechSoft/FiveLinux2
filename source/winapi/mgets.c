@@ -11,12 +11,15 @@ HB_FUNC( CREATETEXT )
    GtkWidget * hScrollBars = gtk_scrolled_window_new( NULL, NULL );
    GtkWidget * hWnd = gtk_text_view_new();
 
-   gtk_container_add( GTK_CONTAINER( hScrollBars ), hViewPort );
-   gtk_container_add( GTK_CONTAINER( hViewPort ), hWnd );
+   gtk_text_view_set_cursor_visible( GTK_TEXT_VIEW( hWnd ), TRUE );
+
+   gtk_container_add( GTK_CONTAINER( hScrollBars ), hWnd ); // ViewPort );
+   // gtk_container_add( GTK_CONTAINER( hViewPort ), hWnd );
 
    gtk_object_set_data( GTK_OBJECT( hScrollBars ), "hWnd", ( gpointer ) hWnd );
    gtk_object_set_data( GTK_OBJECT( hWnd ), "hScrolls",
                         ( gpointer ) hScrollBars );
+   gtk_object_set_data( GTK_OBJECT( hScrollBars ), "hViewPort", ( gpointer ) hViewPort );
 
    GTK_WIDGET_SET_FLAGS( hScrollBars, GTK_CAN_FOCUS );
    gtk_scrolled_window_set_policy( GTK_SCROLLED_WINDOW( hScrollBars ),

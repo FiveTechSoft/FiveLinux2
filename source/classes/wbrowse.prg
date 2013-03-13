@@ -82,6 +82,8 @@ CLASS TWBrowse FROM TControl
 
    METHOD RButtonDown( nRow, nCol ) VIRTUAL
 
+   METHOD Refresh() VIRTUAL
+
    METHOD Skip( n )
 
    METHOD SetAltColors( nClrText, nClrPane, nClrTextS, nClrPaneS )
