@@ -4,7 +4,7 @@
 
 function Main()
 
-   local oDlg, oGet1, cGet1 := Space( 20 ), oFld1
+   local oDlg, oGet1, cPrgName := Space( 20 ), oFld1
    local oResult, cResult := ""
 
    DEFINE DIALOG oDlg TITLE "Visual Make for Harbour" ;
@@ -12,7 +12,11 @@ function Main()
 
    @  20,  20 SAY "Main PRG" SIZE  80,  20 PIXEL OF oDlg
 
-   @  41,  20 GET oGet1 VAR cGet1 SIZE 262,  26 PIXEL OF oDlg
+   @  41,  20 GET oGet1 VAR cPrgName SIZE 300,  26 PIXEL OF oDlg
+
+   @  41, 322 BUTTON "..." OF oDlg SIZE 25, 25 PIXEL ;
+      ACTION ( oGet1:VarPut( cPrgName := cGetFile( "Please select a PRG file", "*.prg" ) ),;
+               oGet1:Refresh() )
 
    @  86,  20 SAY "Additional" SIZE  80,  20 PIXEL OF oDlg
 
