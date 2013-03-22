@@ -19,9 +19,10 @@ function Main()
 
    @  20,  20 SAY "Main PRG" SIZE  80,  20 PIXEL OF oDlg
 
-   @  41,  20 GET oGet1 VAR cPrgName SIZE 300,  26 PIXEL OF oDlg
+   @  41,  20 GET oGet1 VAR cPrgName SIZE 326, 26 PIXEL OF oDlg ;
+      VALID ! Empty( cPrgName )
 
-   @  41, 322 BUTTON "..." OF oDlg SIZE 25, 25 PIXEL ;
+   @  41, 350 BUTTON "..." OF oDlg SIZE 25, 25 PIXEL ;
       ACTION ( oGet1:VarPut( cPrgName := cGetFile( "Please select a PRG file", "*.prg" ) ),;
                oGet1:Refresh() )
 
