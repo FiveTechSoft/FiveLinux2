@@ -5,6 +5,7 @@
 function Main()
 
    local oDlg, oGet1, cPrgName := Space( 20 ), oFld1
+   local oBrwPrgs
    local oResult, cResult := ""
 
    DEFINE DIALOG oDlg TITLE "Visual Make for Harbour" ;
@@ -21,7 +22,13 @@ function Main()
    @  86,  20 SAY "Additional" SIZE  80,  20 PIXEL OF oDlg
 
    @ 108, 20 FOLDER oFld1 PROMPTS "PRGs", "Cs", "OBJs", "LIBs", "HBCs" ;
-      SIZE 363, 204 PIXEL OF oDlg
+      SIZE 363, 210 PIXEL OF oDlg
+
+   @ 138, 25 BROWSE oBrwPrgs ;
+      FIELDS "", "", "" ;
+      HEADERS "Name", "Date", "Size" ;
+      COLSIZES 150, 100, 100 ;
+      OF oFld1:aDialogs[ 1 ] SIZE 335, 160 PIXEL DESIGN
 
    @ 328,  13 SAY "Result" SIZE  80,  20 PIXEL OF oDlg
 
