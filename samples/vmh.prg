@@ -36,7 +36,7 @@ function Main()
              aPrgs[ oBrwPrgs:nArrayAt ][ 3 ] ;
       HEADERS "Name", "Date", "Size" ;
       COLSIZES 180, 85, 85 ;
-      OF oFld1:aDialogs[ 1 ] SIZE 335, 160 PIXEL DESIGN
+      OF oFld1:aDialogs[ 1 ] SIZE 335, 160 PIXEL
 
    oBrwPrgs:SetArray( aPrgs )
    oBrwPrgs:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
