@@ -54,11 +54,11 @@ function Main()
 
    @ 31, 412 BUTTON "_Build" ;
       SIZE 123, 50 PIXEL OF oDlg ;
-      ACTION ( __Run( "~/harbour/bin/hbmk2 " + ;
-                      "-i~/fivelinux/include " + ; 
-                      AllTrim( cPrgName ) + ;
-                      " > out.log" ),;
-               oResult:SetText( AllTrim( Str( ErrorLevel() ) ) + CRLF + ;
+      ACTION ( nRetCode := hb_Run( GetEnv( "HOME" ) + "/harbour/bin/hbmk2 " + ;
+                                   "-i" + GetEnv( "HOME" ) + "/fivelinux/include " + ; 
+                                   AllTrim( cPrgName ) + ;
+                                   " > out.log" ),;
+               oResult:SetText( AllTrim( Str( nRetCode ) ) + CRLF + ;
                                 MemoRead( "out.log" ) ) ) 
 
    @ 87, 412 BUTTON "_Settings" ;
