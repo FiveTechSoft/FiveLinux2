@@ -12,7 +12,7 @@ function Main()
 
    local oDlg, oGet1, cPrgName := Space( 20 ), oFld1
    local oBrwPrgs
-   local oResult, cResult := ""
+   local oResult, cResult := "", nRetCode
 
    DEFINE DIALOG oDlg TITLE "Visual Make for Harbour" ;
       SIZE 557, 500
@@ -53,11 +53,16 @@ function Main()
 
    @ 31, 412 BUTTON "_Build" ;
       SIZE 123, 50 PIXEL OF oDlg ;
-      ACTION MsgInfo( "Not defined yet!" )
+      ACTION ( __Run( "~/harbour/bin/hbmk2 " + ;
+                      "-i~/fivelinux/include " + ; 
+                      AllTrim( cPrgName ) + ;
+                      " > out.log" ),;
+               oResult:SetText( AllTrim( Str( ErrorLevel() ) ) + CRLF + ;
+                                MemoRead( "out.log" ) ) ) 
 
    @ 87, 412 BUTTON "_Settings" ;
       SIZE 124, 50 PIXEL OF oDlg ;
-      ACTION MsgInfo( "Not defined yet!" )
+      ACTION Settings()
 
    @ 143, 412 BUTTON "_Exit" ;
       SIZE 124, 50 PIXEL OF oDlg ;
@@ -66,5 +71,17 @@ function Main()
    ACTIVATE DIALOG oDlg CENTERED
 
 return oDlg
+
+//----------------------------------------------------------------------------//
+
+function Settings()
+
+   local oDlg
+
+   DEFINE DIALOG oDlg TITLE "Settings" SIZE 400, 400
+
+   ACTIVATE DIALOG oDlg CENTERED
+
+return nil
 
 //----------------------------------------------------------------------------//
