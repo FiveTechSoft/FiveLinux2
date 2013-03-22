@@ -30,6 +30,12 @@ function Main()
       COLSIZES 180, 85, 85 ;
       OF oFld1:aDialogs[ 1 ] SIZE 335, 160 PIXEL DESIGN
 
+   @  108, 322 BUTTON "+" OF oDlg SIZE 25, 25 PIXEL ;
+      ACTION MsgInfo( "add" )
+
+   @  108, 350 BUTTON "-" OF oDlg SIZE 25, 25 PIXEL ;
+      ACTION MsgInfo( "delete" )
+
    @ 328,  13 SAY "Result" SIZE  80,  20 PIXEL OF oDlg
 
    @ 347,  20 GET oResult VAR cResult MEMO SIZE 363, 144 OF oDlg PIXEL
