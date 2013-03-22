@@ -27,7 +27,7 @@ function Main()
    @ 138, 25 BROWSE oBrwPrgs ;
       FIELDS "", "", "" ;
       HEADERS "Name", "Date", "Size" ;
-      COLSIZES 150, 100, 100 ;
+      COLSIZES 180, 85, 85 ;
       OF oFld1:aDialogs[ 1 ] SIZE 335, 160 PIXEL DESIGN
 
    @ 328,  13 SAY "Result" SIZE  80,  20 PIXEL OF oDlg
