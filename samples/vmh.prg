@@ -1,5 +1,11 @@
 #include "FiveLinux.ch"
 
+#define CLR_GRAY1 0xCCCCCC
+#define CLR_GRAY2 0xEEEEEE
+#define CLR_TEXT  0x303030
+
+static aPrgs := { { "", "", "" } }
+
 //----------------------------------------------------------------------------//
 
 function Main()
@@ -25,10 +31,15 @@ function Main()
       SIZE 363, 210 PIXEL OF oDlg
 
    @ 138, 25 BROWSE oBrwPrgs ;
-      FIELDS "", "", "" ;
+      FIELDS aPrgs[ oBrwPrgs:nArrayAt ][ 1 ],;
+             aPrgs[ oBrwPrgs:nArrayAt ][ 2 ],;
+             aPrgs[ oBrwPrgs:nArrayAt ][ 3 ] ;
       HEADERS "Name", "Date", "Size" ;
       COLSIZES 180, 85, 85 ;
       OF oFld1:aDialogs[ 1 ] SIZE 335, 160 PIXEL DESIGN
+
+   oBrwPrgs:SetArray( aPrgs )
+   oBrwPrgs:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
 
    @  108, 322 BUTTON "+" OF oDlg SIZE 25, 25 PIXEL ;
       ACTION MsgInfo( "add" )
