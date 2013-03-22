@@ -5,7 +5,7 @@
 CLASS TMultiGet FROM TControl
 
    METHOD New( nRow, nCol, oWnd, bSetGet, nWidth, nHeight, bWhen, bValid,;
-               lUpdate )
+               lUpdate, lPixel )
 
    METHOD HandleEvent( nMsg, nWParam, nLParam )
 
@@ -20,10 +20,10 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, oWnd, bSetGet, nWidth, nHeight, bWhen, bValid,;
-            lUpdate ) CLASS TMultiGet
+            lUpdate, lPixel ) CLASS TMultiGet
 
    DEFAULT oWnd := GetWndDefault(), nWidth := 224, nHeight := 124,;
-           lUpdate := .f.
+           lUpdate := .f., lPixel := .F.
 
    ::hWnd    = CreateText()
    ::bSetGet = bSetGet
@@ -34,7 +34,7 @@ METHOD New( nRow, nCol, oWnd, bSetGet, nWidth, nHeight, bWhen, bValid,;
    oWnd:AddControl( Self )
 
    SetParent( ::hWnd, oWnd:hWnd )
-   ::SetPos( nRow * 10, nCol * 10 )
+   ::SetPos( nRow * If( lPixel, 1, 10 ), nCol * If( lPixel, 1, 10 ) )
    ::SetSize( nWidth, nHeight )
 
    ::Link()

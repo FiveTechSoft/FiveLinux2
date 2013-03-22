@@ -124,14 +124,14 @@ return nil
 
 METHOD GotFocus() CLASS TGet
 
-   ::SetCurPos( ::oGet:pos - 1 )
    ::SetSel( 0, 0 )
+   // ::SetCurPos( ::oGet:pos - 1 )
 
    if ::bGotFocus != nil
       Eval( ::bGotFocus, Self )
    endif
 
-return nil
+return .F.
 
 //----------------------------------------------------------------------------//
 

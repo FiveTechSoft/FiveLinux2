@@ -209,11 +209,12 @@ extern ErrorLink
 	     [ VALID <uValid> ] ;
 	     [ <memo: MULTILINE, MEMO, TEXT> ] ;
 	     [ <update: UPDATE> ] ;
+	     [ <pixel: PIXEL> ] ;       
 	  => ;
              [ <oGet> := ] TMultiGet():New( <nRow>, <nCol>,;
 	     [<oWnd>], bSETGET( <uVar> ), [<nWidth>],;
 	     [<nHeight>], [ \{|o| <uWhen> \} ],;
-	     [ \{|o| <uValid> \} ], <.update.> )
+	     [ \{|o| <uValid> \} ], <.update.>, <.pixel.> )
 
 #xcommand @ <nRow>, <nCol> GET [ <oGet> VAR ] <uVar> ;
 	     [ PICTURE <cPicture> ] ;

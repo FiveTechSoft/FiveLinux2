@@ -12,13 +12,13 @@ function Main()
 
    @  91, 111 GET oGet1 VAR cGet1 SIZE 200,  29 PIXEL OF oForm1 UPDATE
 
-   @ 127, 113 GET oGet2 VAR cGet2 SIZE 200,  29 PIXEL OF oForm1 UPDATE
+   oGet1:bLostFocus = { || oGet2:SetText( Time() ), oGet2:SetCurPos( 0 ) }
 
-   @ 197, 114 COMBOBOX oCbx1 VAR cCbx1 ITEMS aItems SIZE 200, 24 PIXEL OF oForm1 UPDATE
+   @ 127, 113 GET oGet2 VAR cGet2 SIZE 200,  29 PIXEL OF oForm1
 
    @ 251, 174 BUTTON oBtn1 PROMPT "Clear" ;
       SIZE 80, 30 PIXEL OF oForm1 ;
-      ACTION ( cGet1 := cGet2 := cGet3 := Space( 20 ), cCbx1 := "two", oForm1:Update(), oGet1:SetFocus() )
+      ACTION ( oGet2:SetFocus(), oGet2:SetCurPos( 0 ) )
 
    @ 250, 277 BUTTON oBtn2 PROMPT "End" ;
       SIZE 80, 30 PIXEL OF oForm1 ;

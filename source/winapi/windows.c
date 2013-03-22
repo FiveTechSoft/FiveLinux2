@@ -120,7 +120,7 @@ HB_FUNC( GETHEIGHT )
 HB_FUNC( CTRLSETSIZE )
 {
    GtkWidget * hViewPort = gtk_object_get_data( ( GtkObject * ) hb_parnl( 1 ), "hViewPort" );
-   GtkWidget * hWnd = gtk_object_get_data( ( GtkObject * ) hb_parnl( 1 ), "hWnd" );
+   // GtkWidget * hWnd = gtk_object_get_data( ( GtkObject * ) hb_parnl( 1 ), "hWnd" );
 
    if( hViewPort )
       gtk_widget_set_usize( hViewPort, hb_parnl( 2 ), hb_parnl( 3 ) );
