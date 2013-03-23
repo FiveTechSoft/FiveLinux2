@@ -118,9 +118,9 @@ function GetProcessKey( oGet, nKey, oBrw, dFecha, cCuenta, nDoc, cDescrip,;
                      oGet:nLeft + oBrw:aColumns[ oGet:Cargo ]:nWidth - 1  )
            if oGet:nLeft + oBrw:aColumns[ oGet:Cargo + 1 ]:nWidth > ;
 	      oBrw:nWidth
-              SetSize( oGet:hWnd, oBrw:nWidth - oGet:nLeft + 20, 22 )
+              oGet:SetSize( oBrw:nWidth - oGet:nLeft + 20, 22 )
            else
-              SetSize( oGet:hWnd, oBrw:aColumns[ oGet:Cargo + 1 ]:nWidth, 22 )
+              oGet:SetSize( oBrw:aColumns[ oGet:Cargo + 1 ]:nWidth, 22 )
            endif
            oGet:Cargo++
 
@@ -151,9 +151,9 @@ function GetProcessKey( oGet, nKey, oBrw, dFecha, cCuenta, nDoc, cDescrip,;
 	   oGet:Refresh()
 
       case nKey == K_UP .and. oGet:Cargo > 1
-           SetCoors( oGet:hWnd, oGet:nTop,;
-                     oGet:nLeft - oBrw:aColumns[ oGet:Cargo - 1 ]:nWidth + 1 )
-           SetSize( oGet:hWnd, oBrw:aColumns[ oGet:Cargo - 1 ]:nWidth, 22 )
+           oGet:SetPos( oGet:nTop,;
+                        oGet:nLeft - oBrw:aColumns[ oGet:Cargo - 1 ]:nWidth + 1 )
+           oGet:SetSize( oBrw:aColumns[ oGet:Cargo - 1 ]:nWidth, 22 )
            oGet:Cargo--
 
 	   do case

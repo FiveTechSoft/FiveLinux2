@@ -9,6 +9,7 @@ function Main()
    DATABASE oDbf
 
    MsgInfo( oDbf:First )
+   MsgInfo( oDbf:Last )
 
    oDbf:Close()
 

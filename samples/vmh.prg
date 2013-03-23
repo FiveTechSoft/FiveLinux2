@@ -7,6 +7,7 @@
 static aPrgs := { { "", "", "" } }
 static lFLH := .T.
 static cHbmkPath, cFLHPath
+static aDefines := { { "", "" } }
 
 //----------------------------------------------------------------------------//
 
@@ -67,6 +68,7 @@ function Main()
                If( lFLH, "`pkg-config --libs gtk+-2.0` ", "" ) + ;
                If( lFLH, "`pkg-config --libs libglade-2.0` ", "" ) + ;
                If( lFLH, "-L" + cFLHPath + "/lib ", "" ) + ;
+               "xhb.hbc " + ;
                " > out.log",;
                nRetCode := hb_Run( cCmd ),;
                oResult:SetText( AllTrim( Str( nRetCode ) ) + CRLF + ;
@@ -92,6 +94,7 @@ function Settings()
 
    local oDlg, lFLHTemp := lFLH, cHbmkPathTemp := cHbmkPath
    local oGetFLH, cFLHPathTemp := cFLHPath
+   local oBrwDefines
 
    DEFINE DIALOG oDlg TITLE "Settings" SIZE 550, 400
 
@@ -118,6 +121,22 @@ function Settings()
       ON CHANGE If( lFLHTemp, oGetFLH:Enable(), oGetFLH:Disable() )
 
    @ 165, 5 SAY "Defines" OF oDlg SIZE 80, 14 PIXEL
+
+   @ 156, 322 BUTTON "+" OF oDlg SIZE 25, 25 PIXEL ;
+      ACTION MsgInfo( "add" )
+
+   @ 156, 350 BUTTON "-" OF oDlg SIZE 25, 25 PIXEL ;
+      ACTION MsgInfo( "delete" )
+
+   @ 185, 20 BROWSE oBrwDefines ;
+      FIELDS aDefines[ oBrwDefines:nArrayAt ][ 1 ],;
+             aDefines[ oBrwDefines:nArrayAt ][ 2 ] ;
+      HEADERS "Name", "Value" ;
+      COLSIZES 180, 180 ;
+      OF oDlg SIZE 335, 160 PIXEL
+
+   oBrwDefines:SetArray( aDefines )
+   oBrwDefines:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
 
    @ 31, 412 BUTTON "_Save" ;
       SIZE 123, 50 PIXEL OF oDlg ;
