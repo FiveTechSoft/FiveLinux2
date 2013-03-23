@@ -5,6 +5,8 @@
 #define CLR_TEXT  0x303030
 
 static aPrgs := { { "", "", "" } }
+static lFLH := .T.
+static cHbmkPath, cFLHPath
 
 //----------------------------------------------------------------------------//
 
@@ -13,6 +15,9 @@ function Main()
    local oDlg, oGet1, cPrgName := Space( 20 ), oFld1
    local oBrwPrgs
    local oResult, cResult := "", cCmd, nRetCode
+
+   cHbmkPath := GetEnv( "HOME" ) + "/harbour/bin/hbmk2"
+   cFLHPath  := GetEnv( "HOME" ) + "/fivelinux"
 
    DEFINE DIALOG oDlg TITLE "Visual Make for Harbour" ;
       SIZE 557, 500
@@ -50,18 +55,18 @@ function Main()
 
    @ 328,  13 SAY "Result" SIZE  80,  20 PIXEL OF oDlg
 
-   @ 347,  20 GET oResult VAR cResult MEMO SIZE 500, 144 OF oDlg PIXEL
+   @ 347,  20 GET oResult VAR cResult MEMO SIZE 515, 144 OF oDlg PIXEL
 
    @ 31, 412 BUTTON "_Build" ;
       SIZE 123, 50 PIXEL OF oDlg ;
-      ACTION ( cCmd := GetEnv( "HOME" ) + "/harbour/bin/hbmk2 " + ;
-               "-i" + GetEnv( "HOME" ) + "/fivelinux/include " + ; 
+      ACTION ( cCmd := cHbmkPath + " " + ;
+               If( lFLH, "-i" + cFLHPath + "/include ", "" ) + ; 
                AllTrim( cPrgName ) + " " + ;
-               "-l" + "five " + ;
-               "-l" + "fivec " + ;
-               "-l" + "`pkg-config --libs gtk+-2.0` " + ;
-               "-l" + "`pkg-config --libs libglade-2.0` " + ;
-               "-L" + GetEnv( "HOME" ) + "/fivelinux/lib " + ;
+               If( lFLH, "-l" + "five ", "" ) + ;
+               If( lFLH, "-l" + "fivec ", "" ) + ;
+               If( lFLH, "-l" + "`pkg-config --libs gtk+-2.0` ", "" ) + ;
+               If( lFLH, "-l" + "`pkg-config --libs libglade-2.0` ", "" ) + ;
+               If( lFLH, "-L" + GetEnv( "HOME" ) + "/fivelinux/lib ", "" ) + ;
                " > out.log",;
                nRetCode := hb_Run( cCmd ),;
                oResult:SetText( AllTrim( Str( nRetCode ) ) + CRLF + ;
@@ -85,9 +90,43 @@ return oDlg
 
 function Settings()
 
-   local oDlg
+   local oDlg, lFLHTemp := lFLH, cHbmkPathTemp := cHbmkPath
+   local oGetFLH, cFLHPathTemp := cFLHPath
 
-   DEFINE DIALOG oDlg TITLE "Settings" SIZE 400, 400
+   DEFINE DIALOG oDlg TITLE "Settings" SIZE 550, 400
+
+   @ 20, 20 SAY "hbmk2 path" OF oDlg SIZE 80, 12 PIXEL
+
+   @ 40, 20 GET oGetPath VAR cHbmkPathTemp SIZE 326, 26 PIXEL OF oDlg ;
+      VALID ! Empty( cHbmkPathTemp )
+
+   @ 40, 350 BUTTON "..." OF oDlg SIZE 25, 25 PIXEL ;
+      ACTION ( oGetPath:VarPut( cHbmkPathTemp := ;
+               cGetFile( "Please select the hbmk2 path", "hbmk2" ) ),;
+               oGetPath:Refresh() )
+
+   @ 110, 20 GET oGetFLH VAR cFLHPathTemp SIZE 326, 26 PIXEL OF oDlg ;
+      VALID ! Empty( cFLHPathTemp )
+
+   @ 90, 20 CHECKBOX lFLHTemp PROMPT "Use FiveLinux libraries" ;
+      OF oDlg SIZE 180, 15 PIXEL ;
+      ON CHANGE If( lFLHTemp, oGetFLH:Enable(), oGetFLH:Disable() )
+
+   @ 110, 350 BUTTON "..." OF oDlg SIZE 25, 25 PIXEL ;
+      ACTION ( oGetFLH:VarPut( cFLHPathTemp := ;
+               cGetFile( "Please select the FiveLinux path" ) ),;
+               oGetFLH:Refresh() )
+
+   @ 31, 412 BUTTON "_Save" ;
+      SIZE 123, 50 PIXEL OF oDlg ;
+      ACTION ( cHbmkPath := cHbmkPathTemp,;
+               lFLH := lFLHTemp,;
+               cFLHPath  := cFLHPathTemp,;
+               oDlg:End() )
+
+   @ 87, 412 BUTTON "_Cancel" ;
+      SIZE 124, 50 PIXEL OF oDlg ;
+      ACTION oDlg:End()
 
    ACTIVATE DIALOG oDlg CENTERED
 

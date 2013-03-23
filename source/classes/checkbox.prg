@@ -5,7 +5,7 @@
 CLASS TCheckBox FROM TControl
 
    METHOD New( nRow, nCol, cText, oWnd, bSetGet, nWidth, nHeight, bWhen,;
-               bValid, lUpdate, lDesign, lPixel, cVarName )
+               bValid, lUpdate, lDesign, lPixel, cVarName, bChange )
 
    METHOD GenLocals()
 
@@ -27,7 +27,7 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, cText, oWnd, bSetGet, nWidth, nHeight, bWhen,;
-            bValid, lUpdate, lDesign, lPixel, cVarName ) CLASS TCheckBox
+            bValid, lUpdate, lDesign, lPixel, cVarName, bChange ) CLASS TCheckBox
 
    DEFAULT cText := "_Checkbox", oWnd := GetWndDefault(), lUpdate := .f.,;
            nWidth := 80, nHeight := 25, lDesign := .F., lPixel := .F.
@@ -39,6 +39,7 @@ METHOD New( nRow, nCol, cText, oWnd, bSetGet, nWidth, nHeight, bWhen,;
    ::lUpdate   = lUpdate
    ::lDrag     = lDesign
    ::cVarName  = cVarName
+   ::bChange   = bChange
 
    oWnd:AddControl( Self )
 
@@ -59,6 +60,10 @@ METHOD Click() CLASS TCheckBox
 
    if ::bSetGet != nil
       Eval( ::bSetGet, ::GetCheck() )
+
+      if ! Empty( ::bChange )
+         Eval( ::bChange, Self )
+      endif
    endif
 
 return nil
@@ -97,6 +102,6 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TCheckBox
              return ::Click()
    endcase
 
-return Super:HandleEvent( nMsg, nWParam, nLParam )
+return ::Super:HandleEvent( nMsg, nWParam, nLParam )
 
 //----------------------------------------------------------------------------//
