@@ -66,7 +66,7 @@ function Main()
                If( lFLH, "-l" + "fivec ", "" ) + ;
                If( lFLH, "`pkg-config --libs gtk+-2.0` ", "" ) + ;
                If( lFLH, "`pkg-config --libs libglade-2.0` ", "" ) + ;
-               If( lFLH, "-L" + GetEnv( "HOME" ) + "/fivelinux/lib ", "" ) + ;
+               If( lFLH, "-L" + cFLHPath + "/lib ", "" ) + ;
                " > out.log",;
                nRetCode := hb_Run( cCmd ),;
                oResult:SetText( AllTrim( Str( nRetCode ) ) + CRLF + ;
