@@ -108,14 +108,16 @@ function Settings()
    @ 110, 20 GET oGetFLH VAR cFLHPathTemp SIZE 326, 26 PIXEL OF oDlg ;
       VALID ! Empty( cFLHPathTemp )
 
-   @ 90, 20 CHECKBOX lFLHTemp PROMPT "Use FiveLinux libraries" ;
-      OF oDlg SIZE 180, 15 PIXEL ;
-      ON CHANGE If( lFLHTemp, oGetFLH:Enable(), oGetFLH:Disable() )
-
    @ 110, 350 BUTTON "..." OF oDlg SIZE 25, 25 PIXEL ;
       ACTION ( oGetFLH:VarPut( cFLHPathTemp := ;
                cGetFile( "Please select the FiveLinux path" ) ),;
                oGetFLH:Refresh() )
+
+   @ 90, 20 CHECKBOX lFLHTemp PROMPT "Use FiveLinux libraries" ;
+      OF oDlg SIZE 180, 15 PIXEL ;
+      ON CHANGE If( lFLHTemp, oGetFLH:Enable(), oGetFLH:Disable() )
+
+   @ 165, 5 SAY "Defines" OF oDlg SIZE 80, 14 PIXEL
 
    @ 31, 412 BUTTON "_Save" ;
       SIZE 123, 50 PIXEL OF oDlg ;
