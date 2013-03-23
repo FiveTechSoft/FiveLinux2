@@ -64,8 +64,8 @@ function Main()
                AllTrim( cPrgName ) + " " + ;
                If( lFLH, "-l" + "five ", "" ) + ;
                If( lFLH, "-l" + "fivec ", "" ) + ;
-               If( lFLH, "-l" + "`pkg-config --libs gtk+-2.0` ", "" ) + ;
-               If( lFLH, "-l" + "`pkg-config --libs libglade-2.0` ", "" ) + ;
+               If( lFLH, "`pkg-config --libs gtk+-2.0` ", "" ) + ;
+               If( lFLH, "`pkg-config --libs libglade-2.0` ", "" ) + ;
                If( lFLH, "-L" + GetEnv( "HOME" ) + "/fivelinux/lib ", "" ) + ;
                " > out.log",;
                nRetCode := hb_Run( cCmd ),;
