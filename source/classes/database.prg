@@ -3,7 +3,6 @@
 #include "FiveLinux.ch"
 #include "dbinfo.ch"
 #include "dbstruct.ch"
-#include "hbcompat.ch"
 
 #define DBS_EXTYPE   6
 #define DBS_PIC      7

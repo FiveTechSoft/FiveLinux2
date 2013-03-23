@@ -35,6 +35,11 @@ extern ErrorLink
 
 #define CRLF Chr( 10 )
 
+/* TRY / CATCH / FINALLY / END */
+#xcommand TRY  => BEGIN SEQUENCE WITH { | oErr | Break( oErr ) }
+#xcommand CATCH [<!oErr!>] => RECOVER [ USING <oErr> ] <-oErr->
+#xcommand FINALLY => ALWAYS
+
 #xcommand ? [ <list,...> ] => [ AEval( \{ <list> \}, { | u | MsgInfo( u ) } ) ]
 
 #xcommand SET RESOURCES TO <cFileName> => SetResources( <cFileName> ) 
