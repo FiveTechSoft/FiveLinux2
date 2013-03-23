@@ -1,5 +1,4 @@
 #include "FiveLinux.ch"
-#include "hbcompat.ch"
 
 #ifndef _SET_TIMEFORMAT  // fwppc
    #define _SET_TIMEFORMAT 116
