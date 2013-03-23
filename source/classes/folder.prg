@@ -14,7 +14,11 @@ CLASS TFolder FROM TControl
    METHOD New( nRow, nCol, oWnd, aPrompts, nWidth, nHeight, lUpdate,;
                lDesign, lPixel, cVarName )
 
+   METHOD nOption() INLINE ::GetPage()
+
    METHOD cGenPrg()
+
+   METHOD Refresh() INLINE WndRefresh( ::hWnd )
 
    METHOD SetPrompts( aPrompts )
 

@@ -4,17 +4,22 @@
 #define CLR_GRAY2 0xEEEEEE
 #define CLR_TEXT  0x303030
 
-static aPrgs := { { "", "", "" } }
 static lFLH := .T.
 static cHbmkPath, cFLHPath
 static aDefines := { { "", "" } }
+static oBrwPrgs, aPrgs := { { "", "", "" } }
+static oBrwCs, aCs := { { "", "", "" } }
+static oBrwObjs, aObjs := { { "", "", "" } }
+static oBrwLibs, aLibs := { { "", "", "" } }
+static oBrwRcs, aRcs := { { "", "", "" } }
+static oBrwHbcs, aHbcs := { { "", "", "" } }
 
 //----------------------------------------------------------------------------//
 
 function Main()
 
-   local oDlg, oGet1, cPrgName := Space( 20 ), oFld1
-   local oBrwPrgs
+   local oDlg, oGet1, cPrgName := Space( 20 ), oFld
+   local oBrwPrgs, cFileName
    local oResult, cResult := "", cCmd, nRetCode
 
    cHbmkPath := GetEnv( "HOME" ) + "/harbour/bin/hbmk2"
@@ -29,30 +34,37 @@ function Main()
       VALID ! Empty( cPrgName )
 
    @  41, 350 BUTTON "..." OF oDlg SIZE 25, 25 PIXEL ;
-      ACTION ( oGet1:VarPut( cPrgName := cGetFile( "Please select a PRG file", "*.prg" ) ),;
+      ACTION ( oGet1:VarPut( cPrgName := cGetFile( "*.prg", "Please select a PRG file" ) ),;
                oGet1:Refresh() )
 
    @  86,  20 SAY "Additional" SIZE  80,  20 PIXEL OF oDlg
 
-   @ 108, 20 FOLDER oFld1 PROMPTS "PRGs", "Cs", "OBJs", "LIBs", "HBCs" ;
+   @ 108, 20 FOLDER oFld PROMPTS "PRGs", "Cs", "OBJs", "LIBs", "RCs", "HBCs" ;
       SIZE 363, 210 PIXEL OF oDlg
 
-   @ 138, 25 BROWSE oBrwPrgs ;
-      FIELDS aPrgs[ oBrwPrgs:nArrayAt ][ 1 ],;
-             aPrgs[ oBrwPrgs:nArrayAt ][ 2 ],;
-             aPrgs[ oBrwPrgs:nArrayAt ][ 3 ] ;
-      HEADERS "Name", "Date", "Size" ;
-      COLSIZES 180, 85, 85 ;
-      OF oFld1:aDialogs[ 1 ] SIZE 335, 160 PIXEL
-
-   oBrwPrgs:SetArray( aPrgs )
-   oBrwPrgs:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
+   BuildBrowses( oFld )
 
    @  108, 322 BUTTON "+" OF oDlg SIZE 25, 25 PIXEL ;
-      ACTION MsgInfo( "add" )
+      ACTION ( cFileName := cGetFile( { "*.prg", "*.c", "*.obj", "*.lib", "*.rc", "*.hbc" }[ oFld:nOption ],;
+                                      "Please select a " + ;
+                                      { "PRG", "C", "OBJ", "LIB", "RC", "HBC" }[ oFld:nOption ] + " file" ),;
+               If( ! Empty( cFileName ),;
+                   ( If( { aPrgs, aCs, aObjs, aLibs, aRcs, aHbcs }[ oFld:nOption ][ 1 ][ 1 ] == "",;
+                     ASize( { aPrgs, aCs, aObjs, aLibs, aRcs, aHbcs }[ oFld:nOption ], 0 ),),;
+                     AAdd( { aPrgs, aCs, aObjs, aLibs, aRcs, aHbcs }[ oFld:nOption ],;
+                           { cFileName, Directory( cFileName )[ 1 ][ 2 ],;
+                                    Directory( cFileName )[ 1 ][ 3 ] } ),;
+                     oFld:aDialogs[ oFld:nOption ]:aControls[ 1 ]:GoBottom(),;
+                     oFld:aDialogs[ oFld:nOption ]:aControls[ 1 ]:SetFocus() ), ) )
 
    @  108, 350 BUTTON "-" OF oDlg SIZE 25, 25 PIXEL ;
-      ACTION MsgInfo( "delete" )
+      ACTION ( ADel( { aPrgs, aCs, aObjs, aLibs, aRcs, aHbcs }[ oFld:nOption ],;
+               oFld:aDialogs[ oFld:nOption ]:aControls[ 1 ]:nArrayAt ),;
+               ASize( { aPrgs, aCs, aObjs, aLibs, aRcs, aHbcs }[ oFld:nOption ],;
+                      Len( { aPrgs, aCs, aObjs, aLibs, aRcs, aHbcs }[ oFld:nOption ] ) - 1 ),;
+               If( Len( { aPrgs, aCs, aObjs, aLibs, aRcs, aHbcs }[ oFld:nOption ] ) == 0,;
+                   AAdd( { aPrgs, aCs, aObjs, aLibs, aRcs, aHbcs }[ oFld:nOption ], { "", "", "" } ),),;
+               oFld:Refresh() )
 
    @ 328,  13 SAY "Result" SIZE  80,  20 PIXEL OF oDlg
 
@@ -63,6 +75,12 @@ function Main()
       ACTION ( cCmd := cHbmkPath + " " + ;
                If( lFLH, "-i" + cFLHPath + "/include ", "" ) + ; 
                AllTrim( cPrgName ) + " " + ;
+               AToStr( aPrgs ) + " " + ;
+               AToStr( aCs ) + " " + ;
+               AToStr( aObjs ) + " " + ;
+               AToStr( aLibs ) + " " + ;
+               AToStr( aRcs ) + " " + ;
+               AToStr( aHbcs ) + " " + ;
                If( lFLH, "-l" + "five ", "" ) + ;
                If( lFLH, "-l" + "fivec ", "" ) + ;
                If( lFLH, "`pkg-config --libs gtk+-2.0` ", "" ) + ;
@@ -87,6 +105,78 @@ function Main()
    ACTIVATE DIALOG oDlg CENTERED
 
 return oDlg
+
+//----------------------------------------------------------------------------//
+
+function BuildBrowses( oFld )
+
+   @ 138, 25 BROWSE oBrwPrgs ;
+      FIELDS SubStr( aPrgs[ oBrwPrgs:nArrayAt ][ 1 ], Len( GetEnv( "HOME" ) ) + 2 ),;
+             aPrgs[ oBrwPrgs:nArrayAt ][ 2 ],;
+             aPrgs[ oBrwPrgs:nArrayAt ][ 3 ] ;
+      HEADERS "Name", "Size", "Date" ;
+      COLSIZES 230, 45, 75 ;
+      OF oFld:aDialogs[ 1 ] SIZE 335, 160 PIXEL
+
+   oBrwPrgs:SetArray( aPrgs )
+   oBrwPrgs:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
+
+   @ 138, 25 BROWSE oBrwCs ;
+      FIELDS SubStr( aCs[ oBrwCs:nArrayAt ][ 1 ], Len( GetEnv( "HOME" ) ) + 2 ),;
+             aCs[ oBrwCs:nArrayAt ][ 2 ],;
+             aCs[ oBrwCs:nArrayAt ][ 3 ] ;
+      HEADERS "Name", "Size", "Date" ;
+      COLSIZES 230, 45, 75 ;
+      OF oFld:aDialogs[ 2 ] SIZE 335, 160 PIXEL
+
+   oBrwCs:SetArray( aCs )
+   oBrwCs:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
+
+   @ 138, 25 BROWSE oBrwObjs ;
+      FIELDS SubStr( aObjs[ oBrwObjs:nArrayAt ][ 1 ], Len( GetEnv( "HOME" ) ) + 2 ),;
+             aCs[ oBrwObjs:nArrayAt ][ 2 ],;
+             aCs[ oBrwObjs:nArrayAt ][ 3 ] ;
+      HEADERS "Name", "Size", "Date" ;
+      COLSIZES 230, 45, 75 ;
+      OF oFld:aDialogs[ 3 ] SIZE 335, 160 PIXEL
+
+   oBrwObjs:SetArray( aObjs )
+   oBrwObjs:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
+
+   @ 138, 25 BROWSE oBrwLibs ;
+      FIELDS SubStr( aLibs[ oBrwLibs:nArrayAt ][ 1 ], Len( GetEnv( "HOME" ) ) + 2 ),;
+             aCs[ oBrwLibs:nArrayAt ][ 2 ],;
+             aCs[ oBrwLibs:nArrayAt ][ 3 ] ;
+      HEADERS "Name", "Size", "Date" ;
+      COLSIZES 230, 45, 75 ;
+      OF oFld:aDialogs[ 4 ] SIZE 335, 160 PIXEL
+
+   oBrwLibs:SetArray( aLibs )
+   oBrwLibs:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
+
+   @ 138, 25 BROWSE oBrwRcs ;
+      FIELDS SubStr( aRcs[ oBrwRcs:nArrayAt ][ 1 ], Len( GetEnv( "HOME" ) ) + 2 ),;
+             aCs[ oBrwRcs:nArrayAt ][ 2 ],;
+             aCs[ oBrwRcs:nArrayAt ][ 3 ] ;
+      HEADERS "Name", "Size", "Date" ;
+      COLSIZES 230, 45, 75 ;
+      OF oFld:aDialogs[ 5 ] SIZE 335, 160 PIXEL
+
+   oBrwRcs:SetArray( aRcs )
+   oBrwRcs:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
+
+   @ 138, 25 BROWSE oBrwHbcs ;
+      FIELDS SubStr( aHbcs[ oBrwHbcs:nArrayAt ][ 1 ], Len( GetEnv( "HOME" ) ) + 2 ),;
+             aCs[ oBrwHbcs:nArrayAt ][ 2 ],;
+             aCs[ oBrwHbcs:nArrayAt ][ 3 ] ;
+      HEADERS "Name", "Size", "Date" ;
+      COLSIZES 230, 45, 75 ;
+      OF oFld:aDialogs[ 6 ] SIZE 335, 160 PIXEL
+
+   oBrwHbcs:SetArray( aHbcs )
+   oBrwHbcs:SetAltColors( CLR_TEXT, CLR_GRAY1, CLR_TEXT, CLR_GRAY2 )
+
+return nil
 
 //----------------------------------------------------------------------------//
 
@@ -153,4 +243,14 @@ function Settings()
 
 return nil
 
+//----------------------------------------------------------------------------//
+ 
+function AToStr( aFiles )
+ 
+   local cResult := ""
+ 
+   AEval( aFiles, { | aFile | cResult += " " + aFile[ 1 ] } )
+ 
+return cResult
+ 
 //----------------------------------------------------------------------------//

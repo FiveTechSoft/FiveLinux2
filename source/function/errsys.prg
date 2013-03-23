@@ -197,7 +197,7 @@ static function ErrorDialog( oError )
    if nButtons == 2
       @ 32,  9 BUTTON "_Quit" OF oDlg ACTION oDlg:End()
    else
-      @ 32, 26 BUTTON "_Quit" OF oDlg ACTION oDlg:End()
+      @ 32, 15 BUTTON "_Quit" OF oDlg ACTION oDlg:End()
    endif
 
    if oError:CanRetry

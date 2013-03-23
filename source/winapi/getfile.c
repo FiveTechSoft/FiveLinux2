@@ -34,10 +34,9 @@ HB_FUNC( CGETFILE ) // cTitle, cFileName
    if( gtk_window_list_toplevels() )
       hWndParent = g_list_last( gtk_window_list_toplevels() )->data;
 
-   hWnd = gtk_file_selection_new( HB_ISCHAR( 1 ) ? hb_parc( 1 ) : "Select a file" );
+   hWnd = gtk_file_selection_new( HB_ISCHAR( 2 ) ? hb_parc( 2 ) : "Select a file" );
 
-   if( hb_pcount() > 1 )
-      gtk_file_selection_set_filename( GTK_FILE_SELECTION( hWnd ), hb_parc( 2 ) );
+   gtk_file_selection_set_filename( GTK_FILE_SELECTION( hWnd ), hb_parc( 1 ) );
 
    g_signal_connect( G_OBJECT( GTK_FILE_SELECTION( hWnd )->ok_button ),
       "clicked", G_CALLBACK( ButtonOk ), hWnd );
