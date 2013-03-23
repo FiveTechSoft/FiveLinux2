@@ -162,10 +162,9 @@ return Eval( ErrorBlock(), oError )
 function Execute( cCode, ... )
  
    local oHrb, cResult, bOldError, uRet
-   local cFWheaders := If( lIsDir( "./include" ), "./include", "../include" )
-   local cHBheaders := If( lIsDir( "./include" ), "./include", "../../harbour/include" )
+   local cFWheaders := GetEnv( "HOME" ) + "/fivelinux/include"
+   local cHBheaders := GetEnv( "HOME" ) + "/harbour/include"
  
-   // FReOpen_Stderr ( "comp.log", "w" )
    oHrb = HB_CompileFromBuf( cCode, "-n", "-I" + cFWheaders, "-I" + cHBheaders )
    if ! Empty( oHrb )
       BEGIN SEQUENCE
