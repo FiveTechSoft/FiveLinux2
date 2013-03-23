@@ -12,7 +12,7 @@ function Main()
 
    local oDlg, oGet1, cPrgName := Space( 20 ), oFld1
    local oBrwPrgs
-   local oResult, cResult := "", nRetCode
+   local oResult, cResult := "", cCmd, nRetCode
 
    DEFINE DIALOG oDlg TITLE "Visual Make for Harbour" ;
       SIZE 557, 500
@@ -50,16 +50,24 @@ function Main()
 
    @ 328,  13 SAY "Result" SIZE  80,  20 PIXEL OF oDlg
 
-   @ 347,  20 GET oResult VAR cResult MEMO SIZE 363, 144 OF oDlg PIXEL
+   @ 347,  20 GET oResult VAR cResult MEMO SIZE 500, 144 OF oDlg PIXEL
 
    @ 31, 412 BUTTON "_Build" ;
       SIZE 123, 50 PIXEL OF oDlg ;
-      ACTION ( nRetCode := hb_Run( GetEnv( "HOME" ) + "/harbour/bin/hbmk2 " + ;
-                                   "-i" + GetEnv( "HOME" ) + "/fivelinux/include " + ; 
-                                   AllTrim( cPrgName ) + ;
-                                   " > out.log" ),;
+      ACTION ( cCmd := GetEnv( "HOME" ) + "/harbour/bin/hbmk2 " + ;
+               "-i" + GetEnv( "HOME" ) + "/fivelinux/include " + ; 
+               AllTrim( cPrgName ) + " " + ;
+               "-l" + "five " + ;
+               "-l" + "fivec " + ;
+               "-l" + "`pkg-config --libs gtk+-2.0` " + ;
+               "-l" + "`pkg-config --libs libglade-2.0` " + ;
+               "-L" + GetEnv( "HOME" ) + "/fivelinux/lib " + ;
+               " > out.log",;
+               nRetCode := hb_Run( cCmd ),;
                oResult:SetText( AllTrim( Str( nRetCode ) ) + CRLF + ;
-                                MemoRead( "out.log" ) ) ) 
+                                cCmd + CRLF + ; 
+                                MemoRead( "out.log" ) ),;
+               hb_run( cFileNoExt( cPrgName ) ) ) 
 
    @ 87, 412 BUTTON "_Settings" ;
       SIZE 124, 50 PIXEL OF oDlg ;
