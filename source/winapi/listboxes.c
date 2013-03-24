@@ -58,7 +58,7 @@ HB_FUNC( CREATELISTBOX )
 
 HB_FUNC( LBXSETITEMS ) // ( hWnd, aItems )
 {
-   GtkWidget * hWnd = gtk_object_get_data( GTK_OBJECT( hb_parnl( 1 ) ), "hWnd" );
+   GtkWidget * hWnd = ( GtkWidget * ) gtk_object_get_data( GTK_OBJECT( hb_parnl( 1 ) ), "hWnd" );
    int iLen = hb_parinfa( 2, 0 ), i;
 
    for( i = 0; i < iLen; i++ )

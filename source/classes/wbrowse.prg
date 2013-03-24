@@ -82,7 +82,7 @@ CLASS TWBrowse FROM TControl
 
    METHOD RButtonDown( nRow, nCol ) VIRTUAL
 
-   METHOD Refresh() VIRTUAL
+   METHOD Refresh() INLINE WndRefresh( ::hWnd )
 
    METHOD Skip( n )
 

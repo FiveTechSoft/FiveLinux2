@@ -28,10 +28,10 @@ return If( At( ":", cPathMask ) == 2, ;
 
 function cFilePath( cPathMask )   // returns path of a filename
 
-   local n := RAt( "\", cPathMask ), cDisk
+   local n := RAt( "/", cPathMask ), cDisk
 
 return If( n > 0, Upper( Left( cPathMask, n ) ),;
-           ( cDisk := cFileDisc( cPathMask ) ) + If( ! Empty( cDisk ), "\", "" ) )
+           ( cDisk := cFileDisc( cPathMask ) ) + If( ! Empty( cDisk ), "/", "" ) )
 
 //---------------------------------------------------------------------------//
 
@@ -91,7 +91,7 @@ return cPathMask + "." + cExt
 
 function cFileSubDir( cPath )   // returns the subdir of a path & filename
 
-return cFilePath( If( Right( cPath, 1 ) == "\" ,;
+return cFilePath( If( Right( cPath, 1 ) == "/" ,;
                   Left( cPath, Len( cPath ) - 1 ), cPath ) )
 
 //---------------------------------------------------------------------------//
@@ -172,7 +172,7 @@ return ""
 
 function aFindFile( cFileName, cPath, aResult )
 
-   local aFiles := Directory( cPath + "\", "D" )
+   local aFiles := Directory( cPath + "/", "D" )
    local n
 
    if ProcName( 5 ) == "AFINDFILE"
@@ -186,10 +186,10 @@ function aFindFile( cFileName, cPath, aResult )
    for n = 1 to Len( aFiles )
       SysRefresh()
       if Upper( aFiles[ n ][ 1 ] ) == Upper( cFileName )
-         AAdd( aResult, cPath + "\" + cFileName )
+         AAdd( aResult, cPath + "/" + cFileName )
       endif
       if aFiles[ n ][ 5 ] == "D" .and. ! ( aFiles[ n ][ 1 ] $ ".." )
-         aFindFile( cFileName, cPath + "\" + aFiles[ n ][ 1 ], aResult )
+         aFindFile( cFileName, cPath + "/" + aFiles[ n ][ 1 ], aResult )
       endif
    next
 

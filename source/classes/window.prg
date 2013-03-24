@@ -262,6 +262,9 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TWindow
       case nMsg == WM_CLOSE
 	   return ::End()
 
+      case nMsg == WM_KEYDOWN
+           return ::KeyDown( nWParam )
+
       case nMsg == WM_MENUCMD
 	   if ::oPopup != nil
 	      ::oPopup:Command( nWParam )
