@@ -109,7 +109,6 @@ function Main()
    ACTIVATE DIALOG oDlg CENTERED
 
    SaveProject()
-   // SavePreferences()
 
 return oDlg
 
