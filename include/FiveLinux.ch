@@ -4,6 +4,7 @@
 #include "hbclass.ch"
 #include "msgs.h"
 #include "colors.ch"
+#include "ini.ch"
 
 #define K_ENTER     65293
 #define K_ESC       65307
@@ -43,10 +44,6 @@ extern ErrorLink
 #xcommand ? [ <list,...> ] => [ AEval( \{ <list> \}, { | u | MsgInfo( u ) } ) ]
 
 #xcommand SET RESOURCES TO <cFileName> => SetResources( <cFileName> ) 
-
-#xcommand INI <oIni> <file: FILE, FILENAME, FROM> <cFileName> ;
-       => ;
-          [ <oIni> := ] TIni():New( <cFileName> )
 
 #xcommand DATABASE <oDbf> => <oDbf> := TDataBase():New()
 

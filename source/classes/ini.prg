@@ -2,6 +2,8 @@
 
 #include "FiveLinux.ch"
 
+static oIni
+
 //----------------------------------------------------------------------------//
 
 CLASS TIni
@@ -19,6 +21,8 @@ CLASS TIni
    METHOD AddSection( cSection ) INLINE ::hIni[ cSection ] := hb_Hash()
 
    METHOD ClearSection( cSection ) INLINE ::AddSection( cSection ), ::Write()
+
+   METHOD End() VIRTUAL
 
    #ifdef __HARBOUR__
       ERROR HANDLER OnError( uParam1 )
@@ -38,6 +42,8 @@ METHOD New( cFileName, lKeyCaseSens ) CLASS TIni
    ::lKeyCaseSens = lKeyCaseSens 
    ::hIni         = hb_iniRead( cFileName, lKeyCaseSens )
 
+   oIni = Self
+
 return Self
 
 //----------------------------------------------------------------------------//
@@ -50,7 +56,7 @@ METHOD Add( cSection, cEntry, uValue ) CLASS TIni
 
    ::hIni[ cSection ][ cEntry ] = uValue
 
-return hb_IniWrite( ::cFileName, ::hIni )  
+return MsgInfo( hb_IniWrite( ::cFileName, ::hIni ) )  
 
 //----------------------------------------------------------------------------//
 
@@ -64,5 +70,15 @@ return hb_IniWrite( ::cFileName, ::hIni )
 #endif
 
 return If( HB_HHASKEY( ::hIni, cMsg ), ::hIni[ cMsg ], {} ) 
+
+//----------------------------------------------------------------------------//
+
+function EndIni()
+
+   oIni:Write()
+   oIni:End()
+   oIni = nil
+
+return nil
 
 //----------------------------------------------------------------------------//

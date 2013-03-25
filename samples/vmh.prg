@@ -5,7 +5,7 @@
 #define CLR_TEXT  0x303030
 
 static lFLH := .T.
-static cHbmkPath, cFLHPath
+static cPrgName, cHbmkPath, cFLHPath
 static aDefines := { { "", "" } }
 static oBrwPrgs, aPrgs := { { "", "", "" } }
 static oBrwCs, aCs := { { "", "", "" } }
@@ -18,12 +18,15 @@ static oBrwHbcs, aHbcs := { { "", "", "" } }
 
 function Main()
 
-   local oDlg, oGet1, cPrgName := Space( 20 ), oFld
+   local oDlg, oGet1, oFld
    local oBrwPrgs, cFileName
    local oResult, cResult := "", cCmd, nRetCode
 
-   cHbmkPath := GetEnv( "HOME" ) + "/harbour/bin/hbmk2"
-   cFLHPath  := GetEnv( "HOME" ) + "/fivelinux"
+   cPrgName  = Space( 20 )
+   cHbmkPath = GetEnv( "HOME" ) + "/harbour/bin/hbmk2"
+   cFLHPath  = GetEnv( "HOME" ) + "/fivelinux"
+
+   LoadPreferences()
 
    DEFINE DIALOG oDlg TITLE "Visual Make for Harbour" ;
       SIZE 557, 500
@@ -103,6 +106,8 @@ function Main()
       ACTION oDlg:End()
 
    ACTIVATE DIALOG oDlg CENTERED
+
+   SavePreferences()
 
 return oDlg
 
@@ -254,3 +259,69 @@ function AToStr( aFiles )
 return cResult
  
 //----------------------------------------------------------------------------//
+ 
+function SavePreferences()
+ 
+   local oIni, aDefine
+ 
+   INI oIni FILE CurDir() + "/vmh.ini"
+      oIni:AddSection( "Default" )
+      SET SECTION "Default" ENTRY "PrgMain"   OF oIni TO cPrgName
+      SET SECTION "Default" ENTRY "HbmkPath"  OF oIni TO cHbmkPath
+      SET SECTION "Default" ENTRY "FLH"       OF oIni TO lFLH
+      SET SECTION "Default" ENTRY "FLHPath"   OF oIni TO cFLHPath
+ 
+      for each aDefine in aDefines 
+         SET SECTION "Default" ENTRY "DEF" + AllTrim( Str( hb_EnumIndex() ) ) ;
+            OF oIni TO AllTrim( aDefine[ 1 ] )   
+         SET SECTION "Default" ENTRY "DEFVALUE" + AllTrim( Str( hb_EnumIndex() ) ) ;
+            OF oIni TO AllTrim( aDefine[ 2 ] )   
+      next     
+ 
+      SET SECTION "Default" ENTRY "DEF" + AllTrim( Str( Len( aDefines ) + 1 ) ) ;
+         OF oIni TO ""   
+      SET SECTION "Default" ENTRY "DEFVALUE" + AllTrim( Str( Len( aDefines ) + 1 ) ) ;
+         OF oIni TO ""   
+   ENDINI
+   MsgInfo( File( CurDir() + "/vmh.ini" ) )  
+
+return nil
+ 
+//----------------------------------------------------------------------------// 
+ 
+function LoadPreferences()
+ 
+   local oIni, cDefineName, cDefineValue, n
+
+   if File( CurDir() + "/vmh.ini" )
+      INI oIni FILE CurDir() + "/vmh.ini"
+         GET cPrgName   SECTION "Default" ENTRY "PrgMain"   DEFAULT ""    OF oIni
+         GET cCCompiler SECTION "Default" ENTRY "compiler"  DEFAULT "gcc" OF oIni
+         GET lFLH       SECTION "Default" ENTRY "FLH"       DEFAULT .T.   OF oIni
+         GET cHbmkPath  SECTION "Default" ENTRY "HbmkPath" ;
+            DEFAULT cHbmkPath OF oIni
+         GET cFLHPath   SECTION "Default" ENTRY "FLHPath"  DEFAULT "c:\FLH" OF oIni
+      ENDINI
+ 
+      GET cDefineName SECTION "Default" ;
+         ENTRY "DEF1" OF oIni
+      GET cDefineValue SECTION "Default" ;
+         ENTRY "DEFVALUE1" OF oIni
+ 
+      aDefines = {}   
+ 
+      n = 1   
+ 
+      while ! Empty( cDefineName )
+         AAdd( aDefines, { cDefineName, cDefineValue } )
+ 
+         GET cDefineName SECTION "Default" ;
+            ENTRY "DEF" + AllTrim( Str( ++n ) ) OF oIni
+         GET cDefineValue SECTION "Default" ;
+            ENTRY "DEFVALUE" + AllTrim( Str( n ) ) OF oIni
+      end         
+   endif
+ 
+return nil
+ 
+//----------------------------------------------------------------------------// 
