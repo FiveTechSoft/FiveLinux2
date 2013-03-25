@@ -26,7 +26,7 @@ function Main()
    cHbmkPath = GetEnv( "HOME" ) + "/harbour/bin/hbmk2"
    cFLHPath  = GetEnv( "HOME" ) + "/fivelinux"
 
-   LoadPreferences()
+   // LoadPreferences()
    LoadProject()
 
    DEFINE DIALOG oDlg TITLE "Visual Make for Harbour" ;
@@ -109,6 +109,7 @@ function Main()
    ACTIVATE DIALOG oDlg CENTERED
 
    SaveProject()
+   // SavePreferences()
 
 return oDlg
 
@@ -369,7 +370,6 @@ function LoadProject()
       INI oIni FILE "vmh.ini"
  
          GET cPrgName SECTION "Project" ENTRY "PrgMain" OF oIni
-         MsgInfo( cPrgName )
  
          for m = 1 to 5
             GET cFileName SECTION "Project" ;

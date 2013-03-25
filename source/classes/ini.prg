@@ -19,7 +19,7 @@ CLASS TIni
    METHOD Set( cSection, cEntry, uValue )
 
    METHOD Get( cSection, cEntry, uDefault ) INLINE ;
-             If( HB_HHASKEY( ::hIni, cSection ) .and. ! HB_HHASKEY( ::hIni[ cSection ], cEntry  ),;
+             If( HB_HHASKEY( ::hIni, cSection ) .and. HB_HHASKEY( ::hIni[ cSection ], cEntry  ),;
                  ::hIni[ cSection ][ cEntry ], uDefault )    
 
    METHOD AddSection( cSection ) INLINE ::hIni[ cSection ] := hb_Hash()
