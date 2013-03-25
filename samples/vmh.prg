@@ -27,6 +27,7 @@ function Main()
    cFLHPath  = GetEnv( "HOME" ) + "/fivelinux"
 
    LoadPreferences()
+   LoadProject()
 
    DEFINE DIALOG oDlg TITLE "Visual Make for Harbour" ;
       SIZE 557, 500
@@ -107,7 +108,7 @@ function Main()
 
    ACTIVATE DIALOG oDlg CENTERED
 
-   SavePreferences()
+   SaveProject()
 
 return oDlg
 
@@ -238,6 +239,7 @@ function Settings()
       ACTION ( cHbmkPath := cHbmkPathTemp,;
                lFLH := lFLHTemp,;
                cFLHPath  := cFLHPathTemp,;
+               SavePreferences(),;
                oDlg:End() )
 
    @ 87, 412 BUTTON "_Cancel" ;
@@ -264,17 +266,15 @@ function SavePreferences()
  
    local oIni, aDefine
  
-   INI oIni FILE CurDir() + "/vmh.ini"
-      oIni:AddSection( "Default" )
-      SET SECTION "Default" ENTRY "PrgMain"   OF oIni TO cPrgName
+   INI oIni FILE "vmh.ini"
       SET SECTION "Default" ENTRY "HbmkPath"  OF oIni TO cHbmkPath
       SET SECTION "Default" ENTRY "FLH"       OF oIni TO lFLH
       SET SECTION "Default" ENTRY "FLHPath"   OF oIni TO cFLHPath
  
       for each aDefine in aDefines 
-         SET SECTION "Default" ENTRY "DEF" + AllTrim( Str( hb_EnumIndex() ) ) ;
+         SET SECTION "Default" ENTRY "DEF" + AllTrim( Str( aDefine:__EnumIndex() ) ) ;
             OF oIni TO AllTrim( aDefine[ 1 ] )   
-         SET SECTION "Default" ENTRY "DEFVALUE" + AllTrim( Str( hb_EnumIndex() ) ) ;
+         SET SECTION "Default" ENTRY "DEFVALUE" + AllTrim( Str( aDefine:__EnumIndex() ) ) ;
             OF oIni TO AllTrim( aDefine[ 2 ] )   
       next     
  
@@ -283,7 +283,6 @@ function SavePreferences()
       SET SECTION "Default" ENTRY "DEFVALUE" + AllTrim( Str( Len( aDefines ) + 1 ) ) ;
          OF oIni TO ""   
    ENDINI
-   MsgInfo( File( CurDir() + "/vmh.ini" ) )  
 
 return nil
  
@@ -293,14 +292,12 @@ function LoadPreferences()
  
    local oIni, cDefineName, cDefineValue, n
 
-   if File( CurDir() + "/vmh.ini" )
-      INI oIni FILE CurDir() + "/vmh.ini"
-         GET cPrgName   SECTION "Default" ENTRY "PrgMain"   DEFAULT ""    OF oIni
-         GET cCCompiler SECTION "Default" ENTRY "compiler"  DEFAULT "gcc" OF oIni
+   if File( "vmh.ini" )
+      INI oIni FILE "vmh.ini"
          GET lFLH       SECTION "Default" ENTRY "FLH"       DEFAULT .T.   OF oIni
          GET cHbmkPath  SECTION "Default" ENTRY "HbmkPath" ;
             DEFAULT cHbmkPath OF oIni
-         GET cFLHPath   SECTION "Default" ENTRY "FLHPath"  DEFAULT "c:\FLH" OF oIni
+         GET cFLHPath   SECTION "Default" ENTRY "FLHPath"  DEFAULT "/fivelinux" OF oIni
       ENDINI
  
       GET cDefineName SECTION "Default" ;
@@ -325,3 +322,90 @@ function LoadPreferences()
 return nil
  
 //----------------------------------------------------------------------------// 
+ 
+function SaveProject()
+ 
+   local oIni, aFile
+ 
+   INI oIni FILE "vmh.ini"
+      SET SECTION "Project" ENTRY "PrgMain" OF oIni TO cPrgName
+ 
+      for each aFile in aPRGs
+         SET SECTION "Project" ENTRY "PRG" + AllTrim( Str( aFile:__enumIndex() ) ) ;
+            OF oIni TO aFile[ 1 ]
+      next   
+ 
+      for each aFile in aCs
+         SET SECTION "Project" ENTRY "C" + AllTrim( Str( aFile:__enumIndex() ) ) ;
+            OF oIni TO aFile[ 1 ]
+      next   
+ 
+      for each aFile in aOBJs
+         SET SECTION "Project" ENTRY "OBJ" + AllTrim( Str( aFile:__enumIndex() ) ) ;
+            OF oIni TO aFile[ 1 ]
+      next   
+ 
+      for each aFile in aLIBs
+         SET SECTION "Project" ENTRY "LIB" + AllTrim( Str( aFile:__enumIndex() ) ) ;
+            OF oIni TO aFile[ 1 ]
+      next   
+ 
+      for each aFile in aRCs
+         SET SECTION "Project" ENTRY "RC" + AllTrim( Str( aFile:__enumIndex() ) ) ;
+            OF oIni TO aFile[ 1 ]
+      next   
+ 
+   ENDINI
+ 
+return nil 
+ 
+//----------------------------------------------------------------------------// 
+
+function LoadProject()
+ 
+   local oIni, cFileName, m, n
+ 
+   if File( "vmh.ini" )
+      INI oIni FILE "vmh.ini"
+ 
+         GET cPrgName SECTION "Project" ENTRY "PrgMain" OF oIni
+         MsgInfo( cPrgName )
+ 
+         for m = 1 to 5
+            GET cFileName SECTION "Project" ;
+               ENTRY { "PRG1", "C1", "OBJ1", "LIB1", "RC1" }[ m ] OF oIni
+ 
+            if ! Empty( cFileName )
+               do case
+                  case m == 1
+                       aPrgs = {}
+ 
+                  case m == 2
+                       aCs = {}
+ 
+                  case m == 3 
+                       aObjs = {}
+ 
+                  case m == 4 
+                       aLibs = {}
+ 
+                  case m == 5 
+                       aRcs = {}
+               endcase                            
+            endif   
+ 
+            n = 1
+            while ! Empty( cFileName )
+               AAdd( { aPRGs, aCs, aObjs, aLibs, aRCs }[ m ],;
+                     { cFileName, Directory( cFileName )[ 1 ][ 2 ],;
+                                  Directory( cFileName )[ 1 ][ 3 ] } )
+               GET cFileName SECTION "Project" ;
+                  ENTRY { "PRG", "C", "OBJ", "LIB", "RC" }[ m ] + AllTrim( Str( ++n ) ) OF oIni                           
+            end
+         next
+      ENDINI 
+   endif
+ 
+return nil 
+ 
+//----------------------------------------------------------------------------//                  

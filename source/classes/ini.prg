@@ -16,7 +16,11 @@ CLASS TIni
 
    METHOD Write() INLINE hb_iniWrite( ::cFileName, ::hIni )
 
-   METHOD Add( cSection, cEntry, uValue )
+   METHOD Set( cSection, cEntry, uValue )
+
+   METHOD Get( cSection, cEntry, uDefault ) INLINE ;
+             If( HB_HHASKEY( ::hIni, cSection ) .and. ! HB_HHASKEY( ::hIni[ cSection ], cEntry  ),;
+                 ::hIni[ cSection ][ cEntry ], uDefault )    
 
    METHOD AddSection( cSection ) INLINE ::hIni[ cSection ] := hb_Hash()
 
@@ -36,7 +40,7 @@ ENDCLASS
 
 METHOD New( cFileName, lKeyCaseSens ) CLASS TIni
 
-   DEFAULT lKeyCaseSens := .F.
+   DEFAULT lKeyCaseSens := .T.
 
    ::cFileName    = cFileName
    ::lKeyCaseSens = lKeyCaseSens 
@@ -48,7 +52,7 @@ return Self
 
 //----------------------------------------------------------------------------//
 
-METHOD Add( cSection, cEntry, uValue ) CLASS TIni
+METHOD Set( cSection, cEntry, uValue ) CLASS TIni
 
    if ! HB_HHASKEY( ::hIni, cSection )
       ::hIni[ cSection ] = hb_Hash()
@@ -56,7 +60,7 @@ METHOD Add( cSection, cEntry, uValue ) CLASS TIni
 
    ::hIni[ cSection ][ cEntry ] = uValue
 
-return MsgInfo( hb_IniWrite( ::cFileName, ::hIni ) )  
+return nil 
 
 //----------------------------------------------------------------------------//
 
