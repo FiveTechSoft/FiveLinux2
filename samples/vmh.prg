@@ -266,7 +266,7 @@ function SavePreferences()
  
    local oIni, aDefine
  
-   INI oIni FILE "vmh.ini"
+   INI oIni FILE GetEnv( "HOME" ) + "/vmh.ini"
       SET SECTION "Default" ENTRY "HbmkPath"  OF oIni TO cHbmkPath
       SET SECTION "Default" ENTRY "FLH"       OF oIni TO lFLH
       SET SECTION "Default" ENTRY "FLHPath"   OF oIni TO cFLHPath
@@ -292,8 +292,8 @@ function LoadPreferences()
  
    local oIni, cDefineName, cDefineValue, n
 
-   if File( "vmh.ini" )
-      INI oIni FILE "vmh.ini"
+   if File( GetEnv( "HOME" ) + "/vmh.ini" )
+      INI oIni FILE GetEnv( "HOME" ) + "/vmh.ini"
          GET lFLH       SECTION "Default" ENTRY "FLH"       DEFAULT .T.   OF oIni
          GET cHbmkPath  SECTION "Default" ENTRY "HbmkPath" ;
             DEFAULT cHbmkPath OF oIni
@@ -327,7 +327,7 @@ function SaveProject()
  
    local oIni, aFile
  
-   INI oIni FILE "vmh.ini"
+   INI oIni FILE GetEnv( "HOME" ) + "/vmh.ini"
       SET SECTION "Project" ENTRY "PrgMain" OF oIni TO cPrgName
  
       for each aFile in aPRGs
