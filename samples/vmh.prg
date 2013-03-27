@@ -365,8 +365,8 @@ function LoadProject()
  
    local oIni, cFileName, m, n
  
-   if File( "vmh.ini" )
-      INI oIni FILE "vmh.ini"
+   if File( GetEnv( "HOME" ) + "/vmh.ini" )
+      INI oIni FILE GetEnv( "HOME" ) + "/vmh.ini"
  
          GET cPrgName SECTION "Project" ENTRY "PrgMain" OF oIni
  
