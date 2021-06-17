@@ -80,10 +80,10 @@ C_OBJS = ./objc/bars.o        \
 ./lib/libfivec.a : $(C_OBJS)
 
 ./obj/%.c : ./source/classes/%.prg
-	./../harbour/bin/harbour $< -o./$@ -n -I./../harbour/include -I./include
+	./../harbour/bin/linux/gcc/harbour $< -o./$@ -n -I./../harbour/include -I./include
 
 ./obj/%.c : ./source/function/%.prg
-	./../harbour/bin/harbour $< -o./$@ -n -I./../harbour/include -I./include
+	./../harbour/bin/linux/gcc/harbour $< -o./$@ -n -I./../harbour/include -I./include
 
 ./obj/%.o : ./obj/%.c
 	gcc -c -D_HARBOUR_ -o $@ -I./../harbour/include -I./include $<
