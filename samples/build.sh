@@ -8,7 +8,7 @@ if [ $# = 0 ]; then
 fi
 
 echo compiling...
-./../../harbour/bin/harbour $1 -n -I./../include -I./../../harbour/include $2
+./../../harbour/bin/linux/gcc/harbour $1 -n -I./../include -I./../../harbour/include $2
 
 echo compiling C module...
 gcc $1.c -c -I./../include -I./../../harbour/include `pkg-config --cflags gtk+-2.0`
