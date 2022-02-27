@@ -1,2 +1,5 @@
-# fivelinux
-The GTK GUI library for Harbour on Linux using the FiveWin design
+# [Harbour programming language.](../../wiki)
+The modern programming language that originated as a compiler of the Clipper language.
+
+# [FiveLinux.](../../wiki)
+The GTK GUI library for Harbour on Linux using the FiveWin design.
