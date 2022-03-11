@@ -42,6 +42,6 @@ ln -s libharbour.so.3.2.0 libharbour.so
 ln -s libharbour.so.3.2.0 libharbour.so.3.2
 cd ..
 sudo apt update
-sudo make install -y
-sudo reboot_
+sudo make install
+sudo reboot
 
