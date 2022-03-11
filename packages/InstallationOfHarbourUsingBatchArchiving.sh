@@ -32,6 +32,8 @@ sudo apt-get install libsqlite3-dev -y
 sudo apt-get install libexpat1-dev -y
 HB_INSTALL_PREFIX=/home/userName/harbour/tests/
 export HB_INSTALL_PREFIX
+HB_WITH_GPM=/usr/lib
+export HB_WITH_GPM
 PATH=$PATH:$HB_INSTALL_PREFIX/bin
 export PATH
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HB_INSTALL_PREFIX/bin
