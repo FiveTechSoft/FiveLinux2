@@ -1,3 +1,4 @@
+cd ~
 sudo apt update -y
 sudo apt upgrade -y
 sudo apt install gedit -y
