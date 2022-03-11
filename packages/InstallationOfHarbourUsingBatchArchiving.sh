@@ -1,11 +1,10 @@
 cd ~
 sudo apt update -y
 sudo apt upgrade -y
-sudo apt install gedit -y
 sudo apt install gpm -y
 sudo apt install gcc -y
 sudo apt install git -y
-git clone https://github.com/harbour/core.git harbour-core -y
+git clone https://github.com/harbour/core.git harbour-core
 sudo apt update -y
 sudo apt-get install bash git gcc binutils fakeroot debhelper valgrind upx uncrustify -y
 sudo apt install libc6-dev -y
