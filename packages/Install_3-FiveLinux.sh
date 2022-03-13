@@ -1,5 +1,5 @@
 sudo apt update
-cd fivelinux
+cd ~/fivelinux
 make
 sudo apt update
 cd samples
