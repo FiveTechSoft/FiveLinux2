@@ -10,6 +10,7 @@ sudo apt-get install bash git gcc binutils fakeroot debhelper valgrind upx uncru
 sudo apt install libc6-dev -y
 sudo apt-get install libncurses-dev -y
 sudo apt-get install libslang2-dev -y
+sudo apt-get install libslang1-dev -y
 sudo apt-get install libx11-dev -y
 sudo apt-get install libgpm-dev -y
 sudo apt-get install libgpmg1-dev -y
@@ -19,11 +20,17 @@ sudo apt-get install libcups2-dev -y
 sudo apt-get install libcurl4-openssl-dev -y
 sudo apt-get install libcurl4-gnutls-dev -y
 sudo apt-get install firebird-dev -y
+sudo apt-get install libfirebird2.0-dev -y
+sudo apt-get install firebird2.1-dev -y
 sudo apt-get install libfreeimage-dev -y
+sudo apt-get install libgd2-xpm-dev -y
+sudo apt-get install libgd-xpm-dev -y
 sudo apt-get install libgs-dev -y
 sudo apt-get install libmagic-dev -y
+sudo apt-get install libmysqlclient15-dev -y
 sudo apt-get install unixodbc-dev -y
 sudo apt-get install libpq-dev -y
+sudo apt-get install libqt5-dev
 sudo apt update -y
 sudo apt-get install libbz2-dev -y
 sudo apt-get install zlib1g-dev -y
@@ -44,6 +51,15 @@ ln -s libharbour.so.3.2.0 libharbour.so
 ln -s libharbour.so.3.2.0 libharbour.so.3.2
 cd ..
 sudo apt update
-sudo make install
-sudo reboot
+#sudo make install
+#sudo reboot
+
+
+
+
+
+
+
+
+
 
