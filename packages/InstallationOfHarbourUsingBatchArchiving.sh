@@ -1,6 +1,8 @@
 cd ~
 sudo apt update -y
 sudo apt upgrade -y
+sudo apt install openssl -y
+sudo apt install curl -y
 sudo apt install gpm -y
 sudo apt install gcc -y
 sudo apt install git -y
@@ -49,10 +51,12 @@ mv harbour-core harbour
 cd harbour/lib
 ln -s libharbour.so.3.2.0 libharbour.so
 ln -s libharbour.so.3.2.0 libharbour.so.3.2
-cd ..
 sudo apt update
+cd ~
+
 #sudo make install
 #sudo reboot
+###sudo zip -r -y harbour.zip harbour/
 
 
 
