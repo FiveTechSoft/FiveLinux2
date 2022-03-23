@@ -65,11 +65,13 @@ then
     cd /home/$nombre/harbour
     export HB_BUILD_CONTRIBS
     sudo make install
+    sudo echo ==================================================================
+    sudo echo Creating a '.deb' file for possible future installations with the
+    sudo echo same configuration...
+    sudo echo ==================================================================
     sudo fakeroot debian/rules binary
-    sudo echo ===============================================================
-    sudo echo The '.deb' files have been created, in case you need to install 
-    sudo echo Harbour binarily with this same configuration...
-    sudo echo ===============================================================
+    cd /home/$nombre/
+    sudo dpkg -i harbour_3.2.0-1_amd64.deb
     sudo echo ====================================
     sudo echo Harbour language has been installed.
     sudo echo ====================================
