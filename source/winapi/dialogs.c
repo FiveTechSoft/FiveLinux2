@@ -9,20 +9,20 @@ static GtkWidget * hWndParent = NULL;
 
 HB_FUNC( CREATEDIALOG )
 {
-   GtkWidget * hWnd;
+   GtkWidget * hWnd  = gtk_window_new( GTK_WINDOW_TOPLEVEL );
+   GtkWidget * hVBox = gtk_vbox_new( FALSE, 0 );
    GtkWidget * hFixed = gtk_fixed_new();
 
-   if( gtk_window_list_toplevels() )
-      hWndParent = g_list_last( gtk_window_list_toplevels() )->data;
-
-   hWnd = gtk_window_new( GTK_WINDOW_TOPLEVEL );
    SetWndMain( hWnd );
 
-   gtk_container_add( GTK_CONTAINER( hWnd ), hFixed );
+   gtk_container_add( GTK_CONTAINER ( hWnd ), hVBox );
+   gtk_box_pack_start( GTK_BOX( hVBox ), hFixed, TRUE, TRUE, 0 );
+
+   gtk_object_set_data( GTK_OBJECT( hWnd ), "vbox", ( gpointer ) hVBox );
    gtk_object_set_data( GTK_OBJECT( hWnd ), "fixed", ( gpointer ) hFixed );
 
-   gtk_window_set_policy( GTK_WINDOW( hWnd ), FALSE, FALSE, FALSE );
-
+   gtk_window_set_default_size( GTK_WINDOW( hWnd ), 100, 100 );
+   
    gtk_signal_connect( GTK_OBJECT( hWnd ), "delete_event",
       GTK_SIGNAL_FUNC( ( GtkSignalFunc ) DeleteEvent ), NULL );
 
