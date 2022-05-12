@@ -68,9 +68,9 @@ HB_FUNC( CREATEBTN )
                                          NULL, NULL, hb_parc( 2 ), NULL,
                                          NULL, NULL, NULL );
 
-      gtk_label_set_use_underline( GTK_LABEL( ( ( GtkToolbarChild * )
-      ( g_list_last( GTK_TOOLBAR( hToolBar )->children )->data ) )->label ),
-      TRUE );
+      // gtk_label_set_use_underline( GTK_LABEL( ( ( GtkToolbarChild * )
+      // ( g_list_last( GTK_TOOLBAR( hToolBar )->children )->data ) )->label ),
+      // TRUE );
    }
 
    gtk_signal_connect( GTK_OBJECT( hWnd ), "clicked", ( GtkSignalFunc )
