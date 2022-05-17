@@ -21,6 +21,8 @@ HB_FUNC( CREATEDIALOG )
    gtk_object_set_data( GTK_OBJECT( hWnd ), "vbox", ( gpointer ) hVBox );
    gtk_object_set_data( GTK_OBJECT( hWnd ), "fixed", ( gpointer ) hFixed );
 
+   gtk_widget_realize( hWnd );
+   gdk_window_set_decorations( hWnd->window, GDK_DECOR_TITLE );
    gtk_window_set_default_size( GTK_WINDOW( hWnd ), 100, 100 );
    
    gtk_signal_connect( GTK_OBJECT( hWnd ), "delete_event",
