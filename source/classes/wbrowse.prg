@@ -1,5 +1,9 @@
 #include "FiveLinux.ch"
 
+#define K_SPACE          32
+#define K_UP          65362
+#define K_DOWN        65364
+
 //----------------------------------------------------------------------------//
 
 CLASS TWBrowse FROM TControl
@@ -18,9 +22,12 @@ CLASS TWBrowse FROM TControl
    DATA   oVScroll   // The related vertical scrollbar object
    DATA   oHScroll   // The related horizontal scrollbar object
    DATA   lSetVRange // checks if the vertical scrollbar has been initialized
-   DATA   nArrayAt   // array current position
+   DATA   nAt        // array current position
    DATA   oGet       // used for cell editing
    DATA   bSetValue  // A codeblock to evaluate to save a edited cell
+   DATA   aRowsChoosen INIT {} // An array that holds the choosen rows numbers
+   DATA   nClrPaneChoosen INIT CLR_YELLOW // The color of the choosen row pane
+   DATA   nClrTextChoosen INIT CLR_BLACK // The color of the choosen row text
 
    CLASSDATA aProperties INIT { "aColumns", "cVarName", "nClrText",;
                                 "nClrPane", "nTop", "nLeft", "nWidth", "nHeight",;
@@ -99,6 +106,10 @@ METHOD New( nRow, nCol, oWnd, aHeaders, aColSizes, abFields, cAlias, nWidth,;
 
    local n
 
+   if Empty( cAlias )
+      cAlias = Alias() // SELECT 0
+   endif   
+
    DEFAULT cAlias := Alias(), nWidth := 460, nHeight := 240, lUpdate := .f.,;
            oWnd := GetWndDefault(), lPixel := .F., lDesign := .F.
 
@@ -141,20 +152,20 @@ METHOD New( nRow, nCol, oWnd, aHeaders, aColSizes, abFields, cAlias, nWidth,;
    if aHeaders != nil
       for n = 1 to Len( aHeaders )
          AAdd( ::aColumns, TWBColumn():New( aHeaders[ n ],,, Self ) )
-	 if ! Empty( abFields )
-	    ATail( ::aColumns ):bBlock = abFields[ n ]
-	 else
+         if ! Empty( abFields )
+            ATail( ::aColumns ):bBlock = abFields[ n ]
+         else
             ATail( ::aColumns ):bBlock = GetFieldBlock( ::cAlias, n ) 
          endif
-	 if aColSizes != nil
-	    ATail( ::aColumns ):nWidth = aColSizes[ n ]
-	 endif
+         if aColSizes != nil
+            ATail( ::aColumns ):nWidth = aColSizes[ n ]
+         endif
       next
    endif
 
    @ nRow, nCol + nWidth + 2 SCROLLBAR ::oVScroll OF oWnd ;
       SIZE 16, nHeight PIXEL ON DOWN ::GoDown() ON UP ::GoUp() ;
-      ON THUMBPOS If( ::cAlias == "ARRAY", If( ::nArrayAt != nPos, ::GoTo( nPos ), ),;
+      ON THUMBPOS If( ::cAlias == "ARRAY", If( ::nAt != nPos, ::GoTo( nPos ), ),;
                   If( ( ::cAlias )->( OrdKeyNo() ) != nPos, ::GoTo( nPos ),) ) 
 
    if ! Empty( cAlias )
@@ -232,18 +243,34 @@ METHOD DrawLine( nRow, lSelected ) CLASS TWBrowse
    local n := ::nColPos, nColPos := 1, nWidth := ::nWidth,;
               nCols := Len( ::aColumns )
    local hWnd := ::hWnd, nRowAct := ::nRowPos
+   local lChoosen := AScan( ::aRowsChoosen, If( ::cAlias != "ARRAY", ( ::cAlias )->( OrdKeyNo() ), ::nAt ) ) != 0
+   local oCol
 
    DEFAULT nRow := ::nRowPos, lSelected := .f.
 
    while nColPos < nWidth .and. n <= nCols
-      BrwDrawCell( hWnd, ( 20 * nRow ) + 1, nColPos,;
-                   RTrim( cValToChar( Eval( ::aColumns[ n ]:bBlock ) ) ),;
-		   If( n == Len( ::aColumns ) .or. ;
-		   nColPos + ::aColumns[ n ]:nWidth > ::nWidth,;
-		   ::nWidth - nColPos - 1,;
-		   ::aColumns[ n ]:nWidth - 2 ), lSelected,;
-                   If( ValType( ::nClrPane ) == "B", Eval( ::nClrPane, nRow, lSelected ), ::nClrPane ),;
-                   If( ValType( ::nClrText ) == "B", Eval( ::nClrText, nRow, lSelected ), ::nClrText ) )
+      oCol = ::aColumns[ n ]
+      if ! Empty( oCol:nClrPane )
+         BrwDrawCell( hWnd, ( 20 * nRow ) + 1, nColPos,;
+            RTrim( cValToChar( Eval( ::aColumns[ n ]:bBlock ) ) ),;
+            If( n == Len( ::aColumns ) .or. ;
+            nColPos + ::aColumns[ n ]:nWidth > ::nWidth,;
+            ::nWidth - nColPos - 1,;
+            ::aColumns[ n ]:nWidth - 2 ), lSelected .and. ! lChoosen,;
+            If( ! lChoosen, If( ValType( oCol:nClrPane ) == "B", Eval( oCol:nClrPane, nRow, lSelected ), oCol:nClrPane ), ::nClrPaneChoosen ),;
+            If( ! lChoosen, If( ValType( oCol:nClrText ) == "B", Eval( oCol:nClrText, nRow, lSelected ), oCol:nClrText ), ::nClrTextChoosen ),;
+            oCol:lBold )
+      else   
+         BrwDrawCell( hWnd, ( 20 * nRow ) + 1, nColPos,;
+            RTrim( cValToChar( Eval( ::aColumns[ n ]:bBlock ) ) ),;
+            If( n == Len( ::aColumns ) .or. ;
+            nColPos + ::aColumns[ n ]:nWidth > ::nWidth,;
+            ::nWidth - nColPos - 1,;
+            ::aColumns[ n ]:nWidth - 2 ), lSelected .and. ! lChoosen,;
+            If( ! lChoosen, If( ValType( ::nClrPane ) == "B", Eval( ::nClrPane, nRow, lSelected ), ::nClrPane ), ::nClrPaneChoosen ),;
+            If( ! lChoosen, If( ValType( ::nClrText ) == "B", Eval( ::nClrText, nRow, lSelected ), ::nClrText ), ::nClrTextChoosen ),;
+            oCol:lBold )
+      endif         
       nColPos += ::aColumns[ n++ ]:nWidth - 1
    end
 
@@ -350,6 +377,7 @@ METHOD GoBottom() CLASS TWBrowse
           ::Skip( 1 )
       next
       ::DrawSelect()
+      ::Refresh()
 
       ::oVScroll:SetValue( ::nLen )
 
@@ -378,12 +406,13 @@ METHOD GoDown() CLASS TWBrowse
             ::nRowPos++
          else
             BrwScrollUp( ::hWnd )
-	    ::DrawLines()
+	         ::DrawLines()
          endif
       else
          ::lHitBottom = .t.
       endif
       ::DrawSelect()
+      ::Refresh()
       if ::bChange != nil
          Eval( ::bChange, Self )
       endif
@@ -432,6 +461,7 @@ METHOD GoTop() CLASS TWBrowse
       ::nRowPos = 1
       ::DrawRows()
       ::DrawSelect()
+      ::Refresh()
       if ::oVScroll != nil
          ::oVScroll:GoTop()
       endif 
@@ -460,12 +490,13 @@ METHOD GoUp() CLASS TWBrowse
             ::nRowPos--
          else
             BrwScrollDown( ::hWnd )
-	    ::DrawLines()
+	         ::DrawLines()
          endif
       else
          ::lHitTop = .t.
       endif
       ::DrawSelect()
+      ::Refresh()
       if ::bChange != nil
          Eval( ::bChange, Self )
       endif
@@ -501,6 +532,12 @@ METHOD HandleEvent( nMsg, nWParam, nLParam ) CLASS TWBrowse
    do case
       case nMsg == WM_PAINT
            return ::Paint( nWParam )
+
+      case nMsg == WM_KEYDOWN
+           return ::KeyDown( nWParam )
+
+      case nMsg == WM_SIZE
+           return nil     
    endcase
 
 return ::Super:HandleEvent( nMsg, nWParam, nLParam )
@@ -512,15 +549,15 @@ METHOD KeyDown( nKey ) CLASS TWBrowse
    do case
       case nKey == K_DOWN
            ::GoDown()
-	   ::oVScroll:SetValue( ::oVScroll:GetValue() + 1 )
+	        ::oVScroll:SetValue( ::oVScroll:GetValue() + 1 )
 
       case nKey == K_UP
            ::GoUp()
-	   ::oVScroll:SetValue( ::oVScroll:GetValue() - 1 )
+	        ::oVScroll:SetValue( ::oVScroll:GetValue() - 1 )
 
       case nKey == K_HOME
            ::GoTop()
-	   ::oVScroll:SetValue( 1 )
+	        ::oVScroll:SetValue( 1 )
 
       case nKey == K_END
            ::GoBottom()
@@ -533,11 +570,27 @@ METHOD KeyDown( nKey ) CLASS TWBrowse
 
       case nKey == K_LEFT
            ::GoLeft()
-	   ::oHScroll:SetValue( ::oHScroll:GetValue() - 1 )
+	        ::oHScroll:SetValue( ::oHScroll:GetValue() - 1 )
 
       case nKey == K_RIGHT
            ::GoRight()
-	   ::oHScroll:SetValue( ::oHScroll:GetValue() + 1 )
+	        ::oHScroll:SetValue( ::oHScroll:GetValue() + 1 )
+
+      case nKey == K_SPACE
+           if ::cAlias != "ARRAY"
+              if AScan( ::aRowsChoosen, ( ::cAlias )->( OrdKeyNo() ) ) == 0
+                 AAdd( ::aRowsChoosen, ( ::cAlias )->( OrdKeyNo() ) )
+              else
+                 ADel( ::aRowsChoosen, AScan( ::aRowsChoosen, ( ::cAlias )->( OrdKeyNo() ) ) )   
+              endif   
+           else   
+              if AScan( ::aRowsChoosen, ::nAt ) == 0
+                 AAdd( ::aRowsChoosen, ::nAt )
+              else
+                 ADel( ::aRowsChoosen, AScan( ::aRowsChoosen, ::nAt ) )  
+              endif   
+           endif   
+           ::DrawSelect()
    endcase
 
    if ! Empty( ::bKeyDown )
@@ -642,6 +695,7 @@ METHOD PageDown( nLines ) CLASS TWBrowse
       endcase
 
       ::DrawSelect()
+      ::Refresh()
       if ::bChange != nil
          Eval( ::bChange, Self )
       endif
@@ -683,12 +737,13 @@ METHOD PageUp( nLines ) CLASS TWBrowse
             ::Skip( -nSkipped )
             ::oVScroll:SetValue( ::oVScroll:GetValue() + nSkipped )
          endif
-	 ::DrawRows()
-	 ::DrawSelect()
+	      ::DrawRows()
+	      ::DrawSelect()
+         ::Refresh()
+
          if ::bChange != nil
             Eval( ::bChange, Self )
          endif
-
       endif
    else
       ::oVScroll:SetValue( 1 )
@@ -760,9 +815,9 @@ METHOD SetAltColors( nClrText, nClrPane, nClrTextS, nClrPaneS ) CLASS TWBrowse
          If( ( ::cAlias )->( OrdKeyNo() ) % 2 == 0, nClrText, nClrTextS ), nil ) } 
    else
       ::nClrPane = { | nRow, lSelected | If( ! lSelected,;
-                     If( ::nArrayAt % 2 == 0, nClrPane, nClrPaneS ), nil ) } 
+                     If( ::nAt % 2 == 0, nClrPane, nClrPaneS ), nil ) } 
       ::nClrText = { | nRow, lSelected | If( ! lSelected,;
-                     If( ::nArrayAt % 2 == 0, nClrText, nClrTextS ), nil ) } 
+                     If( ::nAt % 2 == 0, nClrText, nClrTextS ), nil ) } 
    endif
 
 return nil
@@ -772,16 +827,16 @@ return nil
 METHOD SetArray( aArray ) CLASS TWBrowse
 
    if ::cAlias != "ARRAY"
-      ::nArrayAt  = 1    
+      ::nAt  = 1    
    endif
 
    ::cAlias    = "ARRAY"
    ::bLogicLen = { || ::nLen := Len( aArray ) }
-   ::bGoTop    = { || ::nArrayAt := 1 }
-   ::bGoBottom = { || ::nArrayAt := Eval( ::bLogicLen, Self ) }
-   ::bSkip     = { | nSkip, nOld | nOld := ::nArrayAt, ::nArrayAt += nSkip,;
-                  ::nArrayAt := Min( Max( ::nArrayAt, 1 ), Eval( ::bLogicLen, Self ) ),;
-                  ::nArrayAt - nOld }
+   ::bGoTop    = { || ::nAt := 1 }
+   ::bGoBottom = { || ::nAt := Eval( ::bLogicLen, Self ) }
+   ::bSkip     = { | nSkip, nOld | nOld := ::nAt, ::nAt += nSkip,;
+                  ::nAt := Min( Max( ::nAt, 1 ), Eval( ::bLogicLen, Self ) ),;
+                  ::nAt - nOld }
    ::oVScroll:SetRange( 1, Len( aArray ), ::nRowCount / Len( aArray ) )
             
    if ::oGet != nil

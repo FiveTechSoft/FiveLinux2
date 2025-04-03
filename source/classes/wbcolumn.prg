@@ -8,6 +8,9 @@ CLASS TWBColumn
    DATA   bBlock     // A codeblock to retrive the column data to display
    DATA   nWidth     // The width of the column
    DATA   oBrw       // container browse
+   DATA   nClrText   // text color RGB color or codeblock 
+   DATA   nClrPane   // background color RGB color or codeblock
+   DATA   lBold INIT .F.
 
    METHOD New( cHeading, bBlock, nWidth, oBrw )
 
