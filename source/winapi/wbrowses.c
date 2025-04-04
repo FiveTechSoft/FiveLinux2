@@ -238,21 +238,19 @@ HB_FUNC( BRWDRAWLINES ) // ( hWnd, aColSizes, nColPos )
 
 }
 
-HB_FUNC( BRWDRAWCELL ) // ( hWnd, nRow, nCol, cText, nWidth, lSelected, nRGBColorBackGround )
+HB_FUNC( BRWDRAWCELL ) // ( hWnd, nRow, nCol, cText, nWidth, lSelected, nRGBColorBackGround, nTextColor, lBold )
 {
    GtkWidget * hWnd = ( GtkWidget * ) hb_parnl( 1 );
    GdkRectangle rect = { hb_parnl( 3 ) + 1, hb_parnl( 2 ) + 1,
                          hb_parnl( 5 ) - 3, 19 };
-   PangoAttrList * attrs;
+   PangoAttrList * attrs = pango_attr_list_new();
 
    if( hb_pcount() > 6 )
    {
       if( ! HB_ISNIL( 7 ) )
       {
          GdkColor color;
-
          color.pixel = hb_parnl( 7 );
-
          gdk_gc_set_foreground( hWnd->style->base_gc[ GTK_STATE_NORMAL ], &color );  
       }
    }   
@@ -262,72 +260,49 @@ HB_FUNC( BRWDRAWCELL ) // ( hWnd, nRow, nCol, cText, nWidth, lSelected, nRGBColo
 
    gdk_draw_rectangle( hWnd->window, hWnd->style->base_gc[ hb_parl( 6 ) ?
                        GTK_STATE_SELECTED : GTK_STATE_NORMAL ], TRUE,
-		       hb_parnl( 3 ), hb_parnl( 2 ), hb_parnl( 5 ),
-		       rect.height );
+               hb_parnl( 3 ), hb_parnl( 2 ), hb_parnl( 5 ),
+               rect.height );
 
    pango_layout_set_text( ( ( GtkBrowse * ) hWnd )->layout, hb_parc( 4 ), -1 );
 
-   if( hb_pcount() > 6 )
-   {
-      if( ! HB_ISNIL( 7 ) )
-      {
-         GdkColor color;
-
-         color.pixel = 0xFFFFFF;
-
-         gdk_gc_set_foreground( hWnd->style->base_gc[ GTK_STATE_NORMAL ], &color );  
-      }
-   }   
-
+   // Configurar atributos del texto (color y negrita)
    if( hb_pcount() > 7 )
    {
+      // Color del texto (parámetro 8)
       if( ! HB_ISNIL( 8 ) )
       {
-         guint16 blue  = hb_parnl( 8 ) / 65536;
-         guint16 green = ( hb_parnl( 8 ) - ( blue * 65536 ) ) / 256;
-         guint16 red   = hb_parnl( 8 ) - ( blue * 65536 ) - ( green * 256 );        
+         guint32 color = (guint32) hb_parnl( 8 );
+         guint16 blue  = (color & 0xFF) * 257;         // Multiplicamos por 257 para convertir de 0-255 a 0-65535
+         guint16 green = ((color >> 8) & 0xFF) * 257;
+         guint16 red   = ((color >> 16) & 0xFF) * 257;
+         pango_attr_list_insert( attrs, pango_attr_foreground_new( red, green, blue ) );
+      }
 
-         attrs = pango_attr_list_new();
-      
-         pango_attr_list_insert( attrs, pango_attr_foreground_new( red * 0xFF, green * 0xFF, blue * 0xFF ) );
-         // oldAttrs = pango_layout_get_attributes( ( ( GtkBrowse * ) hWnd )->layout );
-         pango_layout_set_attributes( ( ( GtkBrowse * ) hWnd )->layout, attrs );
+      // Negrita (parámetro 9)
+      if( hb_pcount() > 8 && ! HB_ISNIL( 9 ) && hb_parl( 9 ) ) // Si lBold es .T.
+      {
+         pango_attr_list_insert( attrs, pango_attr_weight_new( PANGO_WEIGHT_BOLD ) );
       }
    }
 
-   /* 
-      pango_layout_set_width( ( ( GtkBrowse * ) hWnd )->layout, hb_parnl( 5 ) * PANGO_SCALE );
+   // Aplicar los atributos al layout
+   pango_layout_set_attributes( ( ( GtkBrowse * ) hWnd )->layout, attrs );
 
-      pango_layout_set_alignment( ( ( GtkBrowse * ) hWnd )->layout, PANGO_ALIGN_RIGHT );
-
-      gtk_paint_layout( hWnd->style, hWnd->window,
-                        hb_parl( 6 ) ? GTK_STATE_ACTIVE : GTK_STATE_NORMAL,
-                        TRUE, &rect, hWnd, "cellrenderertext",            
-                        hb_parnl( 3 ) + hb_parnl( 5 ) - gdk_string_width( gtk_style_get_font( GTK_WIDGET( hWnd )->style ), hb_parc( 4 ) ) - 20, // hb_parnl( 3 ) + 5,
-		        hb_parnl( 2 ) + 1, ( ( GtkBrowse * ) hWnd )->layout );
-   */ 
- 
+   // Dibujar el layout
    gdk_draw_layout( hWnd->window, hWnd->style->bg_gc[ GTK_STATE_NORMAL ],
                     rect.x, rect.y, ( ( GtkBrowse * ) hWnd )->layout );
 
-   if( hb_pcount() > 7 )
+   // Restaurar color por defecto si se usó color personalizado
+   if( hb_pcount() > 7 && ! HB_ISNIL( 8 ) )
    {
-      if( ! HB_ISNIL( 8 ) )
-      {
-         // pango_layout_set_attributes( ( ( GtkBrowse * ) hWnd )->layout, oldAttrs );
-         // g_free( attrs );
-
-         guint16 blue  = 0;
-         guint16 green = 0;
-         guint16 red   = 0;        
-
-         attrs = pango_attr_list_new();
-      
-         pango_attr_list_insert( attrs, pango_attr_foreground_new( red * 0xFF, green * 0xFF, blue * 0xFF ) );
-         // oldAttrs = pango_layout_get_attributes( ( ( GtkBrowse * ) hWnd )->layout );
-         pango_layout_set_attributes( ( ( GtkBrowse * ) hWnd )->layout, attrs );
-      }
+      pango_attr_list_unref( attrs );
+      attrs = pango_attr_list_new();
+      pango_attr_list_insert( attrs, pango_attr_foreground_new( 0, 0, 0 ) ); // Negro por defecto
+      pango_layout_set_attributes( ( ( GtkBrowse * ) hWnd )->layout, attrs );
    }
+
+   // Liberar la lista de atributos
+   pango_attr_list_unref( attrs );
 }
 
 HB_FUNC( BRWROWCOUNT ) // ( hWnd )
