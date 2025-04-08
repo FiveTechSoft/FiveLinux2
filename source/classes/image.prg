@@ -11,7 +11,7 @@ CLASS TImage FROM TControl
                                 "Cargo" }
 
    METHOD New( nRow, nCol, oWnd, cFileName, nWidth, nHeight, lUpdate, cVarName,;
-               lDesign, lPixel, lAdjust )
+               lDesign, lPixel, lAdjust, lNoBorder )
 
    METHOD cGenPrg()
 
@@ -22,10 +22,10 @@ ENDCLASS
 //----------------------------------------------------------------------------//
 
 METHOD New( nRow, nCol, oWnd, cFileName, nWidth, nHeight, lUpdate, cVarName,;
-            lDesign, lPixel, lAdjust ) CLASS TImage
+            lDesign, lPixel, lAdjust, lNoBorder ) CLASS TImage
 
    DEFAULT oWnd := GetWndDefault(), lUpdate := .F., lDesign := .F.,;
-           lPixel := .F., lAdjust := .F.
+           lPixel := .F., lAdjust := .F., lNoBorder := .F.
 
    ::hWnd    = CreateImage()
    ::lUpdate = lUpdate
