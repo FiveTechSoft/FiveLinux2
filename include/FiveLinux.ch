@@ -253,10 +253,11 @@ extern ErrorLink
 	     [ <design: DESIGN> ] ;       
 	     [ <pixel: PIXEL> ] ; 
              [ <adjust: ADJUST> ] ;
+             [ <noborder: NOBORDER> ] ;
 	  => ;
              [ <oImg> := ] TImage():New( <nRow>, <nCol>, [<oWnd>],;
 	     <cFileName>, <nWidth>, <nHeight>, <.update.>, <(oImg)>,;
-             <.design.>, <.pixel.>, <.adjust.> )
+             <.design.>, <.pixel.>, <.adjust.>, <.noborder.> )
 
 #xcommand @ <nRow>, <nCol> LISTBOX [ <oLbx> VAR ] <cnVar> ;
              [ <of: OF, WINDOW, DIALOG> <oWnd> ] ;
