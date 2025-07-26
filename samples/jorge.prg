@@ -6,11 +6,13 @@ function Main()
 
    DEFINE WINDOW oWnd SIZE 1200, 800
 
-   DEFINE FONT oFont NAME "Helvetica Bold 100"
+   // ChooseFont()
 
-   @ 39, 9 SAY oSay PROMPT "Caja" OF oWnd FONT oFont
+   DEFINE FONT oFont NAME "Sans Bold 24"
 
-   @ 60, 44 BUTTON oBtn PROMPT "Continuar" OF oWnd
+   @ 29, 9 SAY oSay PROMPT "Caja" OF oWnd FONT oFont
+
+   @ 35, 44 BUTTON oBtn PROMPT "Continuar" OF oWnd
 
    ACTIVATE WINDOW oWnd 
 
